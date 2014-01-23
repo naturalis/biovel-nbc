@@ -9,20 +9,28 @@ use constant SUCCESS   => 0;
 use Exporter;
 use Proc::ProcessTable;
 
+# export readable constants to use elsewhere
 our @ISA    = qw(Exporter);
 our @EXPORT = qw(LAUNCHING RUNNING SUCCESS);
-our $AUTOLOAD;
 
+# many getters/setters are done with sub AUTOLOAD
+our $AUTOLOAD;
 my @fields = qw(status id session mail stdout stderr output name arguments timestamp);
 my %fields = map { $_ => 1 } @fields;
+
+# this is the directory with the status files
 my $dir = $ENV{'BIOVEL_JOB_DIR'} || die "No BIOVEL_JOB_DIR defined";
 
 sub new {
 	my $class = shift;
 	my %args  = @_;
+	
+	# create job from existing ID
 	if ( $args{'IdJob'} ) {
 		return $class->from_file( $dir . '/' . $args{'IdJob'} );
 	}
+	
+	# create new job
 	else {
 		my $jobdir = $dir . '/' . $PROCESS_ID . '.dir';
 		mkdir $jobdir;
@@ -43,10 +51,14 @@ sub new {
 
 sub status {
 	my $self = shift;
+	
+	# argument given: write to file
 	if ( @_ ) {
 		$self->{status} = shift;
 		$self->to_file( $dir . '/' . $self->id );
 	}
+	
+	# no argument given: read from file
 	else {
 		$self->from_file( $dir . '/' . $self->id );
 	}
@@ -56,18 +68,22 @@ sub status {
 sub run {
 	my $self = shift;
 	if ( $self->status < RUNNING ) {
+	
+		# record the time and changed status in status file
 		$self->timestamp( time );
 		$self->status( RUNNING );
-		threads->create( sub {
-			my $id = $self->id;
-			my @values = map { $self->$_ } qw(name arguments stdout stderr);
-			my $command = sprintf '%s %s >%s 2>%s && echo "status=$?" >> %s', @values, "$dir/$id";
-			$self->status( system( $command ) );
-		} )->detach();
+
+		# generate the command		
+		my @values = map { $self->$_ } qw(name arguments stdout stderr);
+		my $command = sprintf '%s %s >%s 2>%s &', @values;
+		
+		# execute and record exit value
+		$self->status( system( $command ) );
 	}
 	return $self->status;
 }
 
+# write self to key=value string
 sub to_string {
 	my $self = shift;
 	my $result;
@@ -77,6 +93,7 @@ sub to_string {
 	return $result;
 }
 
+# write key=value string to file
 sub to_file {
 	my ( $self, $file ) = @_;
 	open my $fh, '>', $file or die $!;
@@ -84,6 +101,7 @@ sub to_file {
 	close $fh;
 }
 
+# instantiate/update invocant from key=value string
 sub from_string {
 	my ( $package, $string ) = @_;
 	my $self = ref($package) ? $package : bless {}, $package;
@@ -94,6 +112,7 @@ sub from_string {
 	return $self;
 }
 
+# instantiate/update invocant from key=value file
 sub from_file {
 	my ( $package, $file ) = @_;
 	open my $fh, '<', $file or die $!;
@@ -101,6 +120,7 @@ sub from_file {
 	return $package->from_string( $string );
 }
 
+# handle getters and setters
 sub AUTOLOAD {
 	my $self = shift;
 	my $prop = $AUTOLOAD;
@@ -111,6 +131,7 @@ sub AUTOLOAD {
 	}
 }
 
+# preserve self as file when going out of scope
 sub DESTROY {
 	my $self = shift;
 	ref($self) && $self->to_file( $dir . '/' . $self->id );
