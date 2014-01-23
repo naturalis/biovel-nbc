@@ -15,7 +15,7 @@ BEGIN {
 	# initialize a new job
 	my $j1 = Bio::BioVeL::Job->new(
 		'mail'      => 'rutgeraldo@gmail.com',
-		'NAME'      => 'mb',
+		'NAME'      => 'top',
 		'arguments' => '',
 		'sessionId' => 'foo',
 	);
