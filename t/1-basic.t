@@ -33,6 +33,6 @@ BEGIN {
 	while( $j1->status == RUNNING ) {
 		sleep(1);
 	}
-	ok( $j1->run == SUCCESS );
+	ok( $j1->status == SUCCESS );
 	ok( $j2->status == SUCCESS );
 }
