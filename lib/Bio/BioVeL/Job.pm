@@ -1,6 +1,7 @@
 package Bio::BioVeL::Job;
 use strict;
 use warnings;
+use threads;
 use English;
 use constant LAUNCHING => -2;
 use constant RUNNING   => -1;
@@ -30,19 +31,14 @@ sub new {
 			'session'   => ( $args{sessionId} || die "No session given" ),
 			'mail'      => ( $args{mail}      || die "No mail given" ),
 			'name'      => ( $args{NAME}      || die "No NAME given" ),
-			'arguments' => $args{arguments},
+			'arguments' => $args{arguments}   || '',
 			'stdout'    => $jobdir . '/stdout',
 			'stderr'    => $jobdir . '/stderr',
 		};
 		bless $self, $class;
-		$self->status( -2 );		
+		$self->status( LAUNCHING );		
 		return $self;
 	}
-}
-
-sub kill {
-	my $self = shift;
-	
 }
 
 sub status {
@@ -60,18 +56,14 @@ sub status {
 sub run {
 	my $self = shift;
 	if ( $self->status < RUNNING ) {
-		my $template = '%s %s >%s 2>%s';
 		$self->timestamp( time );
-		$self->status( -1 );
-		$self->status( 
-			system( 
-				sprintf $template, 
-					$self->name, 
-					$self->arguments,
-					$self->stdout,
-					$self->stderr,
-			) 
-		);
+		$self->status( RUNNING );
+		threads->create( sub {
+			my $id = $self->id;
+			my @values = map { $self->$_ } qw(name arguments stdout stderr);
+			my $command = sprintf '%s %s >%s 2>%s && echo "status=$?" >> %s', @values, "$dir/$id";
+			$self->status( system( $command ) );
+		} )->detach();
 	}
 	return $self->status;
 }

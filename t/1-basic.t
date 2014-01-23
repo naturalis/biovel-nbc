@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 BEGIN { 
 	use File::Temp 'tempdir';
-	$ENV{'BIOVEL_JOB_DIR'} = tempdir()
+	$ENV{'BIOVEL_JOB_DIR'} = tempdir( 'CLEANUP' => 1 )
 }
 BEGIN {
 	use Test::More 'no_plan';
@@ -28,7 +28,11 @@ BEGIN {
 	ok( $j1->status == LAUNCHING );
 	ok( $j2->status == LAUNCHING );
 
-	# when one is run, the other should show success
+	# launch process, await result
+	$j1->run;
+	while( $j1->status == RUNNING ) {
+		sleep(1);
+	}
 	ok( $j1->run == SUCCESS );
 	ok( $j2->status == SUCCESS );
 }
