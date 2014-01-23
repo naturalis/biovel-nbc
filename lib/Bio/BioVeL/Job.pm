@@ -1,13 +1,11 @@
 package Bio::BioVeL::Job;
 use strict;
 use warnings;
-use threads;
 use English;
 use constant LAUNCHING => -2;
 use constant RUNNING   => -1;
 use constant SUCCESS   => 0;
 use Exporter;
-use Proc::ProcessTable;
 
 # export readable constants to use elsewhere
 our @ISA    = qw(Exporter);
