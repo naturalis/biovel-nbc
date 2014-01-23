@@ -7,7 +7,6 @@ BEGIN {
 	use Test::More 'no_plan';
 	use strict;
 	use warnings;
-	use Data::Dumper;
 	use Bio::BioVeL::Job;
 }
 
@@ -30,9 +29,7 @@ BEGIN {
 
 	# launch process, await result
 	$j1->run;
-	while( $j1->status == RUNNING ) {
-		sleep(1);
-	}
+	sleep(1) while $j1->status == RUNNING;
 	ok( $j1->status == SUCCESS );
 	ok( $j2->status == SUCCESS );
 }
