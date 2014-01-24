@@ -1,6 +1,12 @@
 <nex:nexml generator="Bio::Phylo::Project v.0.56" version="0.9" xmlns="http://www.nexml.org/2009" xmlns:bv="http://biovel.eu/terms#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:map="http://purl.org/phylo/phylomap/terms#" xmlns:nex="http://www.nexml.org/2009" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.nexml.org/2009 http://www.nexml.org/2009/nexml.xsd">
+
+  <!-- this is the containing element for the model description -->
   <meta datatype="rdf:XMLLiteral" id="ma65" property="bv:model" xsi:type="nex:ResourceMeta">
+  
+    <!-- transition/transversion ratio -->
     <meta content="" datatype="xsd:string" id="ma66" property="bv:kappa" xsi:type="nex:LiteralMeta"/>
+    
+    <!-- rate matrix -->
     <meta datatype="rdf:XMLLiteral" id="ma67" property="bv:rates" xsi:type="nex:ResourceMeta">
       <meta content="1" datatype="xsd:integer" id="ma68" property="bv:rAT" xsi:type="nex:LiteralMeta"/>
       <meta content="1" datatype="xsd:integer" id="ma69" property="bv:rCT" xsi:type="nex:LiteralMeta"/>
@@ -9,16 +15,28 @@
       <meta content="1" datatype="xsd:integer" id="ma72" property="bv:rCG" xsi:type="nex:LiteralMeta"/>
       <meta content="1" datatype="xsd:integer" id="ma73" property="bv:rAG" xsi:type="nex:LiteralMeta"/>
     </meta>
+    
+    <!-- model name -->
     <meta content="GTR" datatype="xsd:string" id="ma74" property="bv:name" xsi:type="nex:LiteralMeta"/>
+    
+    <!-- number of gamma bins -->
     <meta content="" datatype="xsd:string" id="ma75" property="bv:gamma" xsi:type="nex:LiteralMeta"/>
-    <meta datatype="rdf:XMLLiteral" id="ma76" property="bv:frequencies" xsi:type="nex:ResourceMeta">
+    
+    <!-- nucleotide frequencies -->
+    <meta datatype="rdf:XMLLiteral" id="ma76" property="bv:bases" xsi:type="nex:ResourceMeta">
       <meta content="0.25" datatype="xsd:float" id="ma77" property="bv:fG" xsi:type="nex:LiteralMeta"/>
       <meta content="0.25" datatype="xsd:float" id="ma78" property="bv:fA" xsi:type="nex:LiteralMeta"/>
       <meta content="0.25" datatype="xsd:float" id="ma79" property="bv:fT" xsi:type="nex:LiteralMeta"/>
       <meta content="0.25" datatype="xsd:float" id="ma80" property="bv:fC" xsi:type="nex:LiteralMeta"/>
     </meta>
+    
+    <!-- gamma shape parameter -->
     <meta content="" datatype="xsd:string" id="ma81" property="bv:alpha" xsi:type="nex:LiteralMeta"/>
-    <meta content="0" datatype="xsd:integer" id="ma82" property="bv:pinvar" xsi:type="nex:LiteralMeta"/>
+    
+    <!-- proportion of invariant sites -->
+    <meta content="" datatype="xsd:integer" id="ma82" property="bv:pinvar" xsi:type="nex:LiteralMeta"/>
+    
+    <!-- codon rate scalers -->
     <meta datatype="rdf:XMLLiteral" id="ma83" property="bv:codons" xsi:type="nex:ResourceMeta">
       <meta content="1" datatype="xsd:integer" id="ma84" property="bv:r3" xsi:type="nex:LiteralMeta"/>
       <meta content="1" datatype="xsd:integer" id="ma85" property="bv:r1" xsi:type="nex:LiteralMeta"/>
