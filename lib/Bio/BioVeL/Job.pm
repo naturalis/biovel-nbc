@@ -13,7 +13,7 @@ our @EXPORT = qw(LAUNCHING RUNNING SUCCESS);
 
 # many getters/setters are done with sub AUTOLOAD
 our $AUTOLOAD;
-my @fields = qw(status id infile session mail stdout stderr output name arguments timestamp);
+my @fields = qw(status id infile session mail stdout stderr output name arguments timestamp jobdir);
 my %fields = map { $_ => 1 } @fields;
 
 # this is the directory with the status files
@@ -40,11 +40,48 @@ sub new {
 			'arguments' => $args{arguments}   || '',
 			'stdout'    => $jobdir . '/stdout',
 			'stderr'    => $jobdir . '/stderr',
+			'jobdir'    => $jobdir,
 		};
 		bless $self, $class;
 		$self->status( LAUNCHING );		
 		return $self;
 	}
+}
+
+sub fileparams {
+	# returns a list of file names the job wants to process
+}
+
+# override this to use an executable that's different than the
+# name as provided in the query string
+sub exe { shift->name }
+
+# override this to use a command-line interface that is different
+# from the 'arguments' parameter as provided in the query string
+sub cli {
+	my $self = shift;
+
+	# this will eventually become a Getopt::Long-
+	# compatible argument string
+	my %cli;
+	
+	# copy the arguments hash
+	my $argshr = $self->arguments;
+	if ( ref($argshr) && ref($argshr) eq 'HASH' ) {
+		for my $param ( keys %{ $argshr } ) {
+			$cli{$param} = $argshr->{$param};
+		}
+	}
+	
+	# copy the infile hash
+	my $infilehr = $self->infile;
+	if ( ref($infilehr) && ref($infilehr) eq 'HASH' ) {
+		for my $param ( keys %{ $infilehr } ) {
+			$cli{$param} = $infilehr->{$param};			
+		}
+	}
+	
+	return join ' ', map { '--' . $_ . '=' . $cli{$_} } keys %cli;
 }
 
 sub status {
@@ -72,7 +109,7 @@ sub run {
 		$self->status( RUNNING );
 
 		# generate the command		
-		my @values = map { $self->$_ } qw(name arguments stdout stderr);
+		my @values = map { $self->$_ } qw(exe cli stdout stderr);
 		my $command = sprintf '%s %s >%s 2>%s &', @values;
 		
 		# execute and record exit value
