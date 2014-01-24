@@ -17,7 +17,7 @@ BEGIN {
 
 {
 	my $args = {
-		'xmlns'      => { 'biovel' => 'http://biovel.eu/terms#' },
+		'xmlns'      => { 'bv' => 'http://biovel.eu/terms#' },
 		'treeformat' => 'newick',
 		'dataformat' => 'fasta',
 		'datatype'   => 'dna',
