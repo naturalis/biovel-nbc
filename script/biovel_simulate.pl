@@ -33,10 +33,9 @@ my %map = (
 );
 
 # wrapper parameters
-my $format    = 'newick';
+my $format    = 'nexml';
 my $outformat = 'nexml';
 my $treefile;
-my $workdir;
 GetOptions(
 	'kappa=f'     => \$s{'kappa'},
 	'alpha=f'     => \$s{'alpha'},
@@ -50,7 +49,6 @@ GetOptions(
 	'format=s'    => \$format,
 	'outformat=s' => \$outformat,
 	'tree=s'      => \$treefile,
-	'workdir=s'   => \$workdir,
 );
 
 # read/write the first (and only?) in tree
