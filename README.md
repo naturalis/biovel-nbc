@@ -49,7 +49,7 @@ to retrieve. The reply is for example:
 
 The workflow is looking for these paths:
 
-1. `/Jobs/Job/Status` --- and check if is equal to "done"
+1. `/Jobs/Job/Status` to check if is equal to `done`
 2. `/Jobs/Job/Output`  to collect the body that could be or an xml or url or a base64 
    encoded string. Generally is a url with bulk information not relevant for the taverna 
    engine but to pass on to next webservice.
