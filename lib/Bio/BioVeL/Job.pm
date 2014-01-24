@@ -13,7 +13,7 @@ our @EXPORT = qw(LAUNCHING RUNNING SUCCESS);
 
 # many getters/setters are done with sub AUTOLOAD
 our $AUTOLOAD;
-my @fields = qw(status id session mail stdout stderr output name arguments timestamp);
+my @fields = qw(status id infile session mail stdout stderr output name arguments timestamp);
 my %fields = map { $_ => 1 } @fields;
 
 # this is the directory with the status files
@@ -79,6 +79,17 @@ sub run {
 		$self->status( system( $command ) );
 	}
 	return $self->status;
+}
+
+# write self to simple XML
+sub to_xml {
+	my $self = shift;
+	my $result = "<job>\n";
+	for my $key ( keys %{ $self } ) {
+		$result .= "    <$key>" . $self->{$key} . "</$key>\n";
+	}
+	$result .= "</job>";
+	return $result;	
 }
 
 # write self to key=value string
