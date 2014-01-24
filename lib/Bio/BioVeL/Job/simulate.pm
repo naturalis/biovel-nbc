@@ -4,6 +4,6 @@ use base 'Bio::BioVeL::Job';
 
 sub name { 'biovel_simulate.pl' }
 
-sub fileparams { qw[tree] }
+sub fileparams { qw[file] }
 
 1;
