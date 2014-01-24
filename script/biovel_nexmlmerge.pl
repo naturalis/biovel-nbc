@@ -21,6 +21,7 @@ if ( @ARGV ) {
 	GetOptions(
 		'treeformat=s' => \$treeformat,
 		'dataformat=s' => \$dataformat,
+		'datatype=s'   => \$datatype,
 		'tree=s'       => sub { open $treefh, '<', pop or die $! },
 		'data=s'       => sub { open $datafh, '<', pop or die $! },
 		'meta=s'       => sub { open $jsonfh, '<', pop or die $! },
