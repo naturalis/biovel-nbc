@@ -1,0 +1,262 @@
+<nex:nexml generator="Bio::Phylo::Project v.0.56" version="0.9" xmlns="http://www.nexml.org/2009" xmlns:bv="http://biovel.eu/terms#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:map="http://purl.org/phylo/phylomap/terms#" xmlns:nex="http://www.nexml.org/2009" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.nexml.org/2009 http://www.nexml.org/2009/nexml.xsd">
+  <meta datatype="rdf:XMLLiteral" id="ma65" property="bv:model" xsi:type="nex:ResourceMeta">
+    <meta content="" datatype="xsd:string" id="ma66" property="bv:kappa" xsi:type="nex:LiteralMeta"/>
+    <meta datatype="rdf:XMLLiteral" id="ma67" property="bv:rates" xsi:type="nex:ResourceMeta">
+      <meta content="1" datatype="xsd:integer" id="ma68" property="bv:rAT" xsi:type="nex:LiteralMeta"/>
+      <meta content="1" datatype="xsd:integer" id="ma69" property="bv:rCT" xsi:type="nex:LiteralMeta"/>
+      <meta content="1" datatype="xsd:integer" id="ma70" property="bv:rGT" xsi:type="nex:LiteralMeta"/>
+      <meta content="1" datatype="xsd:integer" id="ma71" property="bv:rAC" xsi:type="nex:LiteralMeta"/>
+      <meta content="1" datatype="xsd:integer" id="ma72" property="bv:rCG" xsi:type="nex:LiteralMeta"/>
+      <meta content="1" datatype="xsd:integer" id="ma73" property="bv:rAG" xsi:type="nex:LiteralMeta"/>
+    </meta>
+    <meta content="GTR" datatype="xsd:string" id="ma74" property="bv:name" xsi:type="nex:LiteralMeta"/>
+    <meta content="" datatype="xsd:string" id="ma75" property="bv:gamma" xsi:type="nex:LiteralMeta"/>
+    <meta datatype="rdf:XMLLiteral" id="ma76" property="bv:frequencies" xsi:type="nex:ResourceMeta">
+      <meta content="0.25" datatype="xsd:float" id="ma77" property="bv:fG" xsi:type="nex:LiteralMeta"/>
+      <meta content="0.25" datatype="xsd:float" id="ma78" property="bv:fA" xsi:type="nex:LiteralMeta"/>
+      <meta content="0.25" datatype="xsd:float" id="ma79" property="bv:fT" xsi:type="nex:LiteralMeta"/>
+      <meta content="0.25" datatype="xsd:float" id="ma80" property="bv:fC" xsi:type="nex:LiteralMeta"/>
+    </meta>
+    <meta content="" datatype="xsd:string" id="ma81" property="bv:alpha" xsi:type="nex:LiteralMeta"/>
+    <meta content="0" datatype="xsd:integer" id="ma82" property="bv:pinvar" xsi:type="nex:LiteralMeta"/>
+    <meta datatype="rdf:XMLLiteral" id="ma83" property="bv:codons" xsi:type="nex:ResourceMeta">
+      <meta content="1" datatype="xsd:integer" id="ma84" property="bv:r3" xsi:type="nex:LiteralMeta"/>
+      <meta content="1" datatype="xsd:integer" id="ma85" property="bv:r1" xsi:type="nex:LiteralMeta"/>
+      <meta content="1" datatype="xsd:integer" id="ma86" property="bv:r2" xsi:type="nex:LiteralMeta"/>
+    </meta>
+  </meta>
+  <meta content="rvosa" datatype="xsd:string" id="ma87" property="dc:creator" xsi:type="nex:LiteralMeta"/>
+  <meta content="2014-01-24T19:27:46" datatype="xsd:date" id="ma88" property="dc:date" xsi:type="nex:LiteralMeta"/>
+  <otus id="os61" label="Merged">
+    <otu id="ou62" label="A"/>
+    <otu id="ou63" label="B"/>
+    <otu id="ou64" label="C"/>
+  </otus>
+  <trees id="ts52" otus="os61">
+    <tree id="te45" xsi:type="nex:IntTree">
+      <node id="ne46" root="true"/>
+      <node id="ne47"/>
+      <node id="ne50" label="C" otu="ou64"/>
+      <node id="ne48" label="A" otu="ou62"/>
+      <node id="ne49" label="B" otu="ou63"/>
+      <edge id="edge47" source="ne46" target="ne47"/>
+      <edge id="edge50" source="ne46" target="ne50"/>
+      <edge id="edge48" source="ne47" target="ne48"/>
+      <edge id="edge49" source="ne47" target="ne49"/>
+    </tree>
+  </trees>
+  <characters id="cs5" otus="os61" xsi:type="nex:DnaCells">
+    <format>
+      <states id="ss6">
+        <state id="s1" symbol="A"/>
+        <state id="s2" symbol="C"/>
+        <state id="s3" symbol="G"/>
+        <state id="s4" symbol="T"/>
+        <uncertain_state_set id="s5" symbol="K">
+          <member state="s3"/>
+          <member state="s4"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s6" symbol="M">
+          <member state="s1"/>
+          <member state="s2"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s7" symbol="R">
+          <member state="s1"/>
+          <member state="s3"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s8" symbol="S">
+          <member state="s2"/>
+          <member state="s3"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s9" symbol="W">
+          <member state="s1"/>
+          <member state="s4"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s10" symbol="Y">
+          <member state="s2"/>
+          <member state="s4"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s11" symbol="B">
+          <member state="s2"/>
+          <member state="s3"/>
+          <member state="s4"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s12" symbol="D">
+          <member state="s1"/>
+          <member state="s3"/>
+          <member state="s4"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s13" symbol="H">
+          <member state="s1"/>
+          <member state="s2"/>
+          <member state="s4"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s14" symbol="V">
+          <member state="s1"/>
+          <member state="s2"/>
+          <member state="s3"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s15" symbol="N">
+          <member state="s3"/>
+          <member state="s1"/>
+          <member state="s4"/>
+          <member state="s2"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s16" symbol="X">
+          <member state="s3"/>
+          <member state="s1"/>
+          <member state="s4"/>
+          <member state="s2"/>
+        </uncertain_state_set>
+        <uncertain_state_set id="s17" symbol="-"/>
+        <uncertain_state_set id="s18" symbol="?">
+          <member state="s1"/>
+          <member state="s2"/>
+          <member state="s3"/>
+          <member state="s4"/>
+          <member state="s5"/>
+          <member state="s6"/>
+          <member state="s7"/>
+          <member state="s8"/>
+          <member state="s9"/>
+          <member state="s10"/>
+          <member state="s11"/>
+          <member state="s12"/>
+          <member state="s13"/>
+          <member state="s14"/>
+          <member state="s15"/>
+          <member state="s16"/>
+          <member state="s17"/>
+        </uncertain_state_set>
+      </states>
+      <char id="cr9" states="ss6"/>
+      <char id="cr10" states="ss6"/>
+      <char id="cr11" states="ss6"/>
+      <char id="cr12" states="ss6"/>
+      <char id="cr13" states="ss6"/>
+      <char id="cr14" states="ss6"/>
+      <char id="cr15" states="ss6"/>
+      <char id="cr16" states="ss6"/>
+      <char id="cr17" states="ss6"/>
+      <char id="cr18" states="ss6"/>
+      <char id="cr19" states="ss6"/>
+      <char id="cr20" states="ss6"/>
+      <char id="cr21" states="ss6"/>
+      <char id="cr22" states="ss6"/>
+      <char id="cr23" states="ss6"/>
+      <char id="cr24" states="ss6"/>
+      <char id="cr25" states="ss6"/>
+      <char id="cr26" states="ss6"/>
+      <char id="cr27" states="ss6"/>
+      <char id="cr28" states="ss6"/>
+      <char id="cr29" states="ss6"/>
+      <char id="cr30" states="ss6"/>
+      <char id="cr31" states="ss6"/>
+      <char id="cr32" states="ss6"/>
+      <char id="cr33" states="ss6"/>
+      <char id="cr34" states="ss6"/>
+      <char id="cr35" states="ss6"/>
+      <char id="cr36" states="ss6"/>
+      <char id="cr37" states="ss6"/>
+      <char id="cr38" states="ss6"/>
+    </format>
+    <matrix>
+      <row id="rw7" label="A" otu="ou62">
+        <cell char="cr9" state="s3"/>
+        <cell char="cr10" state="s2"/>
+        <cell char="cr11" state="s1"/>
+        <cell char="cr12" state="s4"/>
+        <cell char="cr13" state="s1"/>
+        <cell char="cr14" state="s2"/>
+        <cell char="cr15" state="s3"/>
+        <cell char="cr16" state="s2"/>
+        <cell char="cr17" state="s1"/>
+        <cell char="cr18" state="s4"/>
+        <cell char="cr19" state="s2"/>
+        <cell char="cr20" state="s1"/>
+        <cell char="cr21" state="s3"/>
+        <cell char="cr22" state="s1"/>
+        <cell char="cr23" state="s2"/>
+        <cell char="cr24" state="s4"/>
+        <cell char="cr25" state="s1"/>
+        <cell char="cr26" state="s2"/>
+        <cell char="cr27" state="s4"/>
+        <cell char="cr28" state="s1"/>
+        <cell char="cr29" state="s2"/>
+        <cell char="cr30" state="s3"/>
+        <cell char="cr31" state="s1"/>
+        <cell char="cr32" state="s2"/>
+        <cell char="cr33" state="s4"/>
+        <cell char="cr34" state="s1"/>
+        <cell char="cr35" state="s2"/>
+        <cell char="cr36" state="s3"/>
+        <cell char="cr37" state="s1"/>
+        <cell char="cr38" state="s2"/>
+      </row>
+      <row id="rw39" label="B" otu="ou63">
+        <cell char="cr9" state="s4"/>
+        <cell char="cr10" state="s1"/>
+        <cell char="cr11" state="s2"/>
+        <cell char="cr12" state="s3"/>
+        <cell char="cr13" state="s1"/>
+        <cell char="cr14" state="s2"/>
+        <cell char="cr15" state="s4"/>
+        <cell char="cr16" state="s1"/>
+        <cell char="cr17" state="s2"/>
+        <cell char="cr18" state="s3"/>
+        <cell char="cr19" state="s1"/>
+        <cell char="cr20" state="s2"/>
+        <cell char="cr21" state="s4"/>
+        <cell char="cr22" state="s2"/>
+        <cell char="cr23" state="s1"/>
+        <cell char="cr24" state="s3"/>
+        <cell char="cr25" state="s2"/>
+        <cell char="cr26" state="s1"/>
+        <cell char="cr27" state="s4"/>
+        <cell char="cr28" state="s1"/>
+        <cell char="cr29" state="s2"/>
+        <cell char="cr30" state="s4"/>
+        <cell char="cr31" state="s1"/>
+        <cell char="cr32" state="s2"/>
+        <cell char="cr33" state="s3"/>
+        <cell char="cr34" state="s1"/>
+        <cell char="cr35" state="s2"/>
+        <cell char="cr36" state="s4"/>
+        <cell char="cr37" state="s2"/>
+        <cell char="cr38" state="s1"/>
+      </row>
+      <row id="rw41" label="C" otu="ou64">
+        <cell char="cr9" state="s4"/>
+        <cell char="cr10" state="s1"/>
+        <cell char="cr11" state="s2"/>
+        <cell char="cr12" state="s3"/>
+        <cell char="cr13" state="s1"/>
+        <cell char="cr14" state="s2"/>
+        <cell char="cr15" state="s4"/>
+        <cell char="cr16" state="s1"/>
+        <cell char="cr17" state="s2"/>
+        <cell char="cr18" state="s3"/>
+        <cell char="cr19" state="s1"/>
+        <cell char="cr20" state="s2"/>
+        <cell char="cr21" state="s4"/>
+        <cell char="cr22" state="s1"/>
+        <cell char="cr23" state="s2"/>
+        <cell char="cr24" state="s3"/>
+        <cell char="cr25" state="s1"/>
+        <cell char="cr26" state="s2"/>
+        <cell char="cr27" state="s4"/>
+        <cell char="cr28" state="s1"/>
+        <cell char="cr29" state="s2"/>
+        <cell char="cr30" state="s1"/>
+        <cell char="cr31" state="s3"/>
+        <cell char="cr32" state="s2"/>
+        <cell char="cr33" state="s1"/>
+        <cell char="cr34" state="s4"/>
+        <cell char="cr35" state="s1"/>
+        <cell char="cr36" state="s2"/>
+        <cell char="cr37" state="s3"/>
+        <cell char="cr38" state="s1"/>
+      </row>
+    </matrix>
+  </characters>
+</nex:nexml>
