@@ -6,9 +6,9 @@ use constant LAUNCHING => -2;
 use constant RUNNING   => -1;
 use constant SUCCESS   => 0;
 use Exporter;
+use base 'Exporter';
 
 # export readable constants to use elsewhere
-our @ISA    = qw(Exporter);
 our @EXPORT = qw(LAUNCHING RUNNING SUCCESS);
 
 # many getters/setters are done with sub AUTOLOAD
