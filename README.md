@@ -18,34 +18,34 @@ divided by ";". Within phylogenetics service set we are not using yet this multi
 submission proposed by INFN. The reply of this insertjob is an xml with several tags. 
 Example:
 
-	&lt;Job>
-		&lt;Name>blast&lt;/Name>
-		&lt;Flag>7772590c-d7ab-4b76-98b9-aa293c6c34fe&lt;/Flag>
-		&lt;JobsID>
-			&lt;JobId>454118&lt;/JobId>
-		&lt;/JobsID>
-	&lt;/Job>
+	<Job>
+		<Name>blast</Name>
+		<Flag>7772590c-d7ab-4b76-98b9-aa293c6c34fe</Flag>
+		<JobsID>
+			<JobId>454118</JobId>
+		</JobsID>
+	</Job>
 
 One endpoint to collect results with one parameter, *jobid*, that identifies the job 
 to retrieve. The reply is for example:
 
-	&lt;Jobs>
-		&lt;Job>
-			&lt;Arguments>
+	<Jobs>
+		<Job>
+			<Arguments>
 				http://webtest.ba.infn.it/vicario/FinalFusariumDB_2.nex 
 				5700.fa 10589.fbsse se selknlk noiho niooih r 
-			&lt;/Arguments>
-			&lt;Comment>interactive&lt;/Comment>
-			&lt;CPUs>7&lt;/CPUs>
-			&lt;Flag>2dbbd030-2803-43c0-a21d-369a21e17f2b&lt;/Flag>
-			&lt;Id>349177&lt;/Id>
-			&lt;LastCheck>2011-11-18 12:54:01.0&lt;/LastCheck>
-			&lt;Name>MyBlasts&lt;/Name>
-			&lt;Output/>
-			&lt;Provenance/>
-			&lt;Status>free&lt;/Status>
-		&lt;/Job>
-	&lt;/Jobs>
+			</Arguments>
+			<Comment>interactive</Comment>
+			<CPUs>7</CPUs>
+			<Flag>2dbbd030-2803-43c0-a21d-369a21e17f2b</Flag>
+			<Id>349177</Id>
+			<LastCheck>2011-11-18 12:54:01.0</LastCheck>
+			<Name>MyBlasts</Name>
+			<Output/>
+			<Provenance/>
+			<Status>free</Status>
+		</Job>
+	</Jobs>
 
 The workflow is looking for these paths:
 
