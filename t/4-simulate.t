@@ -18,9 +18,8 @@ BEGIN {
 
 {
 	my $args = { 
-		'tree'      => 'file://' . $Bin . '/data/tree.dnd', 
-		'outformat' => 'phylip',
-		'format'    => 'newick',
+		'file'   => 'file://' . $Bin . '/data/merged.xml', 
+		'length' => 1000,
 	};
 	my $encoded = encode_base64(encode_json($args));
 
@@ -37,4 +36,5 @@ BEGIN {
 	$j1->run;
 	sleep(1) while $j1->status == RUNNING;
 	ok( $j1->status == SUCCESS );
+	warn Dumper($j1);
 }
