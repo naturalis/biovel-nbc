@@ -17,7 +17,11 @@ BEGIN {
 }
 
 {
-	my $args = { 'tree' => 'file://' . $Bin . '/data/tree.dnd', 'outformat' => 'phylip' };
+	my $args = { 
+		'tree'      => 'file://' . $Bin . '/data/tree.dnd', 
+		'outformat' => 'phylip',
+		'format'    => 'newick',
+	};
 	my $encoded = encode_base64(encode_json($args));
 
 	# initialize a new job
