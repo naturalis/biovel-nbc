@@ -16,7 +16,7 @@ BEGIN {
 	my $j1 = Bio::BioVeL::Job->new(
 		'mail'      => 'rutgeraldo@gmail.com',
 		'NAME'      => 'ls',
-		'arguments' => '-hal',
+		'arguments' => '',
 		'sessionId' => 'foo',
 	);
 
