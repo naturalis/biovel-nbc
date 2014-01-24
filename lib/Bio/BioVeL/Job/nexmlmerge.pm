@@ -1,4 +1,6 @@
 package Bio::BioVeL::Job::nexmlmerge;
+use strict;
+use warnings;
 use Bio::BioVeL::Job;
 use base 'Bio::BioVeL::Job';
 
