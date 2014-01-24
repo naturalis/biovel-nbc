@@ -13,7 +13,7 @@ our @EXPORT = qw(LAUNCHING RUNNING SUCCESS);
 
 # many getters/setters are done with sub AUTOLOAD
 our $AUTOLOAD;
-my @fields = qw(status id infile session mail stdout stderr output name arguments timestamp jobdir);
+my @fields = qw(status id session mail stdout stderr output name arguments timestamp jobdir);
 my %fields = map { $_ => 1 } @fields;
 
 # this is the directory with the status files
@@ -30,6 +30,8 @@ sub new {
 	
 	# create new job
 	else {
+		$class .= '::' . lc($args{NAME});
+		eval "require $class";
 		my $jobdir = $dir . '/' . $PROCESS_ID . '.dir';
 		mkdir $jobdir;
 		my $self = {
@@ -37,7 +39,7 @@ sub new {
 			'session'   => ( $args{sessionId} || die "No session given" ),
 			'mail'      => ( $args{mail}      || die "No mail given" ),
 			'name'      => ( $args{NAME}      || die "No NAME given" ),
-			'arguments' => $args{arguments}   || '',
+			'arguments' => $args{arguments},
 			'stdout'    => $jobdir . '/stdout',
 			'stderr'    => $jobdir . '/stderr',
 			'jobdir'    => $jobdir,
@@ -46,10 +48,6 @@ sub new {
 		$self->status( LAUNCHING );		
 		return $self;
 	}
-}
-
-sub fileparams {
-	# returns a list of file names the job wants to process
 }
 
 # override this to use an executable that's different than the
@@ -66,7 +64,7 @@ sub cli {
 	my %cli;
 	
 	# copy the arguments hash
-	my $argshr = $self->arguments;
+	my $argshr = $self->arguments->args;
 	if ( ref($argshr) && ref($argshr) eq 'HASH' ) {
 		for my $param ( keys %{ $argshr } ) {
 			$cli{$param} = $argshr->{$param};
@@ -74,14 +72,26 @@ sub cli {
 	}
 	
 	# copy the infile hash
-	my $infilehr = $self->infile;
+	my $infilehr = $self->arguments->files;
 	if ( ref($infilehr) && ref($infilehr) eq 'HASH' ) {
 		for my $param ( keys %{ $infilehr } ) {
 			$cli{$param} = $infilehr->{$param};			
 		}
 	}
 	
-	return join ' ', map { '--' . $_ . '=' . $cli{$_} } keys %cli;
+	# transform to argument string
+	my @args;
+	for my $key ( keys %cli ) {
+		if ( ref $cli{$key} ) {
+			my %inner = %{ $cli{$key} };
+			push @args, map { '--' . $key . ' ' . $_ . '=' . $inner{$_} } keys %inner;
+		}
+		else {
+			push @args, '--' . $key . '=' . $cli{$key};
+		}
+	}
+	
+	return join ' ', @args;
 }
 
 sub status {
@@ -134,6 +144,7 @@ sub to_string {
 	my $self = shift;
 	my $result;
 	for my $key ( keys %{ $self } ) {
+		next if not defined $self->{$key};
 		$result .= $key . '=' . $self->{$key} . "\n";
 	}
 	return $result;
