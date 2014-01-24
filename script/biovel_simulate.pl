@@ -54,7 +54,7 @@ GetOptions(
 );
 
 # read/write the first (and only?) in tree
-open my $fh, '>', "$workdir/treefile" or die $!;
+my ( $fh, $filename ) = tempfile();
 print $fh parse_tree(
 	'-file'       => $treefile,
 	'-format'     => $format,
@@ -66,11 +66,15 @@ my @args = qw( seq-gen -or -q );
 for my $key ( keys %map ) {
 	my $val = $s{$key};
 	if ( defined $val ) {
-		push @args, $map{$key};
-		push @args, ref($val) ? @{ $val } : $val;
+		if ( ref($val) && @{ $val } ) {
+			push @args, $map{$key}, @{ $val };
+		}
+		elsif ( not ref $val ) {
+			push @args, $map{$key} . $val;
+		}
 	}
 }
-push @args, "$workdir/treefile";
+push @args, $filename;
 
 # run the command
 my $phylip = `@args`;
