@@ -1,4 +1,28 @@
 {
-	"biovel:description" : "This is a simple example of JSON/semantic annotation",
-	"biovel:timestamp" : "Fri Jan 24 12:34:42 2014"
+	"bv:model" : {			
+		"bv:kappa": null,
+		"bv:alpha": null,
+		"bv:gamma": null,
+		"bv:codons": {
+			"bv:r1": 1.0,
+			"bv:r2": 1.0,
+			"bv:r3": 1.0
+		},
+		"bv:pinvar": 0.0,
+		"bv:name": "GTR",
+		"bv:rates": { 
+			"bv:rAC": 1.0, 
+			"bv:rAG": 1.0, 
+			"bv:rAT": 1.0, 
+			"bv:rCG": 1.0, 
+			"bv:rCT": 1.0, 
+			"bv:rGT": 1.0 
+		},
+		"bv:frequencies": { 
+			"bv:fA": 0.25, 
+			"bv:fC": 0.25, 
+			"bv:fG": 0.25, 
+			"bv:fT": 0.25 
+		}
+	}
 }
