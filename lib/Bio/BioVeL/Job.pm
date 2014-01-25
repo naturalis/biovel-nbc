@@ -1,6 +1,7 @@
 package Bio::BioVeL::Job;
 use strict;
 use warnings;
+use YAML;
 use English;
 use constant LAUNCHING => -2;
 use constant RUNNING   => -1;
@@ -9,11 +10,11 @@ use Exporter;
 use base 'Exporter';
 
 # export readable constants to use elsewhere
-our @EXPORT = qw(LAUNCHING RUNNING SUCCESS);
+our @EXPORT = qw(LAUNCHING RUNNING SUCCESS ERROR);
 
 # many getters/setters are done with sub AUTOLOAD
 our $AUTOLOAD;
-my @fields = qw(status id session mail stdout stderr output name arguments timestamp jobdir);
+my @fields = qw(status id session mail stdout stderr output name arguments timestamp jobdir cpus);
 my %fields = map { $_ => 1 } @fields;
 
 # this is the directory with the status files
@@ -50,9 +51,17 @@ sub new {
 	}
 }
 
+# override this if the job produces a separate output file, not
+# just stdout
+sub output { shift->stdout }
+
 # override this to use an executable that's different than the
 # name as provided in the query string
 sub exe { shift->name }
+
+# override this for MPI jobs, i.e. for examl, and perhaps for 
+# likelihood calculator
+sub cpus { 1 }
 
 # override this to use a command-line interface that is different
 # from the 'arguments' parameter as provided in the query string
@@ -63,23 +72,26 @@ sub cli {
 	# compatible argument string
 	my %cli;
 	
-	# copy the arguments hash
-	my $argshr = $self->arguments->args;
-	if ( ref($argshr) && ref($argshr) eq 'HASH' ) {
-		for my $param ( keys %{ $argshr } ) {
-			$cli{$param} = $argshr->{$param};
+	if ( my $jobargs = $self->arguments ) {
+	
+		# copy the arguments hash
+		my $argshr = $jobargs->args;
+		if ( ref($argshr) && ref($argshr) eq 'HASH' ) {
+			for my $param ( keys %{ $argshr } ) {
+				$cli{$param} = $argshr->{$param};
+			}
+		}
+	
+		# copy the infile hash
+		my $infilehr = $jobargs->files;
+		if ( ref($infilehr) && ref($infilehr) eq 'HASH' ) {
+			for my $param ( keys %{ $infilehr } ) {
+				$cli{$param} = $infilehr->{$param};			
+			}
 		}
 	}
 	
-	# copy the infile hash
-	my $infilehr = $self->arguments->files;
-	if ( ref($infilehr) && ref($infilehr) eq 'HASH' ) {
-		for my $param ( keys %{ $infilehr } ) {
-			$cli{$param} = $infilehr->{$param};			
-		}
-	}
-	
-	# transform to argument string
+	# transform to Getopt::Long argument string
 	my @args;
 	for my $key ( keys %cli ) {
 		if ( ref $cli{$key} ) {
@@ -128,43 +140,23 @@ sub run {
 	return $self->status;
 }
 
-# write self to simple XML
-sub to_xml {
-	my $self = shift;
-	my $result = "<job>\n";
-	for my $key ( keys %{ $self } ) {
-		$result .= "    <$key>" . $self->{$key} . "</$key>\n";
-	}
-	$result .= "</job>";
-	return $result;	
-}
+# write self to YAML string
+sub to_string { Dump(shift) }
 
-# write self to key=value string
-sub to_string {
-	my $self = shift;
-	my $result;
-	for my $key ( keys %{ $self } ) {
-		next if not defined $self->{$key};
-		$result .= $key . '=' . $self->{$key} . "\n";
-	}
-	return $result;
-}
-
-# write key=value string to file
+# write self to YAML file
 sub to_file {
 	my ( $self, $file ) = @_;
 	open my $fh, '>', $file or die $!;
 	print $fh $self->to_string;
-	close $fh;
 }
 
 # instantiate/update invocant from key=value string
 sub from_string {
 	my ( $package, $string ) = @_;
 	my $self = ref($package) ? $package : bless {}, $package;
-	for my $line ( split /\n/, $string ) {
-		my ( $k, $v ) = split /=/, $line;
-		$self->{$k} = $v;
+	my $yaml = Load( $string );
+	for my $k ( keys %{ $yaml } ) {
+		$self->{$k} = $yaml->{$k};
 	}
 	return $self;
 }
@@ -172,7 +164,7 @@ sub from_string {
 # instantiate/update invocant from key=value file
 sub from_file {
 	my ( $package, $file ) = @_;
-	open my $fh, '<', $file or die $!;
+	open my $fh, '<', $file or die "Problem opening $file: $!";
 	my $string = do { local $/; <$fh> };
 	return $package->from_string( $string );
 }
