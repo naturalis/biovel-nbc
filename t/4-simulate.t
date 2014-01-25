@@ -36,5 +36,4 @@ BEGIN {
 	$j1->run;
 	sleep(1) while $j1->status == RUNNING;
 	ok( $j1->status == SUCCESS );
-	warn Dumper($j1);
 }
