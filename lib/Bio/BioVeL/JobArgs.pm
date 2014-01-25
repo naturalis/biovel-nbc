@@ -25,8 +25,14 @@ sub new {
 			$files{$param} = $filename;
 		}
 	}
-	return bless { 'files' => \%files, 'args' => $args_hash_ref }, $class;
+	return bless { 
+		'files'   => \%files, 
+		'args'    => $args_hash_ref,
+		'encoded' => $argstring,
+	}, $class;
 }
+
+sub encoded { shift->{'encoded'} }
 
 sub files { shift->{'files'} }
 
