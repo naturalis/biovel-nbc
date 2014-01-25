@@ -1,4 +1,4 @@
-package Bio::BioVeL::InsertJobsHandler;
+package Bio::BioVeL::Handlers::InsertJobs;
 use strict;
 use warnings;
 use XML::Quick;
