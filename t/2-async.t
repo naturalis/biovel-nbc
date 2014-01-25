@@ -9,9 +9,14 @@ BEGIN {
 	use warnings;
 	use Bio::BioVeL::Job;
 }
-
+BEGIN {
+	package Bio::BioVeL::Job::top;
+	use base 'Bio::BioVeL::Job';
+	sub name { 'top' }
+}
 {
-
+	package main;
+	
 	# initialize a new job
 	my $j1 = Bio::BioVeL::Job->new(
 		'mail'      => 'rutgeraldo@gmail.com',

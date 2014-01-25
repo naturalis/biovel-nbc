@@ -9,9 +9,15 @@ BEGIN {
 	use warnings;
 	use Bio::BioVeL::Job;
 }
+BEGIN {
+	package Bio::BioVeL::Job::ls;
+	use base 'Bio::BioVeL::Job';
+	sub name { 'ls' }
+}
 
 {
-
+	package main;
+	
 	# initialize a new job
 	my $j1 = Bio::BioVeL::Job->new(
 		'mail'      => 'rutgeraldo@gmail.com',
@@ -32,4 +38,5 @@ BEGIN {
 	sleep(1) while $j1->status == RUNNING;
 	ok( $j1->status == SUCCESS );
 	ok( $j2->status == SUCCESS );
+
 }
