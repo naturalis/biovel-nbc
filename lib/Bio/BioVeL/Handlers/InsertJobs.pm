@@ -1,6 +1,7 @@
-package Bio::BioVeL::Handler;
+package Bio::BioVeL::InsertJobsHandler;
 use strict;
 use warnings;
+use XML::Quick;
 use Bio::BioVeL::Job;
 use Bio::BioVeL::JobArgs;
 use Apache2::Request;
@@ -14,7 +15,7 @@ sub handler {
 	
 	# create or lookup a job
 	my %args = map { $_ => $req->param($_) } $req->param;
-	my $job = Bio::BioVeL::Job->new(%args); # just need NAME
+	my $job = Bio::BioVeL::Job->new(%args); # just need NAME, really
 		
 	# job was newly instantiated
 	if ( $job->status == LAUNCHING ) {
@@ -28,7 +29,15 @@ sub handler {
 
 	# return result
 	$r->content_type('application/xml');
-	print $job->to_xml;
+	print xml({
+		'Job' => {
+			'Name'   => $job->name,
+			'Flag'   => undef,
+			'JobsID' => {
+				'JobId' => $job->id,
+			}
+		}	
+	});
 
 	return Apache2::Const::OK;
 }
