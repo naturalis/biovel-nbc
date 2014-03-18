@@ -82,7 +82,7 @@ sub response_body {
 		}
 	}
 	
-	# instante charset reader
+	# instantiate charset reader
 	if ( my $f = $self->charsetformat ) {
 		$log->info("instantiating a $f charset reader");
 		my $r = Bio::BioVeL::Service::NeXMLMerger::CharsetReader->new($f);

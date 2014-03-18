@@ -8,9 +8,12 @@ use Apache2::RequestRec ();
 use Apache2::RequestIO ();
 use Apache2::Const -compile => qw(OK);
 use LWP::UserAgent;
-use Bio::Phylo::Util::Logger;
+use Bio::Phylo::Util::Logger ':levels';
 
-my $log = Bio::Phylo::Util::Logger->new;
+my $log = Bio::Phylo::Util::Logger->new( 
+	'-level' => DEBUG, 
+	'-class' => 'Bio::BioVeL::Service::NeXMLMerger',
+);
 our $AUTOLOAD;
 
 sub new {
@@ -66,17 +69,7 @@ with the specified data.
 =cut
 
 sub get_handle {
-	my ( $self, $param ) = @_;
-	
-	# find out the location
-	my $location;
-	if ( @ARGV ) {
-		GetOptions( "${param}=s" => \$location );
-	}
-	else {
-		my $cgi = CGI->new;
-		$location = $cgi->param($param);
-	}
+	my ( $self, $location ) = @_;
 	
 	# location is a URL
 	if ( $location =~ /^http:/ ) {
