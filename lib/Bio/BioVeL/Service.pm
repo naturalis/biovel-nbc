@@ -72,7 +72,7 @@ sub get_handle {
 	my ( $self, $location ) = @_;
 	
 	# location is a URL
-	if ( $location =~ /^http:/ ) {
+	if ( $location =~ m#^(?:http|ftp|https)://# ) {
 		my $ua = LWP::UserAgent->new;
 		my $response = $ua->get($location);
 		if ( $response->is_success ) {
