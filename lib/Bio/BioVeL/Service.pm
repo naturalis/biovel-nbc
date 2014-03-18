@@ -5,6 +5,8 @@ use Getopt::Long;
 use CGI;
 use LWP::UserAgent;
 
+sub new { return bless {}, shift }
+
 =over
 
 =item get_param
