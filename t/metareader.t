@@ -13,6 +13,6 @@ my $reader = Bio::BioVeL::Service::NeXMLMerger::MetaReader->new( 'tsv' );
 
 isa_ok( $reader, 'Bio::BioVeL::Service::NeXMLMerger::MetaReader::tsv' );
 
-open my $fh, '<', "$Bin/../Examples/TaxaMetadataExample.tsv" or die $!; 
+open my $fh, '<', "$Bin/../Examples/TaxaMetadataExample" or die $!; 
 my $f = $reader->read_meta( $fh );
 isa_ok( $f, 'Text::CSV' );
