@@ -6,6 +6,6 @@ use base 'Bio::BioVeL::Job';
 
 sub exe { 'biovel_nexmlmerge.pl' }
 
-sub fileparams { qw[tree data meta] }
+sub fileparams { qw[trees table data sets meta] }
 
 1;
