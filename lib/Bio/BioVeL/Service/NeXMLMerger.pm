@@ -9,26 +9,23 @@ use Bio::BioVeL::Service::NeXMLMerger::MetaReader;
 use Bio::BioVeL::Service::NeXMLMerger::CharsetReader;
 use base 'Bio::BioVeL::Service';
 
+my $ns  = 'http://biovel.eu/terms#';
 my $fac = Bio::Phylo::Factory->new;
 
 sub new {
-	my $self = shift->SUPER::new(@_);
-	
-	# instantiate data reader
-	my $dataformat = lc $self->get_param('dataformat');
-	$self->data_reader(Bio::BioVeL::Service::NeXMLMerger::DataReader->new($dataformat));
-	
-	# instantiate tree reader
-	my $treeformat = lc $self->get_param('treeformat');
-	$self->tree_reader(Bio::BioVeL::Service::NeXMLMerger::TreeReader->new($treeformat));
-	
-	# instantiate meta reader
-	my $metaformat = lc $self->get_param('metaformat');
-	$self->meta_reader( Bio::BioVeL::Service::NeXMLMerger::MetaReader->new($metaformat));
-	
-	# instante charset reader
-	my $charsetformat = lc $self->get_param('charsetformat');
-	$self->charset_reader(Bio::BioVeL::Service::NeXMLMerger::CharsetReader->new($charsetformat));
+	my $self = shift->SUPER::new(
+		'parameters' => [
+			'dataformat',
+			'datatype',
+			'data',
+			'treeformat'
+			'trees',
+			'metaformat',
+			'meta',
+			'charsetformat',
+			'charsets',			
+		],
+	);	
 	return $self;
 }
 
@@ -38,34 +35,59 @@ sub response_body {
 	my $self = shift;
 	
 	my $project = $fac->create_project;
-	my @matrices = $self->data_reader->read_data( $self->get_handle('data') );
-	my @trees = $self->tree_reader->read_trees( $self->get_handle('tree') );
-	my @meta = $self->meta_reader->read_meta( $self->get_handle('meta') );
-	my @charsets = $self->charset_reader->read_charsets( $self->get_handle('sets') );
-}
-
-sub data_reader {
-	my $self = shift;
-	$self->{'data_reader'} = shift if @_;
-	return $self->{'data_reader'};
-}
-
-sub tree_reader {
-	my $self = shift;
-	$self->{'tree_reader'} = shift if @_;
-	return $self->{'tree_reader'};
-}
-
-sub meta_reader {
-	my $self = shift;
-	$self->{'meta_reader'} = shift if @_;
-	return $self->{'meta_reader'};
-}
-
-sub charset_reader {
-	my $self = shift;
-	$self->{'charset_reader'} = shift if @_;
-	return $self->{'charset_reader'};
+	my $taxa = $fac->create_taxa;	
+	my ( @taxa, @matrices, $forest );
+	
+	# parse character data reader, if any
+	if ( my $f = $self->dataformat ) {
+		$log->info("instantiating a $f data reader");
+		my $r = Bio::BioVeL::Service::NeXMLMerger::DataReader->new($f);
+		@matrices = $r->read_data( $self->get_handle( $self->data ) );
+		push @taxa, $_->make_taxa for @matrices;
+		$project->insert($_) for @matrices;
+	}
+	
+	# instantiate tree reader
+	if ( my $f = $self->treeformat ) {
+		$log->info("instantiating a $f tree reader");
+		my $r = Bio::BioVeL::Service::NeXMLMerger::TreeReader->new($f);
+		my @trees = $r->read_trees( $self->get_handle( $self->trees ) );
+		$forest = $fac->create_forest;
+		$forest->insert($_) for @trees;
+		push @taxa, $forest->make_taxa;
+		$project->insert($forest);
+	}	
+	my $merged = $taxa->merge_by_name(@taxa);
+	$_->set_taxa($merged) for @matrices;
+	$forest->set_taxa($merged) if $forest;
+	$project->insert($taxa);
+	
+	# instantiate meta reader
+	if ( my $f = $self->metaformat ) {
+		$log->info("instantiating a $f metadata reader");
+		my $r = Bio::BioVeL::Service::NeXMLMerger::MetaReader->new($f);
+		my @meta = $r->read_meta( $self->get_handle( $self->meta ) );
+		$taxa->set_namespaces( 'biovel' => $ns );
+		for my $m ( @meta ) {
+			my $taxon = delete $m->{'taxon'};
+			if ( my $obj = $taxa->get_by_name($taxon) ) {
+				for my $key ( keys %{ $m } ) {
+					$obj->add_meta(
+						$fac->create_meta( '-triple' => { "biovel:$key" => $m->{$key} } )
+					);
+				}
+			}
+		}
+	}
+	
+	# instante charset reader
+	if ( my $f = $self->charsetformat ) {
+		$log->info("instantiating a $f charset reader");
+		my $r = Bio::BioVeL::Service::NeXMLMerger::CharsetReader->new($f);
+		my @sets = $r->read_charsets( $self->get_handle( $self->charsets ) );
+	}
+	
+	return $project->to_xml;
 }
 
 1;
