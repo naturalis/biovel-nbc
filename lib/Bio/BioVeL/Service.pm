@@ -3,6 +3,10 @@ use strict;
 use warnings;
 use Getopt::Long;
 use CGI;
+use Apache2::Request;
+use Apache2::RequestRec ();
+use Apache2::RequestIO ();
+use Apache2::Const -compile => qw(OK);
 use LWP::UserAgent;
 use Bio::Phylo::Util::Logger;
 
@@ -24,6 +28,11 @@ sub new {
 				};
 			}
 			GetOptions(%getopt);			
+		}
+		elsif ( my $req = $args{'request'} ) {
+			for my $p ( @{ $params } ) {
+				$self->{'_params'}->{$p} = $req->param($p);
+			}		
 		}
 		else {
 			my $cgi = CGI->new;
@@ -83,6 +92,18 @@ sub get_handle {
 		open my $fh, '<', $location or die $!;
 		return $fh;
 	}
+}
+
+=item handler
+
+Handles request within the context of mod_perl
+
+=cut
+
+sub handler {
+	my $self = __PACKAGE__->new( 'request' => Apache2::Request->new(shift) );
+	print $self->response_header, $self->response_body;
+	return Apache2::Const::OK;
 }
 
 =item response_header

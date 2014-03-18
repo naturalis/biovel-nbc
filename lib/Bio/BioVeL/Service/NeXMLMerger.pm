@@ -18,13 +18,14 @@ sub new {
 			'dataformat',
 			'datatype',
 			'data',
-			'treeformat'
+			'treeformat',
 			'trees',
 			'metaformat',
 			'meta',
 			'charsetformat',
 			'charsets',			
 		],
+		@_,
 	);	
 	return $self;
 }
@@ -33,6 +34,7 @@ sub response_header { "Content-type: application/xml\n\n" }
 
 sub response_body {
 	my $self = shift;
+	my $log = $self->logger;
 	
 	my $project = $fac->create_project;
 	my $taxa = $fac->create_taxa;	
