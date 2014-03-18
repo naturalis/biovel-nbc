@@ -1,25 +1,24 @@
 package Bio::BioVeL::Service::NeXMLMerger::MetaReader::tsv;
 use base Bio::BioVeL::Service::NeXMLMerger::MetaReader;
 
-use Text::CSV;
-
 sub read_meta {
     my ($self, $fh) = @_;
+    my @result = ();
     my $separator = '\t';
-    my @rows;
     
-    my $tsv = Text::CSV->new ( { sep_char => '\t',
-				 binary => 1} ); 
-    
-    while (my $line = $tsv->getline( $fh )) {
-	chomp $line;
-	if ($tsv->parse($line)) {
-	    my @fields = $tsv->fields();    
-	} else {
-	    warn "Line could not be parsed: $line\n";
-	}
+    # get header
+    my @header = split( $separator, <$fh> );
+    print "Length header : ".scalar(@header)."\n";
+    # get rows
+    while (<$fh>){
+	chomp;
+	my @info = split( $separator );
+	my %h;
+	@h{@header} = @info;
+	push @result, \%h;
+	print "Length result : ".scalar(@result)."\n";
     }
-    return $tsv;
+    return @result;
 }
 
 1;
