@@ -1,22 +1,25 @@
-package Bio::BioVeL::Service::NeXMLMerger::tsv;
+package Bio::BioVeL::Service::NeXMLMerger::MetaReader::tsv;
+use base Bio::BioVeL::Service::NeXMLMerger::MetaReader;
 
+use Text::CSV;
 
-sub read_tsv ($file, $separator) {
+sub read_meta {
+    my ($self, $fh) = @_;
+    my $separator = '\t';
     my @rows;
-    my $csv = Text::CSV->new ( { sep_char => $separator } ); 
     
-    my $file = 'testtab.csv';
+    my $tsv = Text::CSV->new ( { sep_char => '\t',
+				 binary => 1} ); 
     
-    open(my $data, '<', $file) or die "Could not open '$file' $!\n";
-    while (my $line = <$data>) {
+    while (my $line = $tsv->getline( $fh )) {
 	chomp $line;
-	if ($csv->parse($line)) {
-	    my @fields = $csv->fields();    
+	if ($tsv->parse($line)) {
+	    my @fields = $tsv->fields();    
 	} else {
 	    warn "Line could not be parsed: $line\n";
 	}
     }
-    return $csv;
+    return $tsv;
 }
 
 1;
