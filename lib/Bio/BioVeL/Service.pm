@@ -101,7 +101,10 @@ Handles request within the context of mod_perl
 =cut
 
 sub handler {
-	my $self = __PACKAGE__->new( 'request' => Apache2::Request->new(shift) );
+	my $request = Apache2::Request->new(shift);
+	my $subclass = __PACKAGE__ . '::' . $request->param('service');
+	eval "require $subclass";
+	my $self = $subclass->new( 'request' => $request );
 	print $self->response_header, $self->response_body;
 	return Apache2::Const::OK;
 }
