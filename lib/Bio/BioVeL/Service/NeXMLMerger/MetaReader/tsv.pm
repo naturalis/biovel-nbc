@@ -1,6 +1,8 @@
 package Bio::BioVeL::Service::NeXMLMerger::MetaReader::tsv;
 use base Bio::BioVeL::Service::NeXMLMerger::MetaReader;
 
+
+
 sub read_meta {
     my ($self, $fh) = @_;
     my @result = ();
@@ -8,7 +10,6 @@ sub read_meta {
     
     # get header
     my @header = split( $separator, <$fh> );
-    print "Length header : ".scalar(@header)."\n";
     # get rows
     while (<$fh>){
 	chomp;
@@ -16,7 +17,6 @@ sub read_meta {
 	my %h;
 	@h{@header} = @info;
 	push @result, \%h;
-	print "Length result : ".scalar(@result)."\n";
     }
     return @result;
 }
