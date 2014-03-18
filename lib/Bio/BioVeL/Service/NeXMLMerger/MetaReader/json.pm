@@ -12,18 +12,16 @@ taxa.
  
 sub read_meta {
     my ($self, $fh) = @_;
-    my @result = ();
-    
-    my $json;
-    { 
-	local $/;
-	$json=<$fh>;
+    my $log = $self->logger;
+    my @result;
+    my $json =  do { local $/; <$fh> };
+    if ( my $data = decode_json($json) ) { 
+    	$log->info("successfully parsed JSON");
+		@result = @{ $data };
     }
-    my $data = decode_json($json);
-    if ( $data ) {
-	@result = @{ $data };
+    else {
+    	$log->warn("problem parsing JSON: $json");
     }
-    
     return @result;
 }
 
