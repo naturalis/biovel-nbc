@@ -4,35 +4,50 @@ use warnings;
 use Getopt::Long;
 use CGI;
 use LWP::UserAgent;
+use Bio::Phylo::Util::Logger;
 
-sub new { return bless {}, shift }
+my $log = Bio::Phylo::Util::Logger->new;
+our $AUTOLOAD;
+
+sub new {
+	my $class = shift;
+	my %args  = @_;
+	my $self  = { '_params' => {} };
+	my $params = $args{'parameters'};
+	if ( $params ) {
+		if ( @ARGV ) {
+			my %getopt;
+			for my $p ( @{ $params } ) {
+				$getopt{"${p}=s"} = sub {
+					my $value = pop;
+					$self->{'_params'}->{$p} = $value;
+				};
+			}
+			GetOptions(%getopt);			
+		}
+		else {
+			my $cgi = CGI->new;
+			for my $p ( @{ $params } ) {
+				$self->{'_params'}->{$p} = $cgi->param($p);
+			}
+		}
+	}
+	return bless $self, $class;
+}
+
+sub AUTOLOAD {
+	my $self = shift;
+	my $method = $AUTOLOAD;
+	$method =~ s/.+://;
+	if ( $method !~ /^[A-Z]+$/ ) {
+		if ( @_ ) {
+			$self->{'_params'}->{$method} = shift;
+		}
+		return $self->{'_params'}->{$method};
+	}	
+}
 
 =over
-
-=item get_param
-
-Given a string parameter name, such as 'treeformat', returns the parameter value, such
-as 'newick'. How the service finds out where to get the values is nobody's business, but
-it will most likely come from CGI.
-
-=cut
-
-sub get_param {
-	my ( $self, $param ) = @_;
-	
-	# running on the shell
-	if ( @ARGV ) {
-		my $value;
-		GetOptions( "${param}=s" => \$value );
-		return $value;
-	}
-	
-	# running on a server
-	else {
-		my $cgi = CGI->new;
-		return $cgi->param($param);
-	}
-}
 
 =item get_handle
 
@@ -89,6 +104,14 @@ Returns the response body as a big string.
 sub response_body {
 	die "Implement me!";
 }
+
+=item logger
+
+Returns a logger object.
+
+=cut
+
+sub logger { $log }
 
 =back
 
