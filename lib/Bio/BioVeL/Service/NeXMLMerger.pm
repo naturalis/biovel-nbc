@@ -44,16 +44,28 @@ sub response_body {
 	if ( my $f = $self->dataformat ) {
 		$log->info("instantiating a $f data reader");
 		my $r = Bio::BioVeL::Service::NeXMLMerger::DataReader->new($f);
-		@matrices = $r->read_data( $self->get_handle( $self->data ) );
+		
+		# read the data
+		my $location = $self->data;
+		$log->info("going to read data from $location");
+		@matrices = $r->read_data( $self->get_handle($location) );
+		
+		# create taxa blocks, add to project
 		push @taxa, $_->make_taxa for @matrices;
 		$project->insert($_) for @matrices;
 	}
 	
-	# instantiate tree reader
+	# parse tree data, if any
 	if ( my $f = $self->treeformat ) {
 		$log->info("instantiating a $f tree reader");
 		my $r = Bio::BioVeL::Service::NeXMLMerger::TreeReader->new($f);
-		my @trees = $r->read_trees( $self->get_handle( $self->trees ) );
+		
+		# read the trees
+		my $location = $self->trees;
+		$log->info("going to read trees from $location");
+		my @trees = $r->read_trees( $self->get_handle($location) );
+		
+		# merge into forest, create corresponding taxa block, add to project
 		$forest = $fac->create_forest;
 		$forest->insert($_) for @trees;
 		push @taxa, $forest->make_taxa;
@@ -64,11 +76,17 @@ sub response_body {
 	$forest->set_taxa($merged) if $forest;
 	$project->insert($taxa);
 	
-	# instantiate meta reader
+	# parse metadata, if any
 	if ( my $f = $self->metaformat ) {
 		$log->info("instantiating a $f metadata reader");
 		my $r = Bio::BioVeL::Service::NeXMLMerger::MetaReader->new($f);
-		my @meta = $r->read_meta( $self->get_handle( $self->meta ) );
+		
+		# read the metadata
+		my $location = $self->meta;
+		$log->info("going to read metadata from $location");
+		my @meta = $r->read_meta( $self->get_handle($location) );
+		
+		# attach metadata to taxa
 		$taxa->set_namespaces( 'biovel' => $ns );
 		for my $m ( @meta ) {
 			my $taxon = delete $m->{'taxon'};
@@ -82,11 +100,15 @@ sub response_body {
 		}
 	}
 	
-	# instantiate charset reader
+	# parse charsets, if any
 	if ( my $f = $self->charsetformat ) {
 		$log->info("instantiating a $f charset reader");
 		my $r = Bio::BioVeL::Service::NeXMLMerger::CharsetReader->new($f);
-		my @sets = $r->read_charsets( $self->get_handle( $self->charsets ) );
+		
+		# read the character sets
+		my $location = $self->charsets;
+		$log->info("going to read charsets from $location");		
+		my @sets = $r->read_charsets( $self->get_handle($location) );
 	}
 	
 	return $project->to_xml;
