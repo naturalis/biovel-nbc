@@ -112,7 +112,7 @@ sub response_body {
 		my @sets = $r->read_charsets( $self->get_handle($location) );
 	}
 	
-	return $project->to_xml;
+	return $project->to_xml( '-compact' => 1 );
 }
 
 1;
