@@ -6,7 +6,7 @@ use base 'Bio::BioVeL::Service::NeXMLMerger::Reader';
 
 =over
 
-=item read_charset
+=item read_charsets
 
 This abstract method, which is implemented by the child classes, is passed a readable
 handle from which it reads a list of character set definitions.
@@ -15,7 +15,7 @@ handle from which it reads a list of character set definitions.
 
 =cut
 
-sub read_charset {
+sub read_charsets {
 	my ( $self, $handle ) = @_;
 	die "Implement me!";
 }
