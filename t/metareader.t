@@ -14,5 +14,8 @@ my $reader = Bio::BioVeL::Service::NeXMLMerger::MetaReader->new( 'tsv' );
 isa_ok( $reader, 'Bio::BioVeL::Service::NeXMLMerger::MetaReader::tsv' );
 
 open my $fh, '<', "$Bin/../Examples/TaxaMetadataExample" or die $!; 
-my $f = $reader->read_meta( $fh );
-isa_ok( $f, 'Text::CSV' );
+my @rows = $reader->read_meta( $fh );
+
+cmp_ok ( scalar(@rows), '==',  6, "number of rows in table" );
+
+cmp_ok ( $rows[2]{'TaxonID'}, "eq", "Tax3", "right row" );
