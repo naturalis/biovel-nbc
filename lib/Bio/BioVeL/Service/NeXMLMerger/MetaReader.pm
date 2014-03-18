@@ -16,8 +16,6 @@ handle from which it reads metadata.
 =cut
 
 sub read_meta {
-	my ( $self, $handle ) = @_;
-	die "Implement me!";
 }
 
 1;
