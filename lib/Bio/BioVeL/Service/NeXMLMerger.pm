@@ -90,6 +90,7 @@ sub response_body {
 		$taxa->set_namespaces( 'biovel' => $ns );
 		for my $m ( @meta ) {
 			my $taxon = delete $m->{'TaxonID'};
+			$log->info("going to annotate taxon $taxon");
 			if ( my $obj = $taxa->get_by_name($taxon) ) {
 				for my $key ( keys %{ $m } ) {
 					$obj->add_meta(
