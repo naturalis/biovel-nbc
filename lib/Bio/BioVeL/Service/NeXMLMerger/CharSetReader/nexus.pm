@@ -1,3 +1,5 @@
+package Bio::BioVeL::Service::NeXMLMerger::CharSeyReader::nexus;
+
 use strict;
 use warnings;
 
@@ -78,17 +80,13 @@ sub readNexus {
 	while (my $line  = <$in>) { # assigns each line in turn to $line
 		$lineNumber ++;	
 		if ($line =~ /^charset/){
-			print $line, "\n";
 			eval {
 				my %data = readCharset($line, \%register);
-				#print Dumper \%data;
 				my $name = $data{name};
-				#print $name, "\n";
 				$register{$name} = \%data;
 			};
 			if ($@) {
 				die "Error reading line number: " . $lineNumber . " " . $@;
-				#print "caught error: $@"
 			}
 		}
 	}
@@ -97,5 +95,5 @@ sub readNexus {
 	return %register
 }
 
-#my %result = readNexus("C:/Biovel/hackathon/Examples/Nexus_MultiplePartitions.nex"); 
-#print Dumper \%result;
+1;
+
