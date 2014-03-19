@@ -1,6 +1,8 @@
 package Bio::BioVeL::AsynchronousService;
 use strict;
 use warnings;
+use File::Path 'make_path';
+use Scalar::Util 'refaddr';
 use Bio::BioVeL::Service;
 use Digest::MD5 'md5_hex';
 use Apache2::Const '-compile' => 'OK';
@@ -11,9 +13,6 @@ use base 'Bio::BioVeL::Service';
 use constant RUNNING => 'running';
 use constant DONE    => 'done';
 use constant ERROR   => 'error';
-
-my $idcounter = 1;
-my %workdirs;
 
 =head1 DESCRIPTION
 
@@ -55,26 +54,27 @@ sub new {
 		if ( $@ ) {
 			my $msg = "$@";		
 			$log->error("problem updating $self: $msg");
-			$self->lasterr($msg);
+			$self->lasterr( $msg );
 			$self->status( ERROR );
 		}
 	}
 	else {
-	
+		
 		# create new instance
 		$log->info("launching new $class job");
-		$self = $class->SUPER::new( 
-			'jobid'     => $idcounter++,
-			'timestamp' => time(),
-			%args 
-		);
+		$self = $class->SUPER::new( 'timestamp' => time(), %args );
+		
+		# generate UID: service module name, object memory address, epoch time
+		my $uid = join '::', ref($self), refaddr($self), timestamp($self);
+		$uid =~ s/::/./g;
+		$self->jobid($uid);
 		
 		# launch the service
 		eval { $self->launch_wrapper };
 		if ( $@ ) {
 			my $msg = "$@";
 			$log->error("problem launching $self: $msg");
-			$self->lasterr($msg);
+			$self->lasterr( $msg );
 			$self->status( ERROR );
 		}
 		else {
@@ -140,7 +140,7 @@ sub update {
 	PROC: for my $proc ( @{ $pt->table } ) {
 		if ( $proc->pid == $pid ) {
 			if ( abs( $timestamp - $proc->start ) < 2 ) {
-				$log->warn("still running: ".$proc->cmndline);
+				$log->info("still running: ".$proc->cmndline);
 				$status = RUNNING;
 				last PROC;
 			}
@@ -222,7 +222,7 @@ sub handler {
 	eval "require $subclass";
 	my $self = $subclass->new( 
 		'request' => $request, 
-		'jobid'   => $request->param('jobid'),
+		'jobid'   => ( $request->param('jobid') || 0 ),
 	);
 	if ( $self->status eq DONE ) {
 		print $self->response_body;
@@ -243,17 +243,19 @@ TEMPLATE
 
 =item workdir
 
-This is a static method, so that Bio::BioVeL::AsynchronousService::Foo->workdir('bar')
-can be set from an external script, e.g. the mod_perl path loader, so that all Foo 
-jobs are serialized inside bar.
+This returns a directory inside $ENV{BIOVEL_HOME}, which consequently needs to be defined,
+for example by specifying it with PerlSetEnv inside httpd.conf. See:
+L<http://modperlbook.org/html/4-2-10-PerlSetEnv-and-PerlPassEnv.html>
 
 =cut
 
 sub workdir {
 	my $class = shift;
 	my $name = ref($class) || $class;
-	$workdirs{$name} = shift if @_;
-	return $workdirs{$name};
+	$name =~ s/.+//;
+	my $dir = $ENV{'BIOVEL_HOME'} . '/' . $name;
+	make_path($dir) if not -d $dir;
+	return $dir;
 }
 
 =item DESTROY
