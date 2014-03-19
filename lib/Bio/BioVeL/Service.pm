@@ -11,9 +11,12 @@ use Apache2::Const -compile => qw(OK);
 use LWP::UserAgent;
 use Bio::Phylo::Util::Logger ':levels';
 
-my $log  = Bio::Phylo::Util::Logger->new( 
+my $log = Bio::Phylo::Util::Logger->new( 
 	'-level' => DEBUG, 
-	'-class' => 'Bio::BioVeL::Service::NeXMLMerger',
+	'-class' => [ 
+		'Bio::BioVeL::Service::NeXMLMerger',
+		'Bio::BioVeL::AsynchronousService',
+	]
 );
 our $AUTOLOAD;
 

@@ -233,9 +233,10 @@ sub handler {
 	<jobid>%i</jobid>
 	<status>%s</status>
 	<error>%s</error>
+	<timestamp>%i</timestamp>
 </response>
 TEMPLATE
-		printf $template, $self->jobid, $self->status, $self->lasterr;
+		printf $template, $self->jobid, $self->status, $self->lasterr, $self->timestamp;
 	}
 	return Apache2::Const::OK;
 }
