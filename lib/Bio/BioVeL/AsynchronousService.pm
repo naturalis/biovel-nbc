@@ -3,11 +3,10 @@ use strict;
 use warnings;
 use File::Path 'make_path';
 use Scalar::Util 'refaddr';
+use Bio::BioVeL::Service;
 use Digest::MD5 'md5_hex';
 use Apache2::Const '-compile' => 'OK';
-use ModPerl::Const '-compile' => 'EXIT';
 use Proc::ProcessTable;
-use Bio::BioVeL::Service;
 use base 'Bio::BioVeL::Service';
 
 # status constants
@@ -72,7 +71,7 @@ sub new {
 		
 		# launch the service
 		eval { $self->launch_wrapper };
-		if ( $@ != ModPerl::EXIT ) {
+		if ( $@ ) {
 			my $msg = "$@";
 			$log->error("problem launching $self: $msg");
 			$self->lasterr( $msg );
@@ -132,18 +131,19 @@ to DONE or ERROR.
 =cut
 
 sub update { 
-	my $self      = shift;
-	my $log       = $self->logger;
-	my $pid       = $self->pid;
-	my $timestamp = $self->timestamp;
-	my $pt        = Proc::ProcessTable->new;
-	my $status    = DONE;
-	PROC: for my $proc ( @{ $pt->table } ) {
-		if ( $proc->pid == $pid ) {
-			if ( abs( $timestamp - $proc->start ) < 2 ) {
-				$log->info("still running: ".$proc->cmndline);
-				$status = RUNNING;
-				last PROC;
+	my $self   = shift;
+	my $log    = $self->logger;
+	my $status = $self->status;
+	if ( my $pid = $self->pid ) {
+		my $timestamp = $self->timestamp;
+		my $pt = Proc::ProcessTable->new;
+		PROC: for my $proc ( @{ $pt->table } ) {
+			if ( $proc->pid == $pid ) {
+				if ( abs( $timestamp - $proc->start ) < 2 ) {
+					$log->info("still running: ".$proc->cmndline);
+					$status = RUNNING;
+					last PROC;
+				}
 			}
 		}
 	}
@@ -195,7 +195,7 @@ The last error string that occurred.
 sub lasterr {
 	my $self = shift;
 	$self->{'lasterr'} = shift if @_;
-	return $self->{'lasterr'};
+	return $self->{'lasterr'} // '';
 }
 
 =item status
@@ -237,6 +237,7 @@ sub handler {
 	<timestamp>%i</timestamp>
 </response>
 TEMPLATE
+		no warnings 'uninitialized';
 		printf $template, $self->jobid, $self->status, $self->lasterr, $self->timestamp;
 	}
 	return Apache2::Const::OK;
