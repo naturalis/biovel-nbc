@@ -4,6 +4,7 @@ use warnings;
 use Bio::BioVeL::Service;
 use Digest::MD5 'md5_hex';
 use Apache2::Const '-compile' => 'OK';
+use Proc::ProcessTable;
 use base 'Bio::BioVeL::Service';
 
 # status constants
@@ -69,7 +70,7 @@ sub new {
 		);
 		
 		# launch the service
-		eval { $self->launch };
+		eval { $self->launch_wrapper };
 		if ( $@ ) {
 			my $msg = "$@";
 			$log->error("problem launching $self: $msg");
@@ -77,7 +78,7 @@ sub new {
 			$self->status( ERROR );
 		}
 		else {
-			$log->error("launched $self successfully");
+			$log->info("launched $self successfully");
 			$self->status( RUNNING );
 		}		
 	}
@@ -96,6 +97,31 @@ sub launch {
 	die "The launch() method needs to be implemented by the concrete child class\n" 
 }
 
+=item launch_wrapper
+
+Wraps the service launch() inside a fork() to keep track of the PID.
+
+=cut
+
+sub launch_wrapper {
+	my $self = shift;
+	my $log  = $self->logger;
+	my $pid  = fork();
+	if ( $pid == 0 ) {
+		
+		# we're in the child process
+		$log->info("launching the child process");
+		$self->launch;
+		exit(0);
+	}
+	else {
+	
+		# we're in the parent
+		$log->info("launched service job with PID $pid");
+		$self->pid($pid);
+	}
+}
+
 =item update 
 
 The concrete child class needs to implement the update() method, which will check on
@@ -105,7 +131,22 @@ to DONE or ERROR.
 =cut
 
 sub update { 
-	die "The update() method needs to be implemented by the concrete child class\n" 
+	my $self      = shift;
+	my $log       = $self->logger;
+	my $pid       = $self->pid;
+	my $timestamp = $self->timestamp;
+	my $pt        = Proc::ProcessTable->new;
+	my $status    = DONE;
+	PROC: for my $proc ( @{ $pt->table } ) {
+		if ( $proc->pid == $pid ) {
+			if ( abs( $timestamp - $proc->start ) < 2 ) {
+				$log->warn("still running: ".$proc->cmndline);
+				$status = RUNNING;
+				last PROC;
+			}
+		}
+	}
+	$self->status($status);
 }
 
 =item jobid
@@ -118,6 +159,18 @@ sub jobid {
 	my $self = shift;
 	$self->{'jobid'} = shift if @_;
 	return $self->{'jobid'};
+}
+
+=item pid
+
+The process ID of the service job.
+
+=cut
+
+sub pid {
+	my $self = shift;
+	$self->{'pid'} = shift if @_;
+	return $self->{'pid'};
 }
 
 =item timestamp
@@ -175,8 +228,14 @@ sub handler {
 		print $self->response_body;
 	}
 	else {
-		my $template = '<response><status>%s</status><error>%s</error></response>';
-		printf $template, $self->status, $self->lasterr;
+		my $template = <<'TEMPLATE';
+<response>
+	<jobid>%i</jobid>
+	<status>%s</status>
+	<error>%s</error>
+</response>
+TEMPLATE
+		printf $template, $self->jobid, $self->status, $self->lasterr;
 	}
 	return Apache2::Const::OK;
 }
