@@ -9,9 +9,8 @@ BEGIN {
 }
 
 @ARGV = ( '-foo' => 'bar' );
-my $service_cli = Bio::BioVeL::Service->new( 'parameters' => [ 'foo' ] );
-ok( $service_cli->foo eq 'bar' );
+my $srv = Bio::BioVeL::Service->new( 'parameters' => [ 'foo' ] );
+ok( $srv->foo eq 'bar' );
 
-@ARGV = ( '-baz' => 'bat' );
-my $service_cgi = Bio::BioVeL::Service->new( 'parameters' => [ 'baz' ] );
-ok( $service_cgi->baz eq 'bat' );
+my $clone = Bio::BioVeL::Service->from_string($srv->to_string);
+ok( $clone->foo eq $srv->foo );
