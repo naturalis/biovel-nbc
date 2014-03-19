@@ -12,7 +12,7 @@ my $reader = Bio::BioVeL::Service::NeXMLMerger::MetaReader->new( $metaformat );
 
 isa_ok( $reader, 'Bio::BioVeL::Service::NeXMLMerger::MetaReader::tsv' );
 
-open my $fh, '<', "$Bin/../Examples/TaxaMetadataExample" or die $!; 
+open my $fh, '<', "$Bin/../Examples/TaxaMetadataExample.tsv" or die $!; 
 my @rows = $reader->read_meta( $fh );
 
 cmp_ok ( scalar(@rows), '==',  6, "number of rows in table" );
