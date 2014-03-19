@@ -133,7 +133,7 @@ to DONE or ERROR.
 sub update { 
 	my $self   = shift;
 	my $log    = $self->logger;
-	my $status = $self->status;
+	my $status = DONE;
 	if ( my $pid = $self->pid ) {
 		my $timestamp = $self->timestamp;
 		my $pt = Proc::ProcessTable->new;
