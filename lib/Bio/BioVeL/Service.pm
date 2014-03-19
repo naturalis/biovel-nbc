@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Getopt::Long;
 use CGI;
-use YAML;
+use YAML qw(Dump Load DumpFile LoadFile);
 use Apache2::Request;
 use Apache2::RequestRec ();
 use Apache2::RequestIO ();
@@ -21,7 +21,8 @@ sub new {
 	my $class = shift;
 	my %args  = @_;
 	my $self  = { '_params' => {} };
-	my $params = $args{'parameters'};
+	bless $self, $class;
+	my $params = delete $args{'parameters'};
 	if ( $params ) {
 		if ( @ARGV ) {
 			my %getopt;
@@ -33,7 +34,7 @@ sub new {
 			}
 			GetOptions(%getopt);			
 		}
-		elsif ( my $req = $args{'request'} ) {
+		elsif ( my $req = delete $args{'request'} ) {
 			for my $p ( @{ $params } ) {
 				$self->{'_params'}->{$p} = $req->param($p);
 			}		
@@ -45,7 +46,10 @@ sub new {
 			}
 		}
 	}
-	return bless $self, $class;
+	for my $key ( keys %args ) {
+		$self->$key( $args{$key} );
+	}	
+	return $self;
 }
 
 sub AUTOLOAD {
@@ -141,6 +145,17 @@ sub to_string {
 	Dump(shift);
 }
 
+=item to_file
+
+Writes the object as L<YAML> to the provided file location.
+
+=cut
+
+sub to_file {
+	my ( $self, $location ) = @_;
+	DumpFile( $location, $self );
+}
+
 =item from_string
 
 Instantiates an object from the provided YAML string.
@@ -150,6 +165,17 @@ Instantiates an object from the provided YAML string.
 sub from_string {
 	my ( $class, $string ) = @_;
 	Load($string);
+}
+
+=item from_file
+
+Instantiates an object from the provided location.
+
+=cut
+
+sub from_file {
+	my ( $class, $location ) = @_;
+	LoadFile($location);
 }
 
 =back
