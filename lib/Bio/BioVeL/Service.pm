@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use Getopt::Long;
 use CGI;
+use YAML;
 use Apache2::Request;
 use Apache2::RequestRec ();
 use Apache2::RequestIO ();
@@ -10,7 +11,7 @@ use Apache2::Const -compile => qw(OK);
 use LWP::UserAgent;
 use Bio::Phylo::Util::Logger ':levels';
 
-my $log = Bio::Phylo::Util::Logger->new( 
+my $log  = Bio::Phylo::Util::Logger->new( 
 	'-level' => DEBUG, 
 	'-class' => 'Bio::BioVeL::Service::NeXMLMerger',
 );
@@ -129,6 +130,27 @@ Returns a logger object.
 =cut
 
 sub logger { $log }
+
+=item to_string
+
+Returns a L<YAML> string representation of the object.
+
+=cut
+
+sub to_string {
+	Dump(shift);
+}
+
+=item from_string
+
+Instantiates an object from the provided YAML string.
+
+=cut
+
+sub from_string {
+	my ( $class, $string ) = @_;
+	Load($string);
+}
 
 =back
 
