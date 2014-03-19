@@ -1,6 +1,7 @@
 package Bio::BioVeL::Service::NeXMLMerger;
 use strict;
 use warnings;
+use Scalar::Util 'looks_like_number';
 use Bio::Phylo::Factory;
 use Bio::BioVeL::Service;
 use Bio::BioVeL::Service::NeXMLMerger::DataReader;
@@ -64,13 +65,29 @@ sub _attach_metadata {
 				# the annotation hash should contain TaxonID or NodeID, or ...
 				if ( my $id = delete $m->{$key} ) {
 					my $type = $typemap{$key};
+					$log->info("object $key => $id has type constant $type");
+
+					# fetch all the objects of that type					
+					my @objects = @{ $project->get_items($type) };
+					$log->info("found ".scalar(@objects)." with constant type $type");
+					my $obj; # the one we want
 					
-					no warnings 'uninitialized';
-					my ($obj) = grep { $_->get_name eq $id } @{ $project->get_items($type) };
+					# pick the one by its 1-based (!!!!!) index
+					if ( looks_like_number $id ) {
+						$obj = $objects[ $id - 1 ];
+					}					
+					# grep the one with the provided name
+					else {
+						no warnings 'uninitialized';
+						($obj) = grep { $_->get_name eq $id } @objects;
+					}
+					
 					$log->info("going to annotate object $obj");
 					for my $predicate ( keys %{ $m } ) {
 						$obj->add_meta(
-							$fac->create_meta( '-triple' => { "biovel:$predicate" => $m->{$key} } )
+							$fac->create_meta( '-triple' => { 
+								"biovel:$predicate" => $m->{$predicate} 
+							} )
 						);
 					}
 				}
@@ -120,7 +137,7 @@ sub response_body {
 	my $merged = $taxa->merge_by_name(@taxa);
 	$_->set_taxa($merged) for @matrices;
 	$forest->set_taxa($merged) if $forest;
-	$project->insert($taxa);
+	$project->insert($merged);
 	
 	# attach the metadata
 	$self->_attach_metadata($project);
