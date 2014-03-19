@@ -71,11 +71,17 @@ sub new {
 		
 		# launch the service
 		eval { $self->launch_wrapper };
-		if ( $@ and $@ !~ /ModPerl::Util::exit/ ) {
-			my $msg = "$@";
-			$log->error("problem launching $self: $msg");
-			$self->lasterr( $msg );
-			$self->status( ERROR );
+		if ( $@ ) {
+			if ( $@ !~ /ModPerl::Util::exit/ ) {
+				my $msg = "$@";
+				$log->error("problem launching $self: $msg");
+				$self->lasterr( $msg );
+				$self->status( ERROR );
+			}
+			else {
+				$log->info("exit was called, assume we are done");
+				$self->status( DONE );
+			}
 		}
 		else {
 			$log->info("launched $self successfully");
