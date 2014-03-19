@@ -3,10 +3,11 @@ use strict;
 use warnings;
 use File::Path 'make_path';
 use Scalar::Util 'refaddr';
-use Bio::BioVeL::Service;
 use Digest::MD5 'md5_hex';
 use Apache2::Const '-compile' => 'OK';
+use ModPerl::Const '-compile' => 'EXIT';
 use Proc::ProcessTable;
+use Bio::BioVeL::Service;
 use base 'Bio::BioVeL::Service';
 
 # status constants
@@ -71,7 +72,7 @@ sub new {
 		
 		# launch the service
 		eval { $self->launch_wrapper };
-		if ( $@ ) {
+		if ( $@ != ModPerl::EXIT ) {
 			my $msg = "$@";
 			$log->error("problem launching $self: $msg");
 			$self->lasterr( $msg );
@@ -230,7 +231,7 @@ sub handler {
 	else {
 		my $template = <<'TEMPLATE';
 <response>
-	<jobid>%i</jobid>
+	<jobid>%s</jobid>
 	<status>%s</status>
 	<error>%s</error>
 	<timestamp>%i</timestamp>
