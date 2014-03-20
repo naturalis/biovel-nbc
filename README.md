@@ -67,7 +67,7 @@ metadata, likewise in the requested format.
 
 Service deployment
 ==================
-We deploy the services as [http://perl.apache.org mod_perl] handlers, which means that for 
+We deploy the services as [mod_perl](http://perl.apache.org) handlers, which means that for 
 synchronous services (i.e. everything is done in one request/response cycle) no forking is 
 done at all. For asynchronous servers, the service class doesn't have to keep track of its 
 session: the superclass keeps track of serializing and de-serializing the job object 
