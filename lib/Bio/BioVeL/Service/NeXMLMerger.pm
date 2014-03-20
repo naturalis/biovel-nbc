@@ -7,7 +7,7 @@ use Bio::BioVeL::Service;
 use Bio::BioVeL::Service::NeXMLMerger::DataReader;
 use Bio::BioVeL::Service::NeXMLMerger::TreeReader;
 use Bio::BioVeL::Service::NeXMLMerger::MetaReader;
-use Bio::BioVeL::Service::NeXMLMerger::CharsetReader;
+use Bio::BioVeL::Service::NeXMLMerger::CharSetReader;
 use Bio::Phylo::Util::CONSTANT ':objecttypes';
 use base 'Bio::BioVeL::Service';
 
@@ -103,7 +103,7 @@ sub _attach_charsets {
 	# parse charsets, if any
 	if ( my $f = $self->charsetformat ) {
 		$log->info("instantiating a $f charset reader");
-		my $r = Bio::BioVeL::Service::NeXMLMerger::CharsetReader->new($f);
+		my $r = Bio::BioVeL::Service::NeXMLMerger::CharSetReader->new($f);
 		
 		# read the character sets
 		my $location = $self->charsets;
@@ -115,22 +115,30 @@ sub _attach_charsets {
 		my $characters = $matrix->get_characters;
 		my @sets = @{ $characters->get_sets };
 		$characters->remove_set($_) for @sets;
+		$log->info("done pre-processing characters object $characters");
 		
 		# attach the sets
 		for my $set_name ( keys %sets ) {
 			my $set_obj = $fac->create_set( '-name' => $set_name );
 			$characters->add_set($set_obj);
+			$log->info("attached set object $set_obj to $characters");
 			
 			# iterate over coordinate ranges
 			for my $range ( @{ $sets{$set_name} } ) {
+				$log->debug("processing range $range");
 			
 				# convert to 0-based indices
 				my $start = $range->{'start'} - 1;
 				my $end   = $range->{'end'} ? $range->{'end'} - 1 : $start;
 				my $phase = $range->{'phase'} || 1;				
-				for ( my $i = $start; $i <= $end; $i += $phase ) {
-					my $char = $characters->get_by_index($i);
-					$characters->add_to_set($char,$set_obj);
+				COORD: for ( my $i = $start; $i <= $end; $i += $phase ) {
+					if ( my $char = $characters->get_by_index($i) ) {
+						$characters->add_to_set($char,$set_obj);
+					}
+					else {
+						$log->warn("charset $set_name coordinate $i is out of range");
+						last COORD;
+					}
 				}
 			}
 		}
