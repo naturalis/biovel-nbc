@@ -10,7 +10,7 @@ my $nexml = "$Bin/../Examples/treebase-record.xml";
 
 @ARGV = (
     '-nexml'  => $nexml,
-    '-objects' => ['Taxa', 'Trees', 'Matrices'],
+    '-object' => 'Matrices',
     '-treeformat' => 'newick',
     '-dataformat' => 'FASTA'
     );
