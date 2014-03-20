@@ -7,10 +7,9 @@ use Scalar::Util 'looks_like_number';
 
 BEGIN { use_ok('Bio::BioVeL::AsynchronousService::Mock') }
 
-my $tempdir = tempdir();
+$ENV{'BIOVEL_HOME'} = tempdir();
 
-Bio::BioVeL::AsynchronousService::Mock->workdir( $tempdir );
-ok( $tempdir eq Bio::BioVeL::AsynchronousService::Mock->workdir );
+ok( $ENV{'BIOVEL_HOME'} . '/' eq Bio::BioVeL::AsynchronousService::Mock->workdir );
 
 my $new = Bio::BioVeL::AsynchronousService::Mock->new;
 isa_ok( $new, 'Bio::BioVeL::AsynchronousService' );
