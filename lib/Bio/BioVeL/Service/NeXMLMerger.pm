@@ -96,6 +96,47 @@ sub _attach_metadata {
 	}	
 }
 
+sub _attach_charsets {
+	my ( $self, $project ) = @_;
+	my $log = $self->logger;
+
+	# parse charsets, if any
+	if ( my $f = $self->charsetformat ) {
+		$log->info("instantiating a $f charset reader");
+		my $r = Bio::BioVeL::Service::NeXMLMerger::CharsetReader->new($f);
+		
+		# read the character sets
+		my $location = $self->charsets;
+		$log->info("going to read charsets from $location");		
+		my %sets = $r->read_charsets( $self->get_handle($location) );
+		
+		# pre-process the focal character block
+		my ($matrix) = @{ $project->get_items(_MATRIX_) };
+		my $characters = $matrix->get_characters;
+		my @sets = @{ $characters->get_sets };
+		$characters->remove_set($_) for @sets;
+		
+		# attach the sets
+		for my $set_name ( keys %sets ) {
+			my $set_obj = $fac->create_set( '-name' => $set_name );
+			$characters->add_set($set_obj);
+			
+			# iterate over coordinate ranges
+			for my $range ( @{ $sets{$set_name} } ) {
+			
+				# convert to 0-based indices
+				my $start = $range->{'start'} - 1;
+				my $end   = $range->{'end'} ? $range->{'end'} - 1 : $start;
+				my $phase = $range->{'phase'} || 1;				
+				for ( my $i = $start; $i <= $end; $i += $phase ) {
+					my $char = $characters->get_by_index($i);
+					$characters->add_to_set($char,$set_obj);
+				}
+			}
+		}
+	}
+}
+
 sub response_body {
 	my $self    = shift;
 	my $log     = $self->logger;	
@@ -142,16 +183,8 @@ sub response_body {
 	# attach the metadata
 	$self->_attach_metadata($project);
 		
-	# parse charsets, if any
-	if ( my $f = $self->charsetformat ) {
-		$log->info("instantiating a $f charset reader");
-		my $r = Bio::BioVeL::Service::NeXMLMerger::CharsetReader->new($f);
-		
-		# read the character sets
-		my $location = $self->charsets;
-		$log->info("going to read charsets from $location");		
-		my @sets = $r->read_charsets( $self->get_handle($location) );
-	}
+	# attach the character sets
+	$self->_attach_charsets($project);
 	
 	return $project->to_xml( '-compact' => 1 );
 }
