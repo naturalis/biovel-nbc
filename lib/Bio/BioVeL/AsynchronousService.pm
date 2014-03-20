@@ -64,10 +64,8 @@ sub new {
 		$log->info("launching new $class job");
 		$self = $class->SUPER::new( 'timestamp' => time(), %args );
 		
-		# generate UID: service module name, object memory address, epoch time
-		my $uid = join '::', ref($self), refaddr($self), timestamp($self);
-		$uid =~ s/::/./g;
-		$self->jobid($uid);
+		# generate UID: {pointer address}.{epoch time}
+		$self->jobid( refaddr($self) . '.' . timestamp($self) );
 		
 		# launch the service
 		eval { $self->launch_wrapper };
@@ -201,7 +199,7 @@ The last error string that occurred.
 sub lasterr {
 	my $self = shift;
 	$self->{'lasterr'} = shift if @_;
-	return $self->{'lasterr'} // '';
+	return $self->{'lasterr'};
 }
 
 =item status
@@ -260,7 +258,7 @@ L<http://modperlbook.org/html/4-2-10-PerlSetEnv-and-PerlPassEnv.html>
 sub workdir {
 	my $class = shift;
 	my $name = ref($class) || $class;
-	$name =~ s/.+//;
+	$name =~ s|::|/|g;
 	my $dir = $ENV{'BIOVEL_HOME'} . '/' . $name;
 	make_path($dir) if not -d $dir;
 	return $dir;
