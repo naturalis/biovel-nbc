@@ -14,12 +14,12 @@ Contributors
 Aims
 ====
 * To develop command-line tools that merge data in a number of commonly-used phylogenetic 
-file formats and export them as [http://nexml.org NeXML]: the Merger service.
+file formats and export them as [NeXML](http://nexml.org): the Merger service.
 * To develop command-line tools that extract objects from NeXML data: Taxa, Trees, 
 Character matrices, all with metadata embedded: the Extractor service.
 * To wrap these tools inside Taverna-compatible RESTful services.
-* To publish these services on [http://BiodiversityCatalogue.org BiodiversityCatalogue].
-* To annotate these services according to [http://biovel.eu BioVeL] guidelines.
+* To publish these services on [BiodiversityCatalogue](http://BiodiversityCatalogue.org).
+* To annotate these services according to [BioVeL](http://biovel.eu) guidelines.
 
 The Merger service
 ==================
@@ -75,10 +75,9 @@ between requests.
 
 Links
 =====
-* [https://github.com/naturalis/biovel-nbc Naturalis BioVeL github repo]
-* [http://biovel.eu BioVeL]
-* [http://biodiversitycatalogue.org BiodiversityCatalogue]
-* [http://nexml.org NeXML]
-* [http://taverna.org.uk Taverna]
-* [http://build.mygrid.org.uk/ci/job/taverna-workbench-enterprise/7/net.sf.taverna.t2.taverna-workbench$taverna-workbench-enterprise/artifact/net.sf.taverna.t2.taverna-workbench/taverna-workbench-enterprise/2.5-SNAPSHOT/ Taverna 2.5Snapshot]
-* [http://dev.mygrid.org.uk/wiki/display/taverna/Loops Taverna Looping]
+* [Naturalis BioVeL github repo](https://github.com/naturalis/biovel-nbc)
+* [BioVeL](http://biovel.eu)
+* [BiodiversityCatalogue](http://biodiversitycatalogue.org)
+* [NeXML](http://nexml.org)
+* [Taverna](http://taverna.org.uk)
+* [Taverna Looping](http://dev.mygrid.org.uk/wiki/display/taverna/Loops)
