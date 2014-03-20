@@ -13,7 +13,10 @@ use Bio::Phylo::Util::Logger ':levels';
 
 my $log = Bio::Phylo::Util::Logger->new(
 	'-level' => DEBUG,
-	'-class' => 'Bio::BioVeL::Service::NeXMLMerger',
+	'-class' => [ 
+		'Bio::BioVeL::Service::NeXMLMerger', 
+		'Bio::BioVeL::Service::NeXMLExtractor' 
+	]
 );
 our $AUTOLOAD;
 

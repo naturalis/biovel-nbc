@@ -5,7 +5,7 @@ use File::Path 'make_path';
 use Scalar::Util 'refaddr';
 use Bio::BioVeL::Service;
 use Digest::MD5 'md5_hex';
-use Apache2::Const '-compile' => 'OK';
+use Apache2::Const '-compile' => qw'OK REDIRECT';
 use Proc::ProcessTable;
 use base 'Bio::BioVeL::Service';
 
@@ -222,7 +222,8 @@ either a status report or the response body.
 =cut
 
 sub handler {
-	my $request = Apache2::Request->new(shift);
+	my $r = shift;
+	my $request = Apache2::Request->new($r);
 	my $subclass = __PACKAGE__ . '::' . $request->param('service');
 	eval "require $subclass";
 	my $self = $subclass->new( 
@@ -230,7 +231,18 @@ sub handler {
 		'jobid'   => ( $request->param('jobid') || 0 ),
 	);
 	if ( $self->status eq DONE ) {
-		print $self->response_body;
+		if ( my $loc = $self->response_location ) {
+			my $docroot = $r->doc_root;
+			my $path    = $r->location;
+			my $server  = $r->get_server_name;
+			$loc =~ s/^\Q$docroot\E//;
+			my $url = 'http://' . $server . $path . $loc;
+			$r->headers_out->set('Location' => $url);
+			$r->status(Apache2::Const::REDIRECT);			
+		}
+		else {
+			print $self->response_body;
+		}
 	}
 	else {
 		my $template = <<'TEMPLATE';
@@ -249,9 +261,12 @@ TEMPLATE
 
 =item workdir
 
-This returns a directory inside $ENV{BIOVEL_HOME}, which consequently needs to be defined,
-for example by specifying it with PerlSetEnv inside httpd.conf. See:
-L<http://modperlbook.org/html/4-2-10-PerlSetEnv-and-PerlPassEnv.html>
+This static method returns a directory inside $ENV{BIOVEL_HOME}, which consequently needs 
+to be defined, for example by specifying it with PerlSetEnv inside httpd.conf. See:
+L<http://modperlbook.org/html/4-2-10-PerlSetEnv-and-PerlPassEnv.html>. This dir is used 
+for serializing the job object, so its location can be generated/pulled out of the air by 
+static methods (as the object might not exist yet). For job-specific output (e.g. analysis
+result files), use outdir().
 
 =cut
 
@@ -260,6 +275,19 @@ sub workdir {
 	my $name = ref($class) || $class;
 	$name =~ s|::|/|g;
 	my $dir = $ENV{'BIOVEL_HOME'} . '/' . $name;
+	make_path($dir) if not -d $dir;
+	return $dir;
+}
+
+=item outdir
+
+This object method returns a directory location where the child class can write its output
+
+=cut
+
+sub outdir {
+	my $self = shift;
+	my $dir  = $self->workdir . '/' . $self->jobid;
 	make_path($dir) if not -d $dir;
 	return $dir;
 }
