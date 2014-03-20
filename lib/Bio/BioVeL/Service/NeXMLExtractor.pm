@@ -44,7 +44,7 @@ sub response_body {
     
     # get alignments
     if ( $object eq "Matrices" ) {
-		my $format = $self->dataformat || 'FASTA';
+		my $format = ucfirst( lc($self->dataformat || 'FASTA') );
 		my @matrices = @{ $project->get_items( _MATRIX_ ) };
 		$log->info("extracting ".scalar(@matrices)." alignment(s) as $format");
 		
@@ -56,6 +56,7 @@ sub response_body {
 				'-format' => 'stockholm',
 				'-fh'     => $fh,
 			);
+			$_->visit(sub { shift->set_position(1) }) for @matrices;
 			$writer->write_aln($_) for @matrices;
 			$result .= $virtual_file;
 		}
@@ -64,7 +65,7 @@ sub response_body {
 		else {		
 			for my $matrix ( @matrices ){
 				$result .= unparse (
-					'-format' => $format,
+					'-format' => ucfirst $format,
 					'-phylo'  => $matrix,
 				);
 			}
@@ -75,10 +76,10 @@ sub response_body {
     if ( $object eq "Trees" ){
 		my $format = $self->treeformat || "Newick";
 		my @trees = @{ $project->get_items( _TREE_ ) };
-		$log->info("extracting ".scalar(@matrices)." tree(s) as $format");
+		$log->info("extracting ".scalar(@trees)." tree(s) as $format");
 		for my $tree ( @trees ){
 			$result .= unparse (
-				'-format' => $format,
+				'-format' => ucfirst $format,
 				'-phylo'  => $tree,
 			);
 		}
