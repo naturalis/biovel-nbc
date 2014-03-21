@@ -5,18 +5,53 @@ use Storable 'dclone';
 use Bio::BioVeL::Service::NeXMLMerger::CharSetReader;
 use base 'Bio::BioVeL::Service::NeXMLMerger::CharSetReader';
 
+=over
+
+=item read_charsets
+
+Reads character set definitions from a text file. The syntax is expected to be like what
+is used inside C<mrbayes> blocks and inside C<sets> blocks after the charset token, 
+i.e.:
+
+	<name> = <start coordinate>(-<end coordinate>)?(\<phase>)? ...;
+
+That is, the definition starts with a name and an equals sign. Then, one or more 
+coordinate sets. Each coordinate set has a start coordinate, an optional end
+coordinate (otherwise it's interpreted as a single site), and an optional phase statement,
+e.g. for codon positions. Alternatively, instead of coordinates, names of other character 
+sets may be used. The statement ends with a semicolon. 
+
+Each line with data in it is dispatched to C<read_charset> for reading. After reading, the 
+collection of character sets is then dispatched to
+L<Bio::BioVeL::Service::NeXMLMerger::CharSetReader::text::resolve_references> to 
+resolve any named character sets that were referenced in lieu of coordinate sets. The
+coordinate sets of the referenced character sets are deepcloned to replace the reference. 
+
+=cut
+
 sub read_charsets {
 	my ( $self, $handle ) = @_;
 	my $line = 1;
 	my %result;
 	while(<$handle>) {
 		chomp;
-		my ( $name, $ranges ) = $self->read_charset( $_, $line ) if /\S/;
-		$result{$name} = $ranges if $name and $ranges;
+		if ( /\S/ ) {
+			my ( $name, $ranges ) = $self->read_charset( $_, $line );
+			if ( $name and $ranges ) {
+				$result{$name};
+			}
+		}
 		$line++;
 	}
 	return $self->resolve_references(%result);
 }
+
+=item resolve_references
+
+Given a collection of character sets, finds the coordinate sets that are named references
+to other characters sets, looks them up and copies over their coordinates.
+
+=cut
 
 sub resolve_references {
 	my ( $self, %charsets ) = @_;
@@ -35,6 +70,24 @@ sub resolve_references {
 	}
 	return %charsets;
 }
+
+=item read_charset
+
+Reads a character set, returns:
+
+1. a character set name
+
+2. an array reference of coordinate sets. Each set is represented as a hash reference as
+follows:
+
+	{
+		'start' => <start coordinate>, # required
+		'end'   => <end coordinate>,   # optional
+		'phase' => <steps to the next site in set>, # optional
+		'ref'   => <name of character set>, # optional
+	}
+
+=cut
 
 sub read_charset {
 	my ( $self, $string, $line ) = @_;
@@ -91,6 +144,10 @@ sub read_charset {
 		$log->warn("unreadable string on line $line: $string");
 	}
 }
+
+=back
+
+=cut
 
 1;
 

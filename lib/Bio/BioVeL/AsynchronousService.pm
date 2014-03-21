@@ -14,11 +14,35 @@ use constant RUNNING => 'running';
 use constant DONE    => 'done';
 use constant ERROR   => 'error';
 
+=head1 NAME
+
+Bio::BioVeL::AsynchronousService - base class for asynchronous web services
+
+=head1 SYNOPSIS
+
+ use Bio::BioVeL::AsynchronousService::Mock; # example class
+ 
+ # this static method returns a writable directory into which
+ # service objects are persisted between request/response cycles
+ my $wd = Bio::BioVeL::AsynchronousService::Mock->workdir;
+
+ # when instantiating objects, values for the 'parameters' that are defined
+ # in their constructors can be provided as named arguments
+ my $mock = Bio::BioVeL::AsynchronousService::Mock->new( 'seconds' => 1 );
+
+ # every async service has a record of when it started
+ my $epoch_time = $mock->timestamp;
+
+ # can be RUNNING, ERROR or DONE
+ if ( $mock->status eq Bio::BioVeL::AsynchronousService::DONE ) {
+ 	print $mock->response_body;
+ }
+
 =head1 DESCRIPTION
 
 Asynchronous services need to subclass this class and implement at least the following
-methods: C<launch>, C<update>, and C<response_body>. The trick lies in making launch()
-fork off a process and return immediately with enough information, stored as object
+methods: C<launch> and C<response_body>. The parent class makes sure that launch()
+forks off a process and returns immediately with enough information, stored as object
 properties, so that update() can check how things are going and update the status(). 
 Once the status set to C<DONE>, C<response_body> is executed to generate the output.
 
@@ -77,7 +101,7 @@ sub new {
 				$self->status( ERROR );
 			}
 			else {
-				$log->info("exit was called, assume we are done");
+				$log->info("ModPerl::Util::exit was trapped, assume we are done");
 				$self->status( DONE );
 			}
 		}
