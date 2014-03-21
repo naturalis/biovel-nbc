@@ -1,6 +1,7 @@
 package Bio::BioVeL::AsynchronousService;
 use strict;
 use warnings;
+use Exporter;
 use Data::Dumper;
 use File::Path 'make_path';
 use Scalar::Util 'refaddr';
@@ -8,12 +9,17 @@ use Bio::BioVeL::Service;
 use Digest::MD5 'md5_hex';
 use Apache2::Const '-compile' => qw'OK REDIRECT';
 use Proc::ProcessTable;
-use base 'Bio::BioVeL::Service';
+use base qw'Bio::BioVeL::Service Exporter'; # NOTE: multiple inheritance
 
 # status constants
 use constant RUNNING => 'running';
 use constant DONE    => 'done';
 use constant ERROR   => 'error';
+
+our @EXPORT_OK = qw(RUNNING DONE ERROR);
+our %EXPORT_TAGS = (
+	'status' => [ qw(RUNNING DONE ERROR) ]
+);
 
 =head1 NAME
 
