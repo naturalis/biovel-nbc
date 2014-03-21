@@ -1,6 +1,7 @@
 package Bio::BioVeL::AsynchronousService;
 use strict;
 use warnings;
+use Data::Dumper;
 use File::Path 'make_path';
 use Scalar::Util 'refaddr';
 use Bio::BioVeL::Service;
@@ -145,6 +146,14 @@ sub launch_wrapper {
 		open my $logfh, '>', $logfile or die $!;
 		$log->set_listeners(sub{$logfh->print(shift)});
 		$log->info("launching the child process");
+		
+		# try to trap disasters
+		$SIG{'__DIE__'} = sub {
+			my @loc = caller(1);
+			$log->fatal("fatality caused at line $loc[2] in $loc[1]");
+			$log->fatal("process died with the following argument stack: ".Dumper(\@_));
+			CORE::die "\n";
+		};
 		
 		# the idea is that this could take days or
 		# however long it needs
