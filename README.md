@@ -3,58 +3,81 @@ biovel-nbc
 
 Naturalis implementations of BioVeL services.
 
-Asynchronous API to be implemented
-==================================
+Contributors
+============
+* Bachir Balech (bitbucket: bachirb)
+* Rutger Vos, @rvosa
+* Christian Brenninkmeijer, @Christian-B
+* Hannes Hettling, @hettling
+* David King, @DauvitKing
 
-One endpoint to submit the different jobs, with four parameters: 
-* `name` --- required
-* `arguments` --- required
-* `sessionid` --- optional
-* `email` --- optional
+Aims
+====
+* To develop command-line tools that merge data in a number of commonly-used phylogenetic 
+file formats and export them as [NeXML](http://nexml.org): the Merger service.
+* To develop command-line tools that extract objects from NeXML data: Taxa, Trees, 
+Character matrices, all with metadata embedded: the Extractor service.
+* To wrap these tools inside Taverna-compatible RESTful services.
+* To publish these services on [BiodiversityCatalogue](http://BiodiversityCatalogue.org).
+* To annotate these services according to [BioVeL](http://biovel.eu) guidelines.
 
-*name* differentiates the different types of work, while *arguments* give the info. 
-Data are given as URL(s) within *arguments*, which allows multiple submission 
-divided by ";". Within phylogenetics service set we are not using yet this multiple 
-submission proposed by INFN. The reply of this insertjob is an xml with several tags. 
-Example:
+The Merger service
+==================
+Inputs
+------
+* Phylogenetic trees, in at least the following formats: Newick, NEXUS, PhyloXML, NeXML. 
+There are two parameters for specifying trees, the location (`trees={URL}`),  
+and the syntax format (`treeformat={Newick|NEXUS|PhyloXML|NeXML}`).
+* Alignments, in at least the following formats: PHYLIP, NEXUS, NeXML, FASTA. There are 
+three parameters for each alignment file, the location (`data={URL}`), the 
+syntax format (`dataformat={PHYLIP|NEXUS|NeXML|FASTA}`), and, optionally, the 
+data type (`datatype={dna|protein|standard}`, default is dna).
+* Character sets, in text format, i.e. `charsets={URL}`, 
+`charsetformat={nexus|txt}`.
+* Metadata in JSON or TSV syntax. i.e. `meta={URL}`, 
+`metaformat={JSON|TSV}`. The first column of the metadata identifies which 
+object is annotated. We can distinguish the following objects: `TaxonID, AlignmentID, 
+TreeID, NodeID, SiteID, CharacterID`
 
-	<Job>
-		<Name>blast</Name>
-		<Flag>7772590c-d7ab-4b76-98b9-aa293c6c34fe</Flag>
-		<JobsID>
-			<JobId>454118</JobId>
-		</JobsID>
-	</Job>
+Output
+------
+* A NeXML document.
 
-One endpoint to collect results with one parameter, *jobid*, that identifies the job 
-to retrieve. The reply is for example:
+URL API
+-------
+* The service responds to HTTP GET requests, so all parameters are combined in the 
+QUERY_STRING, with all "dangerous" characters URL-escaped.
 
-	<Jobs>
-		<Job>
-			<Arguments>
-				http://webtest.ba.infn.it/vicario/FinalFusariumDB_2.nex 
-				5700.fa 10589.fbsse se selknlk noiho niooih r 
-			</Arguments>
-			<Comment>interactive</Comment>
-			<CPUs>7</CPUs>
-			<Flag>2dbbd030-2803-43c0-a21d-369a21e17f2b</Flag>
-			<Id>349177</Id>
-			<LastCheck>2011-11-18 12:54:01.0</LastCheck>
-			<Name>MyBlasts</Name>
-			<Output/>
-			<Provenance/>
-			<Status>free</Status>
-		</Job>
-	</Jobs>
+The Extractor service
+=====================
+Inputs
+------
+* NeXML file, whose location is specified as a URL, e.g. `nexml={URL}`
+* A parameter that specifies which objects to extract, e.g. 
+`objects={Taxa|Trees|Matrices}`
+* A parameter that specifies the output formats, 
+`treeformat={NEXUS|Newick|PhyloXML|NeXML}`, 
+`dataformat={NEXUS|PHYLIP|FASTA|Stockholm}`, 
+`metaformat={tsv|JSON|csv}`, `charsetformat={txt}`
 
-The workflow is looking for these paths:
+Output
+------
+* A subset of the NeXML data in the requested format, with a separate download of the 
+metadata, likewise in the requested format.
 
-1. `/Jobs/Job/Status` to check if is equal to `done`
-2. `/Jobs/Job/Output`  to collect the body that could be or an xml or url or a base64 
-   encoded string. Generally is a url with bulk information not relevant for the taverna 
-   engine but to pass on to next webservice.
-3. `/Jobs/Job/StandardOutput` to collect the body that could be or an xml or url or a 
-   base64 enconded string. Generally is a xml with information to be processed within the 
-   taverna engine
-4. `/Jobs/Job/StandardError` to collect the body that is a base64 encoded string with 
-   all relevant info for debug error
+Service deployment
+==================
+We deploy the services as [mod_perl](http://perl.apache.org) handlers, which means that for 
+synchronous services (i.e. everything is done in one request/response cycle) no forking is 
+done at all. For asynchronous servers, the service class doesn't have to keep track of its 
+session: the superclass keeps track of serializing and de-serializing the job object 
+between requests.
+
+Links
+=====
+* [Naturalis BioVeL github repo](https://github.com/naturalis/biovel-nbc)
+* [BioVeL](http://biovel.eu)
+* [BiodiversityCatalogue](http://biodiversitycatalogue.org)
+* [NeXML](http://nexml.org)
+* [Taverna](http://taverna.org.uk)
+* [Taverna Looping](http://dev.mygrid.org.uk/wiki/display/taverna/Loops)

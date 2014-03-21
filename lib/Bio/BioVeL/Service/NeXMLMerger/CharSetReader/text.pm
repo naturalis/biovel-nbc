@@ -1,83 +1,96 @@
-package Bio::BioVeL::Service::NeXMLMerger::CharSeyReader::text;
-
+package Bio::BioVeL::Service::NeXMLMerger::CharSetReader::text;
 use strict;
 use warnings;
+use Storable 'dclone';
+use Bio::BioVeL::Service::NeXMLMerger::CharSetReader;
+use base 'Bio::BioVeL::Service::NeXMLMerger::CharSetReader';
 
-use Bio::BioVeL::Christian::utils;
-
-sub readDomainLine{
-	my $line = shift;
-	my $register = shift;
-
-	$line =~ s/;//; #remove semi column
-	my @tokens = split(/\s|=/,$line);
-	my $name;
-	my $pos;
-	if ($tokens[0] =~ /pos\d$/){
-		my @nameTokens = split(/pos/,$tokens[0]);
-		$name = $nameTokens[0];
-		$pos = $nameTokens[1];
-	} else{
-		$name = $tokens[0];
-		$pos = 0;
+sub read_charsets {
+	my ( $self, $handle ) = @_;
+	my $line = 1;
+	my %result;
+	while(<$handle>) {
+		chomp;
+		my ( $name, $ranges ) = $self->read_charset( $_, $line ) if /\S/;
+		$result{$name} = $ranges if $name and $ranges;
+		$line++;
 	}
-	my %data;
-	foreach my $token (@tokens[1..$#tokens]) {
-		if (length($token) > 0){
-			if (%data){
-				die "Second data token found\n";
-			} else {
-				%data = Bio::BioVeL::Christian::utils::readToken($token, $register);
-			}
-		}
-	}
-	unless (%data){
-		die "No data token found\n";
-	}
-	my %result = (
-	    name => $name,
-	    pos => $pos,
-	    data => \%data,
-	);
-	return %result;
+	return $self->resolve_references(%result);
 }
 
-sub readDomainReport {
-	my $fileName = shift;
-	open(my $in,  "<",  $fileName)  or die "Can't open input.txt: $!";
-
-	my %register;
-	my $lineNumber = 0;
-	while (my $line  = <$in>) { # assigns each line in turn to $line
-		$lineNumber ++;	
-		eval {
-			my %data = readDomainLine($line, \%register);
-			my $name = $data{name};
-			my $pos = $data{pos};
-			my $entry = $register{$name};
-			my @dataArray;
-			if ($entry){
-				my %entryHash = %{$entry};
-				my $dataArray = $entryHash{data};
-				@dataArray = @{$dataArray};
-				$dataArray[$pos] = $data{data};
-			} else {
-				@dataArray = [];
-				$dataArray[$pos] = $data{data};
+sub resolve_references {
+	my ( $self, %charsets ) = @_;
+	for my $set ( keys %charsets ) {
+		my @resolved;
+		my @ranges = @{ $charsets{$set} };
+		for my $range ( @ranges ) {
+			if ( my $ref = delete $range->{'ref'} ) {
+				push @resolved, map { dclone($_) } @{ $charsets{$ref} };
 			}
-			my %newEntryHash = (
-    				name => $name,
-    				data => \@dataArray,
-			);			
-			$register{$name} = \%newEntryHash;
-		};
-		if ($@) {
-			die "Error reading line number: " . $lineNumber . " " . $@;
+			else {
+				push @resolved, $range;
+			}
 		}
+		$charsets{$set} = \@resolved;
 	}
+	return %charsets;
+}
 
-	close $in or die "$in: $!";
-	return %register
+sub read_charset {
+	my ( $self, $string, $line ) = @_;
+	my $log = $self->logger;
+	
+	# charset statement is name = ranges ;
+	if ( $string =~ /^\s*(\S+?)\s*=\s*(.+?)\s*;\s*$/ ) {
+		my ( $name, $ranges ) = ( $1, $2 );
+		my @ranges;
+		$log->debug("found charset name $name on line $line");
+		
+		# ranges are space separated
+		for my $range ( split /\s+/, $ranges ) {
+			$log->debug("parsing range $range");
+		
+			# initialize range data structure
+			my %range = ( 
+				'start' => undef, 
+				'end'   => undef, 
+				'phase' => undef,
+				'ref'   => undef,
+			);
+			
+			# range is a named reference
+			if ( $range =~ /[a-z]/i ) {
+				$range{'ref'} = $range;
+			}
+			
+			# range has coordinates
+			else {
+				# number after / is phase
+				if ( $range =~ /\\(\d+)$/ ) {
+					$range{'phase'} = $1;
+					$log->debug("phase of range $range is $range{phase}");
+				}
+			
+				# number after - is end coordinate
+				if ( $range =~ /-(\d+)/ ) {
+					$range{'end'} = $1;
+					$log->debug("end of range $range is $range{end}");
+				}
+			
+				# first number is start coordinate
+				if ( $range =~ /^(\d+)/ ) {
+					$range{'start'} = $1;
+					$log->debug("start of range $range is $range{start}");
+				}
+			}
+			push @ranges, \%range;
+		}
+		return $name => \@ranges;
+	}
+	else {
+		$log->warn("unreadable string on line $line: $string");
+	}
 }
 
 1;
+

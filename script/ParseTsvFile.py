@@ -47,8 +47,8 @@ def getColsOfInterest(f_in, colNames):
 			else:
 				ColOfInterest.setdefault(Taxon,[]).append(AllCols[j])
 	f.close()
-	f_out=open(f_in + 'ColsOfInterest.tsv','w')
-	f_out.write(TaxID + ','+colNames + '\n')
+	f_out=open(f_in + '_ColsOfInterest.csv','w')
+	f_out.write('LABELS,'+ ','.join(colNames.split(';'))+ '\n')
 	Cols2Write=dict2TSV(ColOfInterest)
 	f_out.write('\n'.join(Cols2Write)+ '\n')
 	f_out.close()
