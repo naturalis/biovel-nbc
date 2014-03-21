@@ -1,12 +1,18 @@
 package Bio::BioVeL::Service::NeXMLMerger::MetaReader::json;
-use base Bio::BioVeL::Service::NeXMLMerger::MetaReader;
+use strict;
+use Bio::BioVeL::Service::NeXMLMerger::MetaReader;
+use base 'Bio::BioVeL::Service::NeXMLMerger::MetaReader';
 use JSON;
+
+=over
 
 =item read_meta
 
 Function to read meta data from a json file handle. Returns array
 of hashes with key/value pairs representing metadata for 
-taxa.
+annotatable objects.
+
+=back
 
 =cut
  

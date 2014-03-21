@@ -15,7 +15,7 @@ my $fac = Bio::Phylo::Factory->new;
 
 =item read_trees
 
-This method, which may or may not be overrided by the child classes, is passed a readable
+This method, which may or may not be overridden by the child classes, is passed a readable
 handle from which it reads a list of L<Bio::Phylo::Forest::Tree> objects.
 
 =back

@@ -5,7 +5,7 @@ use File::Path 'make_path';
 use Scalar::Util 'refaddr';
 use Bio::BioVeL::Service;
 use Digest::MD5 'md5_hex';
-use Apache2::Const '-compile' => 'OK';
+use Apache2::Const '-compile' => qw'OK REDIRECT';
 use Proc::ProcessTable;
 use base 'Bio::BioVeL::Service';
 
@@ -14,11 +14,35 @@ use constant RUNNING => 'running';
 use constant DONE    => 'done';
 use constant ERROR   => 'error';
 
+=head1 NAME
+
+Bio::BioVeL::AsynchronousService - base class for asynchronous web services
+
+=head1 SYNOPSIS
+
+ use Bio::BioVeL::AsynchronousService::Mock; # example class
+ 
+ # this static method returns a writable directory into which
+ # service objects are persisted between request/response cycles
+ my $wd = Bio::BioVeL::AsynchronousService::Mock->workdir;
+
+ # when instantiating objects, values for the 'parameters' that are defined
+ # in their constructors can be provided as named arguments
+ my $mock = Bio::BioVeL::AsynchronousService::Mock->new( 'seconds' => 1 );
+
+ # every async service has a record of when it started
+ my $epoch_time = $mock->timestamp;
+
+ # can be RUNNING, ERROR or DONE
+ if ( $mock->status eq Bio::BioVeL::AsynchronousService::DONE ) {
+ 	print $mock->response_body;
+ }
+
 =head1 DESCRIPTION
 
 Asynchronous services need to subclass this class and implement at least the following
-methods: C<launch>, C<update>, and C<response_body>. The trick lies in making launch()
-fork off a process and return immediately with enough information, stored as object
+methods: C<launch> and C<response_body>. The parent class makes sure that launch()
+forks off a process and returns immediately with enough information, stored as object
 properties, so that update() can check how things are going and update the status(). 
 Once the status set to C<DONE>, C<response_body> is executed to generate the output.
 
@@ -64,10 +88,8 @@ sub new {
 		$log->info("launching new $class job");
 		$self = $class->SUPER::new( 'timestamp' => time(), %args );
 		
-		# generate UID: service module name, object memory address, epoch time
-		my $uid = join '::', ref($self), refaddr($self), timestamp($self);
-		$uid =~ s/::/./g;
-		$self->jobid($uid);
+		# generate UID: {pointer address}.{epoch time}
+		$self->jobid( refaddr($self) . '.' . timestamp($self) );
 		
 		# launch the service
 		eval { $self->launch_wrapper };
@@ -79,7 +101,7 @@ sub new {
 				$self->status( ERROR );
 			}
 			else {
-				$log->info("exit was called, assume we are done");
+				$log->info("ModPerl::Util::exit was trapped, assume we are done");
 				$self->status( DONE );
 			}
 		}
@@ -201,7 +223,7 @@ The last error string that occurred.
 sub lasterr {
 	my $self = shift;
 	$self->{'lasterr'} = shift if @_;
-	return $self->{'lasterr'} // '';
+	return $self->{'lasterr'};
 }
 
 =item status
@@ -224,7 +246,8 @@ either a status report or the response body.
 =cut
 
 sub handler {
-	my $request = Apache2::Request->new(shift);
+	my $r = shift;
+	my $request = Apache2::Request->new($r);
 	my $subclass = __PACKAGE__ . '::' . $request->param('service');
 	eval "require $subclass";
 	my $self = $subclass->new( 
@@ -232,7 +255,18 @@ sub handler {
 		'jobid'   => ( $request->param('jobid') || 0 ),
 	);
 	if ( $self->status eq DONE ) {
-		print $self->response_body;
+		if ( my $loc = $self->response_location ) {
+			my $docroot = $r->doc_root;
+			my $path    = $r->location;
+			my $server  = $r->get_server_name;
+			$loc =~ s/^\Q$docroot\E//;
+			my $url = 'http://' . $server . $path . $loc;
+			$r->headers_out->set('Location' => $url);
+			$r->status(Apache2::Const::REDIRECT);			
+		}
+		else {
+			print $self->response_body;
+		}
 	}
 	else {
 		my $template = <<'TEMPLATE';
@@ -251,17 +285,33 @@ TEMPLATE
 
 =item workdir
 
-This returns a directory inside $ENV{BIOVEL_HOME}, which consequently needs to be defined,
-for example by specifying it with PerlSetEnv inside httpd.conf. See:
-L<http://modperlbook.org/html/4-2-10-PerlSetEnv-and-PerlPassEnv.html>
+This static method returns a directory inside $ENV{BIOVEL_HOME}, which consequently needs 
+to be defined, for example by specifying it with PerlSetEnv inside httpd.conf. See:
+L<http://modperlbook.org/html/4-2-10-PerlSetEnv-and-PerlPassEnv.html>. This dir is used 
+for serializing the job object, so its location can be generated/pulled out of the air by 
+static methods (as the object might not exist yet). For job-specific output (e.g. analysis
+result files), use outdir().
 
 =cut
 
 sub workdir {
 	my $class = shift;
 	my $name = ref($class) || $class;
-	$name =~ s/.+//;
+	$name =~ s|::|/|g;
 	my $dir = $ENV{'BIOVEL_HOME'} . '/' . $name;
+	make_path($dir) if not -d $dir;
+	return $dir;
+}
+
+=item outdir
+
+This object method returns a directory location where the child class can write its output
+
+=cut
+
+sub outdir {
+	my $self = shift;
+	my $dir  = $self->workdir . '/' . $self->jobid;
 	make_path($dir) if not -d $dir;
 	return $dir;
 }

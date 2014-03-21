@@ -9,11 +9,11 @@ use_ok ( 'Bio::BioVeL::Service::NeXMLExtractor' );
 my $nexml = "$Bin/../Examples/treebase-record.xml";
 
 @ARGV = (
-    '-nexml'  => $nexml,
-    '-objects' => ['Taxa', 'Trees', 'Matrices'],
+    '-nexml'      => $nexml,
+    '-object'     => 'Trees',
     '-treeformat' => 'newick',
-    '-dataformat' => 'FASTA'
-    );
+    '-dataformat' => 'nexus'
+);
 
 my $extractor = new_ok ('Bio::BioVeL::Service::NeXMLExtractor');
 
