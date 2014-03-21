@@ -4,9 +4,40 @@ use warnings;
 use Bio::BioVeL::AsynchronousService;
 use base 'Bio::BioVeL::AsynchronousService';
 
+=head1 NAME
+
+Bio::BioVeL::AsynchronousService::TNRS - wrapper for the SUPERSMART TNRS service
+
+=head1 DESCRIPTION
+
+B<NOTE>: this service is untested, it is a work in progress. It is meant to show
+how the scripts of the L<http://www.supersmart-project.org> could be executed as
+asynchronous web services.
+
+=head1 METHODS
+
+=over
+
+=item new
+
+The constructor specifies one object property: the location of the input C<names>
+list.
+
+=cut
+
 sub new {
 	shift->SUPER::new( 'parameters' => [ 'names' ], @_ );
 }
+
+=item launch
+
+Launches the TNRS script. This will require the SUPERSMART_HOME environment 
+variable to be defined, which when running under mod_perl needs to be done by
+adding something like the following to httpd.conf:
+
+ PerlSetEnv SUPERSMART_HOME /Library/WebServer/Perl/supersmart
+
+=cut
 
 sub launch {
 	my $self = shift;
@@ -34,7 +65,22 @@ sub launch {
 	}
 }
 
+=item response_location
+
+B<NOTE>: this is an untested feature. The idea is that child classes can re-direct
+the client to an alternate location with, e.g. the most important output file or a
+directory listing of files.
+
+=cut
+
 sub response_location { shift->outdir . '/taxa.tsv' }
+
+=item response_body
+
+Returns the analysis result as a string. In this service, this is the tab-separated
+file of names-to-taxon-ID mappings.
+
+=cut
 
 sub response_body {
 	my $self = shift;
@@ -42,5 +88,9 @@ sub response_body {
 	my @result = do { local $/; <$fh> };
 	return join "\n", @result;
 }
+
+=back
+
+=cut
 
 1;

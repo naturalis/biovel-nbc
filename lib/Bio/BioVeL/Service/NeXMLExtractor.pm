@@ -7,8 +7,50 @@ use Bio::Phylo::Util::CONSTANT ':objecttypes';
 use Bio::BioVeL::Service;
 use base 'Bio::BioVeL::Service';
 
+=head1 NAME
+
+Bio::BioVeL::Service::NeXMLExtractor - extracts and converts data from a NeXML document
+
+=head1 SYNOPSIS
+
+ use Bio::BioVeL::Service::NeXMLExtractor;
+
+ # arguments can either be passed in from the command line argument array or as 
+ # HTTP request parameters, e.g. from $QUERY_STRING
+ @ARGV = (
+     '-nexml'      => $nexml,
+     '-object'     => 'Trees',
+     '-treeformat' => 'newick',
+     '-dataformat' => 'nexus'
+ );
+
+ my $extractor = Bio::BioVeL::Service::NeXMLExtractor->new;
+ my $data = $extractor->response_body;
+
+=head1 DESCRIPTION
+
+This package extracts phylogenetic data from a NeXML document. Although
+it can be used inside scripts that receive command line arguments, it is intended to be
+used as a RESTful web service that clients can be written against, e.g. in 
+L<http://taverna.org.uk> for inclusion in L<http://biovel.eu> workflows.
+
+=head1 METHODS
+
+=over
+
+=item new
+
+The constructor typically receives no arguments.
+
+=cut
+
 sub new {
     my $self = shift->SUPER::new(
+    
+		# these parameters are turned into object properties
+		# whose values are magically filled in. after object
+		# construction the object can access these properties,
+		# e.g. as $self->nexml    
 		'parameters' => [
 			'nexml',       # input 
 			'object',      # Taxa|Trees|Matrices
@@ -21,7 +63,24 @@ sub new {
     return $self;
 }
 
+=item response_header
+
+Returns the MIME-type HTTP header. Note: at present this isn't really used, it needs
+refactoring to play nice with the way mod_perl constructs response headers. This would
+probably be done by only returning the MIME-type itself, which is then included in the
+header by the superclass.
+
+=cut
+
 sub response_header { "Content-type: text/plain\n\n" }
+
+=item response_body
+
+Generates the requested response. It does this by reading a NeXML document and collecting
+objects of the type specified by the object() property (i.e. 'Matrices', 'Trees' or 
+'Taxa'). It then serializes these to the requested format.
+
+=cut
 
 sub response_body {
     my $self = shift;
@@ -98,5 +157,9 @@ sub response_body {
     
     return $result;    
 }
+
+=back
+
+=cut
 
 1;

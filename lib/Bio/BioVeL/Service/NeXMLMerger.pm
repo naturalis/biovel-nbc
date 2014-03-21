@@ -11,8 +11,16 @@ use Bio::BioVeL::Service::NeXMLMerger::CharSetReader;
 use Bio::Phylo::Util::CONSTANT ':objecttypes';
 use base 'Bio::BioVeL::Service';
 
+# XXX this is a bogus namespace for properties we encounter in metadata
 my $ns  = 'http://biovel.eu/terms#';
+
+# creates Bio::Phylo objects
 my $fac = Bio::Phylo::Factory->new;
+
+# maps between the metadata field that identifies the subject of the 
+# annotation (e.g. a taxon) and Bio::Phylo's type constant. this is
+# used by $project->get_items($const) to fetch the objects that are
+# candidates for annotation.
 my %typemap = (
 	'TaxonID'     => _TAXON_,
 	'NodeID'      => _NODE_,
@@ -23,8 +31,54 @@ my %typemap = (
 	'MatrixID'    => _MATRIX_,
 );
 
+=head1 NAME
+
+Bio::BioVeL::Service::NeXMLMerger - merges phylogenetic data and metadata into NeXML
+
+=head1 SYNOPSIS
+
+ use Bio::BioVeL::Service::NeXMLMerger;
+
+ # arguments can either be passed in from the command line argument array or as 
+ # HTTP request parameters, e.g. from $QUERY_STRING
+ @ARGV = (
+ 	'-data'          => $data,  # a location, either local or as URL
+ 	'-trees'         => $tree,  # a location, either local or as URL
+ 	'-meta'          => $meta,  # a location, either local or as URL
+ 	'-charsets'      => $sets,  # a location, either local or as URL
+ 	'-dataformat'    => 'nexus',
+ 	'-treeformat'    => 'newick',
+ 	'-metaformat'    => 'json',
+ 	'-charsetformat' => 'nexus',
+ );
+
+ my $merger = Bio::BioVeL::Service::NeXMLMerger->new;
+ my $nexml = $merger->response_body;
+
+=head1 DESCRIPTION
+
+This package merges phylogenetic data and metadata to produce a NeXML document. Although
+it can be used inside scripts that receive command line arguments, it is intended to be
+used as a RESTful web service that clients can be written against, e.g. in 
+L<http://taverna.org.uk> for inclusion in L<http://biovel.eu> workflows.
+
+=head1 METHODS
+
+=over
+
+=item new
+
+The constructor typically receives no arguments.
+
+=cut
+
 sub new {
 	my $self = shift->SUPER::new(
+	
+		# these parameters are turned into object properties
+		# whose values are magically filled in. after object
+		# construction the object can access these properties,
+		# e.g. as $self->dataformat
 		'parameters' => [
 			'dataformat',
 			'datatype',
@@ -41,7 +95,19 @@ sub new {
 	return $self;
 }
 
+=item response_header
+
+Returns the MIME-type HTTP header. Note: at present this isn't really used, it needs
+refactoring to play nice with the way mod_perl constructs response headers. This would
+probably be done by only returning the MIME-type itself, which is then included in the
+header by the superclass.
+
+=cut
+
 sub response_header { "Content-type: application/xml\n\n" }
+
+# given a project object, instantiates a metadata reader, figures out what type of
+# objects is to be annotated, and attaches the annotations as biovel:* CURIEs.
 
 sub _attach_metadata {
 	my ( $self, $project ) = @_;
@@ -96,6 +162,11 @@ sub _attach_metadata {
 	}	
 }
 
+# given a project object, instantiates a character set reader and attaches the
+# character sets to the FIRST character matrix in the project. XXX: this means
+# there will be trouble if the project contains multiple matrices that each
+# need character sets attached to them.
+
 sub _attach_charsets {
 	my ( $self, $project ) = @_;
 	my $log = $self->logger;
@@ -144,6 +215,13 @@ sub _attach_charsets {
 		}
 	}
 }
+
+=item response_body
+
+Generates the NeXML response body by reading the input data and metadata objects and
+folding them into a single L<Bio::Phylo::Project> object that is serialized to NeXML.
+
+=cut
 
 sub response_body {
 	my $self    = shift;
@@ -196,5 +274,9 @@ sub response_body {
 	
 	return $project->to_xml( '-compact' => 1 );
 }
+
+=back
+
+=cut
 
 1;
