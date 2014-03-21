@@ -1,4 +1,9 @@
-Example\ Itol\ Perl\ Scripts/*
+.DS_Store
+Makefile
+Makefile.old
+MANIFEST.bak
+Itol/*
 Java/*
 Workflow/*
 vm/*
+script/*
