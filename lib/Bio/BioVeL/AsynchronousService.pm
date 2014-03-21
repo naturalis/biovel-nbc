@@ -40,13 +40,14 @@ Bio::BioVeL::AsynchronousService - base class for asynchronous web services
 
 =head1 DESCRIPTION
 
-Asynchronous services need to subclass this class and implement at least the following
-methods: C<launch> and C<response_body>. The parent class makes sure that launch()
-forks off a process and returns immediately with enough information, stored as object
-properties, so that update() can check how things are going and update the status(). 
-Once the status set to C<DONE>, C<response_body> is executed to generate the output.
+Asynchronous services need to inherit from this package and implement at least the following
+methods: C<launch> and C<response_body>. This package makes sure that the child's C<launch>
+runs inside a forked process so that the parent returns immediately with enough information, 
+stored as object properties, such that C<update> can check how things are going and update the 
+C<status>. Once the status set to C<DONE>, C<response_body> is executed to generate the 
+output.
 
-Successful implementations are likely going to have simple, serializable object properties
+Successful implementations are likely going to have simple, persistable object properties
 that allow a newly de-serialized object (i.e. during the next polling cycle) to probe
 the process table or the job directory to check the status.
 
@@ -115,9 +116,9 @@ sub new {
 
 =item launch
 
-The concrete child class needs to implement the launch() method, which presumably
-will fork off a process, e.g. using system("command &"), such that it will be able
-to keep track of its status, e.g. by knowing the PID of the child processes.
+The concrete child class needs to implement the C<launch> method, which it should do simply
+as something like a C<system> or `backticks` call such that the child class stays around
+to chaperonne the process.
 
 =cut
 
@@ -127,7 +128,7 @@ sub launch {
 
 =item launch_wrapper
 
-Wraps the service launch() inside a fork() to keep track of the PID.
+Wraps the service C<launch> inside a C<fork> to keep track of the PID.
 
 =cut
 
@@ -137,8 +138,16 @@ sub launch_wrapper {
 	my $pid  = fork();
 	if ( $pid == 0 ) {
 		
-		# we're in the child process
+		# we're in the child process. make its logger
+		# (which is a copy of the original process),
+		# write to a job-specific file
+		my $logfile = $self->outdir . '/job.log';
+		open my $logfh, '>', $logfile or die $!;
+		$log->set_listeners(sub{$logfh->print(shift)});
 		$log->info("launching the child process");
+		
+		# the idea is that this could take days or
+		# however long it needs
 		$self->launch;
 		exit(0);
 	}
@@ -152,9 +161,9 @@ sub launch_wrapper {
 
 =item update 
 
-The concrete child class needs to implement the update() method, which will check on
-the process that was launched by launch(), and will update the status, e.g. from RUNNING
-to DONE or ERROR.
+Updates the status of the forked child process by probing the process table to
+see if a process with the same PID and timestamp is still active. If not, the
+process is presumably DONE.
 
 =cut
 
@@ -192,7 +201,7 @@ sub jobid {
 
 =item pid
 
-The process ID of the service job.
+The process ID of the forked child process.
 
 =cut
 
