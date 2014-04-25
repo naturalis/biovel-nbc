@@ -73,6 +73,10 @@ done at all. For asynchronous servers, the service class doesn't have to keep tr
 session: the superclass keeps track of serializing and de-serializing the job object 
 between requests.
 
+To deploy the services, there is a puppet manifest that installs the dependencies and 
+configures apache in vm/manifests/default.pp
+
+
 Links
 =====
 * [Naturalis BioVeL github repo](https://github.com/naturalis/biovel-nbc)
