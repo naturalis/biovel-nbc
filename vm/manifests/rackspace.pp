@@ -16,14 +16,15 @@ Exec {
 # packages to be installed
 package {
 
-  'apache2':	          ensure => installed;
-  'libapache2-mod-perl2': ensure => installed;
-  'git':                  ensure => installed;
-  'make':                 ensure => installed;
-  'libyaml-perl':         ensure => installed;
-  'libapreq2':            ensure => installed;
-  'libwww-perl':          ensure => installed;
-  'bioperl':              ensure => installed;
+  'apache2':	             ensure => installed;
+  'libapache2-mod-perl2':    ensure => installed;
+  'git':                     ensure => installed;
+  'make':                    ensure => installed;
+  'libyaml-perl':            ensure => installed;
+  'libapreq2':               ensure => installed;
+  'libapache2-request-perl': ensure => installed;
+  'libwww-perl':             ensure => installed;
+  'bioperl':                 ensure => installed;
 
 } 
 
@@ -131,6 +132,3 @@ exec {
     require => [ Package[ 'apache2' ], Exec[ 'conf_file_mod_perl', 'conf_file_webapp_dir' ] ];
   
 }
-
-##from a web browser, a request to the web service on the virtual machine could be as follows:
-##http://localhost:4567/biovel?service=NeXMLExtractor&nexml=https://dl.dropboxusercontent.com/s/2x8tgptk93gg9t0/treebase-record.xml&object=Trees
