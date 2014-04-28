@@ -74,7 +74,8 @@ session: the superclass keeps track of serializing and de-serializing the job ob
 between requests.
 
 To deploy the services, there is a puppet manifest that installs the dependencies and 
-configures apache in vm/manifests/default.pp
+configures apache on a Vagrant box here: vm/manifests/default.pp, and for rackspace-hosted,
+default Ubuntu flavours here: vm/manifests/rackspace.pp
 
 
 Links
