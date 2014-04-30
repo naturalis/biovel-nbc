@@ -73,7 +73,7 @@ exec {
    'dl_json':
      command => 'wget http://search.cpan.org/CPAN/authors/id/M/MA/MAKAMAKA/JSON-2.90.tar.gz',
      cwd     => '/usr/local/src',
-     creates => 'JSON-2.90';
+     creates => '/usr/local/src/JSON-2.90';
    'unzip_json':
      command => 'tar xvfz JSON-2.90.tar.gz',
      cwd     => '/usr/local/src',
@@ -83,7 +83,6 @@ exec {
      command => 'perl Makefile.PL && make install',
      cwd     => '/usr/local/src/JSON-2.90',
      require => Exec[ 'unzip_json' ];
-     
   
   # install https protocol for NWP
   'download_lwp_protocol_https':

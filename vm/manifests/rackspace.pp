@@ -74,7 +74,7 @@ exec {
    'dl_json':
      command => 'wget http://search.cpan.org/CPAN/authors/id/M/MA/MAKAMAKA/JSON-2.90.tar.gz',
      cwd     => '/usr/local/src',
-     creates => 'JSON-2.90';
+     creates => '/usr/local/src/JSON-2.90';
    'unzip_json':
      command => 'tar xvfz JSON-2.90.tar.gz',
      cwd     => '/usr/local/src',
