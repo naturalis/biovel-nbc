@@ -121,11 +121,11 @@ sub _attach_metadata {
 		# read the metadata
 		my $location = $self->meta;
 		$log->info("going to read metadata from $location");
-		my @meta = $r->read_meta( $self->get_handle($location) );
+                my @meta = $r->read_meta( $self->get_handle($location) );
 		
 		# attach metadata to taxa
 		$project->set_namespaces( 'biovel' => $ns );
-		for my $m ( @meta ) {
+                for my $m ( @meta ) {
 			for my $key ( keys %typemap ) {
 			
 				# the annotation hash should contain TaxonID or NodeID, or ...
@@ -225,7 +225,7 @@ folding them into a single L<Bio::Phylo::Project> object that is serialized to N
 
 sub response_body {
 	my $self    = shift;
-	my $log     = $self->logger;	
+        my $log     = $self->logger;	
 	my $project = $fac->create_project;
 	my $taxa    = $fac->create_taxa;	
 	my ( @taxa, @matrices, $forest );
@@ -272,7 +272,9 @@ sub response_body {
 	# attach the character sets
 	$self->_attach_charsets($project);
 	
-	return $project->to_xml( '-compact' => 1 );
+        my $result = $project->to_xml( '-compact' => 1 );
+        Bio::Phylo::Util::IDPool->_reset;
+        return $result;
 }
 
 =back
