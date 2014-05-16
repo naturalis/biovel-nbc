@@ -4,3 +4,5 @@ perl:
   - "5.14"
   - "5.12"
   - "5.10"
+install:
+  - sudo apt-get install -qq libdb-dev libapache2-mod-perl2
