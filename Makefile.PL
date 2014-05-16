@@ -11,9 +11,9 @@ WriteMakefile(
 	'PREREQ_PM'     => { 	
 		'YAML'        => 0,
 		'libwww-perl' => 0,	
-		'mod_perl'    => 0,
+		# 'mod_perl'    => 0,
 		'Bio::Phylo'  => 0,
-		'BioPerl'     => 0,
+		# 'BioPerl'     => 0, # suggested for stockholm format
 		'Proc::ProcessTable' => 0,
 	},
 );
