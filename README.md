@@ -86,3 +86,8 @@ Links
 * [NeXML](http://nexml.org)
 * [Taverna](http://taverna.org.uk)
 * [Taverna Looping](http://dev.mygrid.org.uk/wiki/display/taverna/Loops)
+
+Build status
+============
+Currently, the build status is:
+[![Build Status](https://travis-ci.org/naturalis/biovel-nbc.svg?branch=master)](https://travis-ci.org/naturalis/biovel-nbc)
