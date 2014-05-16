@@ -6,4 +6,4 @@ perl:
   - "5.10"
 install:
   - sudo apt-get install -qq bioperl apache2 libapache2-mod-perl2 libapreq2 libapache2-request-perl
-  - cpanm --installdeps --notest .
+  - cpanm --installdeps --notest --skip-satisfied .
