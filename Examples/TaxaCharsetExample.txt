@@ -1,0 +1,6 @@
+CDS_firstPos=1-87\3 221-281\3;
+CDS_secondPos=2-87\3 222-281\3;
+CDS_thirdPos=3-87\3 223-281\3;
+Introns=88-218 282-655;
+esclusi=219 220;
+NIntrons=Introns esclusi;
