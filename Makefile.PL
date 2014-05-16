@@ -11,7 +11,7 @@ WriteMakefile(
 	'PREREQ_PM'     => { 	
 		'YAML'               => 0,
 		'LWP::UserAgent'     => 0,
-		'Apache2::Request'   => 0,
+		#'Apache2::Request'   => 0,
 		'Bio::Phylo'         => 0,
 		'Proc::ProcessTable' => 0,		
 		# 'mod_perl'    => 0,		
