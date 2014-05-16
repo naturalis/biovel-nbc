@@ -5,4 +5,4 @@ perl:
   - "5.12"
   - "5.10"
 install:
-  - sudo apt-get install -qq libdb-dev libapache2-mod-perl2
+  - sudo apt-get install -qq libdb-dev graphviz libgd2-xpm-dev libxml2-dev libapache2-mod-perl2
