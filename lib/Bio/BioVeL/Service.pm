@@ -174,7 +174,7 @@ Returns the HTTP response header. This might include the content-type.
 =cut
 
 sub response_header {
-	die "Implement me!";
+	die "Implement me!"; # abstract method
 }
 
 =item response_body
@@ -184,7 +184,7 @@ Returns the response body as a big string.
 =cut
 
 sub response_body {
-	die "Implement me!";
+	die "Implement me!"; # abstract method
 }
 
 =item logger
@@ -211,7 +211,7 @@ Returns a L<YAML> string representation of the object.
 =cut
 
 sub to_string {
-	Dump(shift);
+	YAML::Dump(shift);
 }
 
 =item to_file
@@ -222,7 +222,7 @@ Writes the object as L<YAML> to the provided file location.
 
 sub to_file {
 	my ( $self, $location ) = @_;
-	DumpFile( $location, $self );
+	YAML::DumpFile( $location, $self );
 }
 
 =item from_string
@@ -233,7 +233,7 @@ Instantiates an object from the provided YAML string.
 
 sub from_string {
 	my ( $class, $string ) = @_;
-	Load($string);
+	YAML::Load($string);
 }
 
 =item from_file
@@ -244,7 +244,7 @@ Instantiates an object from the provided location.
 
 sub from_file {
 	my ( $class, $location ) = @_;
-	LoadFile($location);
+	YAML::LoadFile($location);
 }
 
 =back
