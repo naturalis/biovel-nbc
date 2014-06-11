@@ -97,14 +97,21 @@ sub new {
 
 =item response_header
 
-Returns the MIME-type HTTP header. Note: at present this isn't really used, it needs
-refactoring to play nice with the way mod_perl constructs response headers. This would
-probably be done by only returning the MIME-type itself, which is then included in the
-header by the superclass.
+Returns the Content-type HTTP header. Note: at present this isn't really used, instead
+C<content_type> (see below) is used by the superclass to compose the header through
+mod_perl
 
 =cut
 
-sub response_header { "Content-type: application/xml\n\n" }
+sub response_header { "Content-type: ".shift->content_type."\n\n" }
+
+=item content_type
+
+Returns the MIME type.
+
+=cut
+
+sub content_type { 'application/xml' }
 
 # given a project object, instantiates a metadata reader, figures out what type of
 # objects is to be annotated, and attaches the annotations as biovel:* CURIEs.

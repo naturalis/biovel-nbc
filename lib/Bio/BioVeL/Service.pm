@@ -163,7 +163,8 @@ sub handler {
 	my $subclass = __PACKAGE__ . '::' . $request->param('service');
 	eval "require $subclass";
 	my $self = $subclass->new( 'request' => $request );
-	print $self->response_body;
+	$request->content_type( $self->content_type );
+	$request->print( $self->response_body );
 	return Apache2::Const::OK;
 }
 
