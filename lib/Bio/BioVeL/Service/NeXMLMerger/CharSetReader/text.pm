@@ -38,7 +38,7 @@ sub read_charsets {
 		if ( /\S/ ) {
 			my ( $name, $ranges ) = $self->read_charset( $_, $line );
 			if ( $name and $ranges ) {
-				$result{$name};
+				$result{$name} = $ranges;
 			}
 		}
 		$line++;
