@@ -1,62 +1,89 @@
 <nex:nexml generator="Bio::Phylo::Project v.0.58" version="0.9" xmlns="http://www.nexml.org/2009" xmlns:biovel="http://biovel.eu/terms#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:map="http://purl.org/phylo/phylomap/terms#" xmlns:nex="http://www.nexml.org/2009" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.nexml.org/2009 http://www.nexml.org/2009/nexml.xsd">
-  <meta content="2014-06-11T10:29:00" datatype="xsd:date" id="ma722" property="dc:date" xsi:type="nex:LiteralMeta"/>
-  <otus id="os679" label="Merged">
-    <otu id="ou680" label="Tax1">
-      <meta content="0.45" datatype="xsd:float" id="ma686" property="biovel:Biomass" xsi:type="nex:LiteralMeta"/>
-      <meta content="soil" datatype="xsd:string" id="ma687" property="biovel:SampleType" xsi:type="nex:LiteralMeta"/>
-      <meta content="D" datatype="xsd:string" id="ma688" property="biovel:phenology
-" xsi:type="nex:LiteralMeta"/>
-      <meta content="citrus" datatype="xsd:string" id="ma689" property="biovel:host" xsi:type="nex:LiteralMeta"/>
-      <meta content="yes" datatype="xsd:string" id="ma690" property="biovel:Pathogenic_Potential" xsi:type="nex:LiteralMeta"/>
-      <meta content="UK,NL" datatype="xsd:string" id="ma691" property="biovel:GeographicalOrigin" xsi:type="nex:LiteralMeta"/>
+  <meta content="2014-06-11T10:49:01" datatype="xsd:date" id="ma748" property="dc:date" xsi:type="nex:LiteralMeta"/>
+  <otus id="os705" label="Merged">
+    <otu id="ou706" label="Tax1">
+      <meta content="0.45" datatype="xsd:float" id="ma712" property="biovel:Biomass" xsi:type="nex:LiteralMeta"/>
+      <meta content="soil" datatype="xsd:string" id="ma713" property="biovel:SampleType" xsi:type="nex:LiteralMeta"/>
+      <meta content="D" datatype="xsd:string" id="ma714" property="biovel:phenology" xsi:type="nex:LiteralMeta"/>
+      <meta content="citrus" datatype="xsd:string" id="ma715" property="biovel:host" xsi:type="nex:LiteralMeta"/>
+      <meta content="yes" datatype="xsd:string" id="ma716" property="biovel:Pathogenic_Potential" xsi:type="nex:LiteralMeta"/>
+      <meta content="UK,NL" datatype="xsd:string" id="ma717" property="biovel:GeographicalOrigin" xsi:type="nex:LiteralMeta"/>
     </otu>
-    <otu id="ou681" label="Tax2">
-      <meta content="1.2" datatype="xsd:float" id="ma692" property="biovel:Biomass" xsi:type="nex:LiteralMeta"/>
-      <meta content="root" datatype="xsd:string" id="ma693" property="biovel:SampleType" xsi:type="nex:LiteralMeta"/>
-      <meta content="C" datatype="xsd:string" id="ma694" property="biovel:phenology
-" xsi:type="nex:LiteralMeta"/>
-      <meta content="citrus" datatype="xsd:string" id="ma695" property="biovel:host" xsi:type="nex:LiteralMeta"/>
-      <meta content="yes" datatype="xsd:string" id="ma696" property="biovel:Pathogenic_Potential" xsi:type="nex:LiteralMeta"/>
-      <meta content="ITA" datatype="xsd:string" id="ma697" property="biovel:GeographicalOrigin" xsi:type="nex:LiteralMeta"/>
+    <otu id="ou707" label="Tax2">
+      <meta content="1.2" datatype="xsd:float" id="ma718" property="biovel:Biomass" xsi:type="nex:LiteralMeta"/>
+      <meta content="root" datatype="xsd:string" id="ma719" property="biovel:SampleType" xsi:type="nex:LiteralMeta"/>
+      <meta content="C" datatype="xsd:string" id="ma720" property="biovel:phenology" xsi:type="nex:LiteralMeta"/>
+      <meta content="citrus" datatype="xsd:string" id="ma721" property="biovel:host" xsi:type="nex:LiteralMeta"/>
+      <meta content="yes" datatype="xsd:string" id="ma722" property="biovel:Pathogenic_Potential" xsi:type="nex:LiteralMeta"/>
+      <meta content="ITA" datatype="xsd:string" id="ma723" property="biovel:GeographicalOrigin" xsi:type="nex:LiteralMeta"/>
     </otu>
-    <otu id="ou682" label="Tax3">
-      <meta content="2.3" datatype="xsd:float" id="ma698" property="biovel:Biomass" xsi:type="nex:LiteralMeta"/>
-      <meta content="soil" datatype="xsd:string" id="ma699" property="biovel:SampleType" xsi:type="nex:LiteralMeta"/>
-      <meta content="D" datatype="xsd:string" id="ma700" property="biovel:phenology
-" xsi:type="nex:LiteralMeta"/>
-      <meta content="tomatoe" datatype="xsd:string" id="ma701" property="biovel:host" xsi:type="nex:LiteralMeta"/>
-      <meta content="no" datatype="xsd:string" id="ma702" property="biovel:Pathogenic_Potential" xsi:type="nex:LiteralMeta"/>
-      <meta content="ITA,FR" datatype="xsd:string" id="ma703" property="biovel:GeographicalOrigin" xsi:type="nex:LiteralMeta"/>
+    <otu id="ou708" label="Tax3">
+      <meta content="2.3" datatype="xsd:float" id="ma724" property="biovel:Biomass" xsi:type="nex:LiteralMeta"/>
+      <meta content="soil" datatype="xsd:string" id="ma725" property="biovel:SampleType" xsi:type="nex:LiteralMeta"/>
+      <meta content="D" datatype="xsd:string" id="ma726" property="biovel:phenology" xsi:type="nex:LiteralMeta"/>
+      <meta content="tomatoe" datatype="xsd:string" id="ma727" property="biovel:host" xsi:type="nex:LiteralMeta"/>
+      <meta content="no" datatype="xsd:string" id="ma728" property="biovel:Pathogenic_Potential" xsi:type="nex:LiteralMeta"/>
+      <meta content="ITA,FR" datatype="xsd:string" id="ma729" property="biovel:GeographicalOrigin" xsi:type="nex:LiteralMeta"/>
     </otu>
-    <otu id="ou683" label="Tax4">
-      <meta content="0.3" datatype="xsd:float" id="ma704" property="biovel:Biomass" xsi:type="nex:LiteralMeta"/>
-      <meta content="soil" datatype="xsd:string" id="ma705" property="biovel:SampleType" xsi:type="nex:LiteralMeta"/>
-      <meta content="D" datatype="xsd:string" id="ma706" property="biovel:phenology
-" xsi:type="nex:LiteralMeta"/>
-      <meta content="tomatoe" datatype="xsd:string" id="ma707" property="biovel:host" xsi:type="nex:LiteralMeta"/>
-      <meta content="yes" datatype="xsd:string" id="ma708" property="biovel:Pathogenic_Potential" xsi:type="nex:LiteralMeta"/>
-      <meta content="RU,FR" datatype="xsd:string" id="ma709" property="biovel:GeographicalOrigin" xsi:type="nex:LiteralMeta"/>
+    <otu id="ou709" label="Tax4">
+      <meta content="0.3" datatype="xsd:float" id="ma730" property="biovel:Biomass" xsi:type="nex:LiteralMeta"/>
+      <meta content="soil" datatype="xsd:string" id="ma731" property="biovel:SampleType" xsi:type="nex:LiteralMeta"/>
+      <meta content="D" datatype="xsd:string" id="ma732" property="biovel:phenology" xsi:type="nex:LiteralMeta"/>
+      <meta content="tomatoe" datatype="xsd:string" id="ma733" property="biovel:host" xsi:type="nex:LiteralMeta"/>
+      <meta content="yes" datatype="xsd:string" id="ma734" property="biovel:Pathogenic_Potential" xsi:type="nex:LiteralMeta"/>
+      <meta content="RU,FR" datatype="xsd:string" id="ma735" property="biovel:GeographicalOrigin" xsi:type="nex:LiteralMeta"/>
     </otu>
-    <otu id="ou684" label="Tax5">
-      <meta content="4" datatype="xsd:integer" id="ma710" property="biovel:Biomass" xsi:type="nex:LiteralMeta"/>
-      <meta content="root" datatype="xsd:string" id="ma711" property="biovel:SampleType" xsi:type="nex:LiteralMeta"/>
-      <meta content="E" datatype="xsd:string" id="ma712" property="biovel:phenology
-" xsi:type="nex:LiteralMeta"/>
-      <meta content="tomatoe" datatype="xsd:string" id="ma713" property="biovel:host" xsi:type="nex:LiteralMeta"/>
-      <meta content="yes" datatype="xsd:string" id="ma714" property="biovel:Pathogenic_Potential" xsi:type="nex:LiteralMeta"/>
-      <meta content="RU,ITS" datatype="xsd:string" id="ma715" property="biovel:GeographicalOrigin" xsi:type="nex:LiteralMeta"/>
+    <otu id="ou710" label="Tax5">
+      <meta content="4" datatype="xsd:integer" id="ma736" property="biovel:Biomass" xsi:type="nex:LiteralMeta"/>
+      <meta content="root" datatype="xsd:string" id="ma737" property="biovel:SampleType" xsi:type="nex:LiteralMeta"/>
+      <meta content="E" datatype="xsd:string" id="ma738" property="biovel:phenology" xsi:type="nex:LiteralMeta"/>
+      <meta content="tomatoe" datatype="xsd:string" id="ma739" property="biovel:host" xsi:type="nex:LiteralMeta"/>
+      <meta content="yes" datatype="xsd:string" id="ma740" property="biovel:Pathogenic_Potential" xsi:type="nex:LiteralMeta"/>
+      <meta content="RU,ITS" datatype="xsd:string" id="ma741" property="biovel:GeographicalOrigin" xsi:type="nex:LiteralMeta"/>
     </otu>
-    <otu id="ou685" label="Tax6">
-      <meta content="4.2" datatype="xsd:float" id="ma716" property="biovel:Biomass" xsi:type="nex:LiteralMeta"/>
-      <meta content="soil" datatype="xsd:string" id="ma717" property="biovel:SampleType" xsi:type="nex:LiteralMeta"/>
-      <meta content="E" datatype="xsd:string" id="ma718" property="biovel:phenology
-" xsi:type="nex:LiteralMeta"/>
-      <meta content="tomatoe" datatype="xsd:string" id="ma719" property="biovel:host" xsi:type="nex:LiteralMeta"/>
-      <meta content="no" datatype="xsd:string" id="ma720" property="biovel:Pathogenic_Potential" xsi:type="nex:LiteralMeta"/>
-      <meta content="NL" datatype="xsd:string" id="ma721" property="biovel:GeographicalOrigin" xsi:type="nex:LiteralMeta"/>
+    <otu id="ou711" label="Tax6">
+      <meta content="4.2" datatype="xsd:float" id="ma742" property="biovel:Biomass" xsi:type="nex:LiteralMeta"/>
+      <meta content="soil" datatype="xsd:string" id="ma743" property="biovel:SampleType" xsi:type="nex:LiteralMeta"/>
+      <meta content="E" datatype="xsd:string" id="ma744" property="biovel:phenology" xsi:type="nex:LiteralMeta"/>
+      <meta content="tomatoe" datatype="xsd:string" id="ma745" property="biovel:host" xsi:type="nex:LiteralMeta"/>
+      <meta content="no" datatype="xsd:string" id="ma746" property="biovel:Pathogenic_Potential" xsi:type="nex:LiteralMeta"/>
+      <meta content="NL" datatype="xsd:string" id="ma747" property="biovel:GeographicalOrigin" xsi:type="nex:LiteralMeta"/>
     </otu>
   </otus>
-  <characters id="cs6" otus="os679" xsi:type="nex:DnaSeqs">
+  <trees id="ts697" otus="os705">
+    <tree id="te681" xsi:type="nex:FloatTree">
+      <node id="ne682" root="true"/>
+      <node id="ne683">
+        <meta content="0.89" datatype="xsd:float" id="ma693" property="biovel:support" xsi:type="nex:LiteralMeta"/>
+      </node>
+      <node id="ne690">
+        <meta content="0.98" datatype="xsd:float" id="ma696" property="biovel:support" xsi:type="nex:LiteralMeta"/>
+      </node>
+      <node id="ne684">
+        <meta content="0.95" datatype="xsd:float" id="ma694" property="biovel:support" xsi:type="nex:LiteralMeta"/>
+      </node>
+      <node id="ne687">
+        <meta content="0.97" datatype="xsd:float" id="ma695" property="biovel:support" xsi:type="nex:LiteralMeta"/>
+      </node>
+      <node id="ne691" label="Tax5" otu="ou710"/>
+      <node id="ne692" label="Tax6" otu="ou711"/>
+      <node id="ne685" label="Tax1" otu="ou706"/>
+      <node id="ne686" label="Tax2" otu="ou707"/>
+      <node id="ne688" label="Tax3" otu="ou708"/>
+      <node id="ne689" label="Tax4" otu="ou709"/>
+      <edge id="edge683" length="0.123211" source="ne682" target="ne683"/>
+      <edge id="edge690" length="0.2342" source="ne682" target="ne690"/>
+      <edge id="edge684" length="0.12312" source="ne683" target="ne684"/>
+      <edge id="edge687" length="0.34232" source="ne683" target="ne687"/>
+      <edge id="edge691" length="0.32412" source="ne690" target="ne691"/>
+      <edge id="edge692" length="0.3242" source="ne690" target="ne692"/>
+      <edge id="edge685" length="0.23423" source="ne684" target="ne685"/>
+      <edge id="edge686" length="0.25345" source="ne684" target="ne686"/>
+      <edge id="edge688" length="0.5634" source="ne687" target="ne688"/>
+      <edge id="edge689" length="0.3432" source="ne687" target="ne689"/>
+    </tree>
+  </trees>
+  <characters id="cs6" otus="os705" xsi:type="nex:DnaSeqs">
     <format>
       <states id="ss8">
         <state id="s1" symbol="A"/>
@@ -799,35 +826,23 @@
       <char id="cr666" states="ss8"/>
     </format>
     <matrix>
-      <row id="rw9" label="Tax1" otu="ou680">
-        <seq>
-ACTTTATACTTGGTTTTTGGTGCTTGAGCGGCTATGGTTGGAACTGCAATAAGTGTTTTAATTCGAATTGAGTTGGGGCAATCTGGTAGATTTATGGGAGATGATCAGTTGTATAATGTTATTGTAACTGCTCATGCTTTTGTTATAATTTTTTTTATGGTTATGCCTATTTTGATTGGGGGCTTTGGTAATTGACTGGTTCCTTTGATGTTGGGGGCTCCTGATATGGCTTTTCCTCGCATGAATAATTTAAGGTTTTGATTATTGCCTCCTTCTTTATTTTTATTATTTATTTCTTCTATGGTGGAAATAGGGGTTGGGGCTGGTTGAACGATCTACCCTCCTTTAGCGTCTCTAGAAGGACATTCAGGAAGTTCGGTTGATTTTGCCATTTTTTCTTTGCATTTGGCTGGGGCCTCTTCTATTATAGGGGCTATTAATTTTATTTCTACAATTTTGAATATACGGTCTTATGGGATGTCTATGGAAAAAGTTCCTTTGTTTGTTTGGTCGGTTTTAATTACTGCTGTTTTGCTCCTATTATCACTTCCGGTTTTAGCTGGGGCTATCACTATGTTATTAACTGATCGAAATTTTAATACATCGTTTTTTGATCCTTCGGGGGGAGGGGATCCTATTTTTTTT------------
-</seq>
+      <row id="rw9" label="Tax1" otu="ou706">
+        <seq>ACTTTATACTTGGTTTTTGGTGCTTGAGCGGCTATGGTTGGAACTGCAATAAGTGTTTTAATTCGAATTGAGTTGGGGCAATCTGGTAGATTTATGGGAGATGATCAGTTGTATAATGTTATTGTAACTGCTCATGCTTTTGTTATAATTTTTTTTATGGTTATGCCTATTTTGATTGGGGGCTTTGGTAATTGACTGGTTCCTTTGATGTTGGGGGCTCCTGATATGGCTTTTCCTCGCATGAATAATTTAAGGTTTTGATTATTGCCTCCTTCTTTATTTTTATTATTTATTTCTTCTATGGTGGAAATAGGGGTTGGGGCTGGTTGAACGATCTACCCTCCTTTAGCGTCTCTAGAAGGACATTCAGGAAGTTCGGTTGATTTTGCCATTTTTTCTTTGCATTTGGCTGGGGCCTCTTCTATTATAGGGGCTATTAATTTTATTTCTACAATTTTGAATATACGGTCTTATGGGATGTCTATGGAAAAAGTTCCTTTGTTTGTTTGGTCGGTTTTAATTACTGCTGTTTTGCTCCTATTATCACTTCCGGTTTTAGCTGGGGCTATCACTATGTTATTAACTGATCGAAATTTTAATACATCGTTTTTTGATCCTTCGGGGGGAGGGGATCCTATTTTTTTT------------</seq>
       </row>
-      <row id="rw669" label="Tax2" otu="ou681">
-        <seq>
-AGATTATATTTTGTTTTTGGGGCTTGAGCTGCTATAGTAGGAACAGCAATAAGAGTATTAATTCGTGTTGAGTTGGGACAAACTGGTAGTTTGTTAGGGGATGATCAGTTGTATAATGTTATTGTTACGGCTCATGCTTTTGTAATAATTTTTTTTATAGTTATGCCTATTTTAATTGGGGGTTTTGGAAATTGGCTGATTCCACTAATACTAGGAGCTCCGGATATAGCTTTCCCTCGTATAAATAATTTGAGATTTTGGCTTTTACCCCCTTCTTTATTATTACTGTTTATTTCAAGCATAGATGAGATAGGAGTGGGGGCGGGATGAACGGTTTACCCCCCTCTTGCCTCTTTAGAGGGACATTCTGGTAGTTCAGTAGATTTTGCTATTTTTTCTTTACACTTAGCTGGAGCGTCTTCTATTATAGGGGCTATTAATTTTATTTCCACAATTTTGAATATACGGGGTTATGGAATATCTATAGAAAAAGTACCTTTATTTGTTTGGTCCGTGTTAATTACAGCTGTATTATTATTGTTATCTCTTCCTGTGTTAGCTGGGGCTATCACAATATTACTGACGGATCGTAATTTTAATACTTCATTTTTTGATCCTTGTGGGGGGGGGGATCCTGTTTTGTTTCAA---------
-</seq>
+      <row id="rw669" label="Tax2" otu="ou707">
+        <seq>AGATTATATTTTGTTTTTGGGGCTTGAGCTGCTATAGTAGGAACAGCAATAAGAGTATTAATTCGTGTTGAGTTGGGACAAACTGGTAGTTTGTTAGGGGATGATCAGTTGTATAATGTTATTGTTACGGCTCATGCTTTTGTAATAATTTTTTTTATAGTTATGCCTATTTTAATTGGGGGTTTTGGAAATTGGCTGATTCCACTAATACTAGGAGCTCCGGATATAGCTTTCCCTCGTATAAATAATTTGAGATTTTGGCTTTTACCCCCTTCTTTATTATTACTGTTTATTTCAAGCATAGATGAGATAGGAGTGGGGGCGGGATGAACGGTTTACCCCCCTCTTGCCTCTTTAGAGGGACATTCTGGTAGTTCAGTAGATTTTGCTATTTTTTCTTTACACTTAGCTGGAGCGTCTTCTATTATAGGGGCTATTAATTTTATTTCCACAATTTTGAATATACGGGGTTATGGAATATCTATAGAAAAAGTACCTTTATTTGTTTGGTCCGTGTTAATTACAGCTGTATTATTATTGTTATCTCTTCCTGTGTTAGCTGGGGCTATCACAATATTACTGACGGATCGTAATTTTAATACTTCATTTTTTGATCCTTGTGGGGGGGGGGATCCTGTTTTGTTTCAA---------</seq>
       </row>
-      <row id="rw671" label="Tax3" otu="ou682">
-        <seq>
-ACGTTATATTTAATATTTGGGGCTTGAGCTGCTATAGTAGGAACAGCCATAAGAGTATTAATTCGAATTGAATTAGGTCAACCTGGGAGGTTTATTGGGGATGATCAATTATATAATGTAATCGTTACTGCTCATGCATTTGTTATAATTTTTTTTATAGTAATACCTATTTTGATTGGAGGATTTGGAAATTGATTAGTTCCTTTAATATTAGGCGCTCCTGATATAGCTTTTCCTCGTATAAATAATTTAAGATTTTGGCTACTCCCTCCTTCATTATTTTTATTAATTATTTCTTCTATAGTAGAAATGGGAGTGGGGGCAGGATGGACGGTTTATCCTCCTTTAGCTAGTTTAGAGGGCCATGCTGGCAGGTCAGTGGATTTTGCTATTTTTTCTTTACATTTAGCGGGGGCCTCCTCTATTATGGGGGCTATTAATTTTATTTCTACTATTATTAATATACGATCGCATGGAATAACTATAGAAAAAGTACCTTTATTTGTATGATCAGTATTGATTACTGCTGTATTATTATTATTATCACTTCCAGTATTGGCGGGGGCTATCACAATATTATTAACTGATCGAAATTTTAATACTTCGTTTTTTGACCCTTCAGGAGGGGGGGATCCAATCCTTTTCCAACATTTATTT
-</seq>
+      <row id="rw671" label="Tax3" otu="ou708">
+        <seq>ACGTTATATTTAATATTTGGGGCTTGAGCTGCTATAGTAGGAACAGCCATAAGAGTATTAATTCGAATTGAATTAGGTCAACCTGGGAGGTTTATTGGGGATGATCAATTATATAATGTAATCGTTACTGCTCATGCATTTGTTATAATTTTTTTTATAGTAATACCTATTTTGATTGGAGGATTTGGAAATTGATTAGTTCCTTTAATATTAGGCGCTCCTGATATAGCTTTTCCTCGTATAAATAATTTAAGATTTTGGCTACTCCCTCCTTCATTATTTTTATTAATTATTTCTTCTATAGTAGAAATGGGAGTGGGGGCAGGATGGACGGTTTATCCTCCTTTAGCTAGTTTAGAGGGCCATGCTGGCAGGTCAGTGGATTTTGCTATTTTTTCTTTACATTTAGCGGGGGCCTCCTCTATTATGGGGGCTATTAATTTTATTTCTACTATTATTAATATACGATCGCATGGAATAACTATAGAAAAAGTACCTTTATTTGTATGATCAGTATTGATTACTGCTGTATTATTATTATTATCACTTCCAGTATTGGCGGGGGCTATCACAATATTATTAACTGATCGAAATTTTAATACTTCGTTTTTTGACCCTTCAGGAGGGGGGGATCCAATCCTTTTCCAACATTTATTT</seq>
       </row>
-      <row id="rw673" label="Tax4" otu="ou683">
-        <seq>
-ACTTTATATTTTTTATTTGGTACTTGATCAGCAATAATTGGTACAGCAATAAGTGTTTTAATTCGTGTTGAACTAGGATTTTCTGGAAGATTTTTAGGTGATGATCATTTATATAATGTAATTGTTACTGCTCATGCTTTTATTATAATTTTTTTTATAGTTATACCTATTTTAATTGGTGGTTTTGGAAATTGGTTAGTTCCTTTAATATTAAGAGCTCCAGATATAGCTTTTCCTCGTATAAATAATTTAAGATTTTGGTTACTACCTCCTTCGTTATTATTGTTATTTATTTCTTCTATGGTTGAAATCGGAGTTGGAGCAGGGTGGACTATTTATCCTCCTTTATCTTCTTCTGTGGGTCATTCTGGTGCATCTATGGATTTTGCAATTTTTTCTCTTCATTTAGCTGGTGCTTCTTCTATTATAGGTGCTATTAATTTTATTTCAACAATTATTAATATACGACCTTATGGTATAAGAATAGAAAAGATTCCTTTATTTGTATGATCTGTATTAATTACAGCTGTCTTATTATTATTATCATTACCAGTATTAGCTGGGGCTATTACTATACTTTTAACTGATCGTAATTTTAATACTTCTTTTTTTGATCCAGCTGGGGGTGGGGATCCAATTTTATTTCAGCATTTATTT
-</seq>
+      <row id="rw673" label="Tax4" otu="ou709">
+        <seq>ACTTTATATTTTTTATTTGGTACTTGATCAGCAATAATTGGTACAGCAATAAGTGTTTTAATTCGTGTTGAACTAGGATTTTCTGGAAGATTTTTAGGTGATGATCATTTATATAATGTAATTGTTACTGCTCATGCTTTTATTATAATTTTTTTTATAGTTATACCTATTTTAATTGGTGGTTTTGGAAATTGGTTAGTTCCTTTAATATTAAGAGCTCCAGATATAGCTTTTCCTCGTATAAATAATTTAAGATTTTGGTTACTACCTCCTTCGTTATTATTGTTATTTATTTCTTCTATGGTTGAAATCGGAGTTGGAGCAGGGTGGACTATTTATCCTCCTTTATCTTCTTCTGTGGGTCATTCTGGTGCATCTATGGATTTTGCAATTTTTTCTCTTCATTTAGCTGGTGCTTCTTCTATTATAGGTGCTATTAATTTTATTTCAACAATTATTAATATACGACCTTATGGTATAAGAATAGAAAAGATTCCTTTATTTGTATGATCTGTATTAATTACAGCTGTCTTATTATTATTATCATTACCAGTATTAGCTGGGGCTATTACTATACTTTTAACTGATCGTAATTTTAATACTTCTTTTTTTGATCCAGCTGGGGGTGGGGATCCAATTTTATTTCAGCATTTATTT</seq>
       </row>
-      <row id="rw675" label="Tax5" otu="ou684">
-        <seq>
-ACTTTATATTTAATGTTTGGGGTTTGGTCAGCTATAATAGGAACTGCTATAAGAGTATTAATTCGAATGGAATTAGGGAATCCTGGTAGATTGTTAGGTGATGATCATTTGTATAATGTTATAGTTACTGCTCATGCTTTTGTAATAATTTTTTTTATAGTAATGCCTATTCTTATTGGAGGTTTTGGAAATTGATTAGTTCCTTTAATATTAGGAGCTCCAGATATATCATTTCCTCGAATAAATAATCTTTCTTTTTGATTATTACCTCCTTCTTTATTTTTGTTATCTATATCTTCTATAGTAGAAATAGGAGTTGGGGCTGGGTGAACTGTTTATCCTCCTTTAGCGTCTACAGTTGGGCACATAGGAAATTCAATAGATTTTGCTATTTTTTCTCTTCATTTAGCTGGAGCTTCTTCTATTATAGGAGCTGTAAATTTTATTTCTACCATTATTAATATACGAATATTAGGAATATCTATAGAGAAGGTTCCTCTTTTTGTTTGATCAGTTTTAATTACAGCAGTATTATTATTACTTTCTTTACCTGTTTTAGCAGGTGCTATTACTATATTATTAACAGATCGAAATTTTAATACTTCTTTTTTTGATCCTGCTGGGGGAGGAGATCCTAATTTATTT------------
-</seq>
+      <row id="rw675" label="Tax5" otu="ou710">
+        <seq>ACTTTATATTTAATGTTTGGGGTTTGGTCAGCTATAATAGGAACTGCTATAAGAGTATTAATTCGAATGGAATTAGGGAATCCTGGTAGATTGTTAGGTGATGATCATTTGTATAATGTTATAGTTACTGCTCATGCTTTTGTAATAATTTTTTTTATAGTAATGCCTATTCTTATTGGAGGTTTTGGAAATTGATTAGTTCCTTTAATATTAGGAGCTCCAGATATATCATTTCCTCGAATAAATAATCTTTCTTTTTGATTATTACCTCCTTCTTTATTTTTGTTATCTATATCTTCTATAGTAGAAATAGGAGTTGGGGCTGGGTGAACTGTTTATCCTCCTTTAGCGTCTACAGTTGGGCACATAGGAAATTCAATAGATTTTGCTATTTTTTCTCTTCATTTAGCTGGAGCTTCTTCTATTATAGGAGCTGTAAATTTTATTTCTACCATTATTAATATACGAATATTAGGAATATCTATAGAGAAGGTTCCTCTTTTTGTTTGATCAGTTTTAATTACAGCAGTATTATTATTACTTTCTTTACCTGTTTTAGCAGGTGCTATTACTATATTATTAACAGATCGAAATTTTAATACTTCTTTTTTTGATCCTGCTGGGGGAGGAGATCCTAATTTATTT------------</seq>
       </row>
-      <row id="rw677" label="Tax6" otu="ou685">
-        <seq>
-ACTTTATATTTAATATTTGGAGCTTGATCTGCTATAGTAGGGACTGCTATAAGAGTGTTAATTCGAATAGAATTAGGTCAATCTGGAAGACTTTTAGGTGATGATCATTTATATAATGTTGTAGTTACTGCACATGCTTTTGTTATAATTTTTTTTATAGTTATACCTATTTTGATTGGTGGTTTTGGAAATTGGTTAGTTCCTTTAATATTAGGTGCTCCTGATATAGCTTTTCCTCGAATAAATAATTTAAGTTTTTGATTATTACCTCCTTCTTTATTTTTATTATTTATTTCTTCTATAGTTGAAATAGGAGTTGGAGCAGGATGAACAGTTTATCCTCCATTGGCATCTAGTGTAGGTCATATGGGAAGTGCAATAGATTTTGCTATTTTTTCATTACATTTGGCTGGTGCTTCTTCTATTATAGGAGCAGTAAATTTTATTACTACTATTATTAATATACGTTCTCATGGAATAAGAATAGAAAAAGTTCCTTTATTTGTTTGATCAGTTTTAATTACAGCTATTTTGTTGTTATTATCTTTACCTGTTTTAGCAGGTGCTATTACTATATTATTAACTGATCGTAATTTTAATACTTCTTTTTTTGATCCTGCTGGAGGAGGAGATCCTATTTTATTTCAACATTTATTT
-</seq>
+      <row id="rw677" label="Tax6" otu="ou711">
+        <seq>ACTTTATATTTAATATTTGGAGCTTGATCTGCTATAGTAGGGACTGCTATAAGAGTGTTAATTCGAATAGAATTAGGTCAATCTGGAAGACTTTTAGGTGATGATCATTTATATAATGTTGTAGTTACTGCACATGCTTTTGTTATAATTTTTTTTATAGTTATACCTATTTTGATTGGTGGTTTTGGAAATTGGTTAGTTCCTTTAATATTAGGTGCTCCTGATATAGCTTTTCCTCGAATAAATAATTTAAGTTTTTGATTATTACCTCCTTCTTTATTTTTATTATTTATTTCTTCTATAGTTGAAATAGGAGTTGGAGCAGGATGAACAGTTTATCCTCCATTGGCATCTAGTGTAGGTCATATGGGAAGTGCAATAGATTTTGCTATTTTTTCATTACATTTGGCTGGTGCTTCTTCTATTATAGGAGCAGTAAATTTTATTACTACTATTATTAATATACGTTCTCATGGAATAAGAATAGAAAAAGTTCCTTTATTTGTTTGATCAGTTTTAATTACAGCTATTTTGTTGTTATTATCTTTACCTGTTTTAGCAGGTGCTATTACTATATTATTAACTGATCGTAATTTTAATACTTCTTTTTTTGATCCTGCTGGAGGAGGAGATCCTATTTTATTTCAACATTTATTT</seq>
       </row>
     </matrix>
   </characters>
