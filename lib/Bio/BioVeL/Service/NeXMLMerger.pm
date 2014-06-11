@@ -187,6 +187,7 @@ sub _attach_charsets {
 		my $location = $self->charsets;
 		$log->info("going to read charsets from $location");		
 		my %sets = $r->read_charsets( $self->get_handle($location) );
+		$log->info("read ".scalar(keys(%sets))." character sets");
 		
 		# pre-process the focal character block
 		my ($matrix) = @{ $project->get_items(_MATRIX_) };

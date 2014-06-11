@@ -31,6 +31,7 @@ coordinate sets of the referenced character sets are deepcloned to replace the r
 
 sub read_charsets {
 	my ( $self, $handle ) = @_;
+	my $log = $self->logger;
 	my $line = 1;
 	my %result;
 	while(<$handle>) {
@@ -39,6 +40,7 @@ sub read_charsets {
 			my ( $name, $ranges ) = $self->read_charset( $_, $line );
 			if ( $name and $ranges ) {
 				$result{$name} = $ranges;
+				$log->info("read '$name' => '@$ranges'");
 			}
 		}
 		$line++;
@@ -97,11 +99,11 @@ sub read_charset {
 	if ( $string =~ /^\s*(\S+?)\s*=\s*(.+?)\s*;\s*$/ ) {
 		my ( $name, $ranges ) = ( $1, $2 );
 		my @ranges;
-		$log->debug("found charset name $name on line $line");
+		$log->info("found charset name $name on line $line");
 		
 		# ranges are space separated
 		for my $range ( split /\s+/, $ranges ) {
-			$log->debug("parsing range $range");
+			$log->info("parsing range $range");
 		
 			# initialize range data structure
 			my %range = ( 
@@ -121,19 +123,19 @@ sub read_charset {
 				# number after / is phase
 				if ( $range =~ /\\(\d+)$/ ) {
 					$range{'phase'} = $1;
-					$log->debug("phase of range $range is $range{phase}");
+					$log->info("phase of range $range is $range{phase}");
 				}
 			
 				# number after - is end coordinate
 				if ( $range =~ /-(\d+)/ ) {
 					$range{'end'} = $1;
-					$log->debug("end of range $range is $range{end}");
+					$log->info("end of range $range is $range{end}");
 				}
 			
 				# first number is start coordinate
 				if ( $range =~ /^(\d+)/ ) {
 					$range{'start'} = $1;
-					$log->debug("start of range $range is $range{start}");
+					$log->info("start of range $range is $range{start}");
 				}
 			}
 			push @ranges, \%range;
