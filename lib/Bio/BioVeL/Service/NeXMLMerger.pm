@@ -280,9 +280,9 @@ sub response_body {
 	# attach the character sets
 	$self->_attach_charsets($project);
 	
-        my $result = $project->to_xml( '-compact' => 1 );
-        Bio::Phylo::Util::IDPool->_reset;
-        return $result;
+    my $result = $project->to_xml( '-compact' => 1 );
+    #    Bio::Phylo::Util::IDPool->_reset;
+    return $result;
 }
 
 =back
