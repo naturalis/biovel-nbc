@@ -232,7 +232,7 @@ folding them into a single L<Bio::Phylo::Project> object that is serialized to N
 
 sub response_body {
 	my $self    = shift;
-        my $log     = $self->logger;	
+    my $log     = $self->logger;	
 	my $project = $fac->create_project;
 	my $taxa    = $fac->create_taxa;	
 	my ( @taxa, @matrices, $forest );
@@ -267,6 +267,7 @@ sub response_body {
 		$forest->insert($_) for @trees;
 		push @taxa, $forest->make_taxa;
 		$project->insert($forest);
+		$log->info("done reading trees");
 	}	
 	my $merged = $taxa->merge_by_name(@taxa);
 	$_->set_taxa($merged) for @matrices;
