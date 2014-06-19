@@ -53,7 +53,7 @@ sub new {
 		# e.g. as $self->nexml    
 		'parameters' => [
 			'nexml',       # input 
-			'object',      # Taxa|Trees|Matrices
+			'object',      # Taxa|Trees|Matrices|Charset
 			'treeformat',  # NEXUS|Newick|PhyloXML|NeXML
 			'dataformat',  # NEXUS|PHYLIP|FASTA|Stockholm 
 			'metaformat',  # tsv|JSON|csv
@@ -161,7 +161,46 @@ sub response_body {
 			$result .= $t->to_nexus
 		}
     }
-    
+
+    # get character sets
+    if ( $object eq "Charset" ){
+            $log->info("extracting character sets");
+
+            my ($matrix) = @{ $project->get_items(_MATRIX_) };
+            my $characters = $matrix->get_characters;
+            my @sets = @{ $characters->get_sets };            
+
+            for my $set ( @sets ) {
+                    
+                    my $char = $characters->get_by_index($set->current_index);
+                    $log->info("Set name : ".$set->get_name);
+                    
+                    #for (my $i=$set->current_index; $i<=$set->last_index; $i++){
+                    #        my $char = $characters->get_by_index($i);
+                    #        $log->info("Index : $i , ".$char->to_xml);
+                    #}
+                    $log->info("Ref set : ".ref($set));
+                    ###my $cr = $characters->first;
+                    my $cr = $characters->first;
+                    
+                    my @entities = @{ $set->get_entities };
+                    print "Length entities : ".scalar(@entities)."\n";
+                    #foreach my $ent (@entities){
+                    #        print "ref ent : ".ref($ent)."\n";
+                    #}
+
+                    while ($cr = $set->next()){
+                            $log->info("Ref cr : ".ref($cr));
+                    }
+
+                    $cr = $set->first;
+                    $log->info("Ref cr2 : ".ref($cr));
+                    
+            }
+            ##print $project->to_xml;
+            
+    }
+    $project->reset_xml_ids;
     return $result;    
 }
 
