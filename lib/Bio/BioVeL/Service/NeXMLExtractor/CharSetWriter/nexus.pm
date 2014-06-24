@@ -11,7 +11,7 @@ use base 'Bio::BioVeL::Service::NeXMLExtractor::CharSetWriter';
 
 =item write_charsets
 
-Writes character set definitions to a NEXUS file. The syntax is expected to be like what
+Writes character set definitions to a NEXUS string. The syntax is expected to be like what
 is used inside C<mrbayes> blocks and inside C<sets> blocks, i.e.:
 
 	charset <name> = <start coordinate>(-<end coordinate>)?(\<phase>)? ...;
@@ -27,16 +27,15 @@ sets may be used. The statement ends with a semicolon.
 =cut
 
 sub write_charsets {
-        my ( $self, @charsets ) = @_;
-        
-        my @setnames = uniq map {${$_}{"ref"}} @charsets;
+        my ( $self, $charsets ) = @_;
         
         my $str = "#nexus\n";
         $str .= "begin sets;\n";
-        
-        foreach my $name (@setnames) {
+        my %h = %{$charsets};
+        foreach my $name (keys %h) {
                 $str .= "charset $name = ";
-                my @sets = grep {${$_}{"ref"} eq $name} @charsets;
+                my $sets_ref = $h{$name};
+                my @sets = @{$sets_ref}; 
                 foreach my $set (@sets) {
                         $str .= $set->{"start"} == $set->{"end"} ? $set->{"start"} : $set->{"start"} . "-" . $set->{"end"};
                         my $phase = $set->{"phase"};
@@ -46,13 +45,9 @@ sub write_charsets {
                         $str .= " ";
                 }
                 $str .= ";\n";       
-        }
-        
+        } 
         $str .= "end;\n";
-        
         return $str;
-
-
 }
 
 1;
