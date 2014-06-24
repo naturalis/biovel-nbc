@@ -54,11 +54,11 @@ Inputs
 ------
 * NeXML file, whose location is specified as a URL, e.g. `nexml={URL}`
 * A parameter that specifies which objects to extract, e.g. 
-`objects={Taxa|Trees|Matrices}`
+`objects={Taxa|Trees|Matrices|Charsets}`
 * A parameter that specifies the output formats, 
 `treeformat={NEXUS|Newick|PhyloXML|NeXML}`, 
 `dataformat={NEXUS|PHYLIP|FASTA|Stockholm}`, 
-`metaformat={tsv|JSON|csv}`, `charsetformat={txt}`
+`metaformat={tsv|JSON|csv}`, `charsetformat={NEXUS|JSON}`
 
 Output
 ------
