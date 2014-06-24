@@ -30,4 +30,4 @@ $nexml = "$Bin/../Examples/merge.xml";
 );
 
 $extractor = new_ok ('Bio::BioVeL::Service::NeXMLExtractor');
-ok( my $res = $extractor->response_body );
+ok( $res = $extractor->response_body );
