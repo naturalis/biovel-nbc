@@ -1,11 +1,16 @@
 package Bio::BioVeL::Service::NeXMLExtractor;
 use strict;
 use warnings;
+
+use Bio::BioVeL::Service;
+use Bio::BioVeL::Service::NeXMLExtractor::CharSetWriter;
+
 use Bio::AlignIO;
 use Bio::Phylo::IO qw (parse unparse);
 use Bio::Phylo::Util::CONSTANT ':objecttypes';
-use Bio::BioVeL::Service;
 use base 'Bio::BioVeL::Service';
+
+
 
 =head1 NAME
 
@@ -55,9 +60,9 @@ sub new {
 			'nexml',       # input 
 			'object',      # Taxa|Trees|Matrices|Charset
 			'treeformat',  # NEXUS|Newick|PhyloXML|NeXML
-			'dataformat',  # NEXUS|PHYLIP|FASTA|Stockholm 
+			'dataformat',  # NEXUS|PHYLIP|FASTA|Stockholm|JSON 
 			'metaformat',  # tsv|JSON|csv
-		],
+                ],
 		@_,
 	);	
     return $self;
@@ -165,43 +170,78 @@ sub response_body {
     # get character sets
     if ( $object eq "Charset" ){
             $log->info("extracting character sets");
-
-            my ($matrix) = @{ $project->get_items(_MATRIX_) };
-            my $characters = $matrix->get_characters;
-            my @sets = @{ $characters->get_sets };            
-
-            for my $set ( @sets ) {
-                    
-                    my $char = $characters->get_by_index($set->current_index);
-                    $log->info("Set name : ".$set->get_name);
-                    
-                    #for (my $i=$set->current_index; $i<=$set->last_index; $i++){
-                    #        my $char = $characters->get_by_index($i);
-                    #        $log->info("Index : $i , ".$char->to_xml);
-                    #}
-                    $log->info("Ref set : ".ref($set));
-                    ###my $cr = $characters->first;
-                    my $cr = $characters->first;
-                    
-                    my @entities = @{ $set->get_entities };
-                    print "Length entities : ".scalar(@entities)."\n";
-                    #foreach my $ent (@entities){
-                    #        print "ref ent : ".ref($ent)."\n";
-                    #}
-
-                    while ($cr = $set->next()){
-                            $log->info("Ref cr : ".ref($cr));
-                    }
-
-                    $cr = $set->first;
-                    $log->info("Ref cr2 : ".ref($cr));
-                    
-            }
-            ##print $project->to_xml;
-            
+            my @charsets = $self->_extract_charsets($project);
+            my $f = $self->dataformat || "JSON";
+            my $writer = Bio::BioVeL::Service::NeXMLExtractor::CharSetWriter->new(lc($f));
+            $result .= $writer->write_charsets(@charsets);
     }
     $project->reset_xml_ids;
     return $result;    
+}
+
+# extracts the charset data from a given project object.
+# returns an array of hash references with charset information of the form:
+# 	{
+#		'start' => <start coordinate>, 
+#		'end'   => <end coordinate>,  
+#		'phase' => <steps to the next site in set>, 
+#		'ref'   => <name of character set>, 
+#	}
+
+sub _extract_charsets {
+        my ( $self, $project ) = @_;
+	my $log = $self->logger;
+        
+        my @charsets;
+
+        # extracting sets from matrix object
+        my ($matrix) = @{ $project->get_items(_MATRIX_) };
+        my $characters = $matrix->get_characters;
+        my @sets = @{ $characters->get_sets };            
+        my $first_id;
+        my @setnames = map {$_->get_name} @sets;
+
+        # iterate over all characters and put them into respective sets
+        my %set_chrs;
+        @set_chrs{@setnames} = [];
+        while (my $char = $characters->next) {
+                # strip non-digits (e.g. 'cr')
+                my $id = ${$char->get_attributes}{"id"} =~ s/[^0-9]//gr;
+                $first_id = $id if ! $first_id;
+                for my $set (@sets) {
+                        if ($characters->is_in_set($char, $set)) {
+                                # subtract id for first character, so characters start from one
+                                push @{$set_chrs{$set->get_name}}, $id - $first_id + 1;
+                        }
+                }
+        }
+        
+        # now, iterate over each caracter set and look if we can summarize some characters 
+        #  (e.g. 1-100 instead of all characters inbetween, or 3-9\3 for characters in steps of 3).
+        foreach my $setname (@setnames) {
+                my @ids = @{$set_chrs{$setname}};
+                my $last_diff;
+                my $start = $ids[0];
+                my $end;
+                for my $i (1..($#ids+1)){
+                        my $diff;
+                        if ($i <($#ids+1)){
+                                $diff = $ids[$i] - $ids[$i-1];
+                        }
+                        if (!$diff || ( $last_diff && ($last_diff != $diff)) ) {
+                                $end = $ids[$i-1];
+                                my $coord_set = { 'start'=> $start,
+                                                  'end'  => $end,
+                                                  'phase'=> $start == $end ? 1 : $last_diff,
+                                                  'ref'  => $setname
+                                };
+                                push @charsets, $coord_set;
+                                $start = $ids[$i];
+                        }
+                        $last_diff = $diff;
+                }
+        }
+        return @charsets;
 }
 
 =back
