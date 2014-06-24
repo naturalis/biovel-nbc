@@ -26,7 +26,8 @@ Bio::BioVeL::Service::NeXMLExtractor - extracts and converts data from a NeXML d
      '-nexml'      => $nexml,
      '-object'     => 'Trees',
      '-treeformat' => 'newick',
-     '-dataformat' => 'nexus'
+     '-dataformat' => 'nexus',
+     '-charsetformat' => 'nexus',
  );
 
  my $extractor = Bio::BioVeL::Service::NeXMLExtractor->new;
@@ -57,11 +58,12 @@ sub new {
 		# construction the object can access these properties,
 		# e.g. as $self->nexml    
 		'parameters' => [
-			'nexml',       # input 
-			'object',      # Taxa|Trees|Matrices|Charset
-			'treeformat',  # NEXUS|Newick|PhyloXML|NeXML
-			'dataformat',  # NEXUS|PHYLIP|FASTA|Stockholm|JSON 
-			'metaformat',  # tsv|JSON|csv
+			'nexml',        # input 
+			'object',       # Taxa|Trees|Matrices|Charsets
+			'treeformat',   # NEXUS|Newick|PhyloXML|NeXML
+			'dataformat',   # NEXUS|PHYLIP|FASTA|Stockholm 
+			'metaformat',   # tsv|JSON|csv
+                        'charsetformat' # NEXUS|JSON
                 ],
 		@_,
 	);	
@@ -168,10 +170,10 @@ sub response_body {
     }
 
     # get character sets
-    if ( $object eq "Charset" ){
+    if ( $object eq "Charsets" ){
             $log->info("extracting character sets");
             my @charsets = $self->_extract_charsets($project);
-            my $f = $self->dataformat || "JSON";
+            my $f = $self->charsetformat || "JSON";
             my $writer = Bio::BioVeL::Service::NeXMLExtractor::CharSetWriter->new(lc($f));
             $result .= $writer->write_charsets(@charsets);
     }

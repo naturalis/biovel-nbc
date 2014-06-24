@@ -25,9 +25,10 @@ $nexml = "$Bin/../Examples/merge.xml";
 
 @ARGV = (
     '-nexml'      => $nexml,
-    '-object'     => 'Charset',
-    '-dataformat' => 'nexus'
+    '-object'     => 'Charsets',
+    '-charsetformat' => 'nexus'
 );
 
 $extractor = new_ok ('Bio::BioVeL::Service::NeXMLExtractor');
 ok( $res = $extractor->response_body );
+
