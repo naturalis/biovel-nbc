@@ -172,10 +172,10 @@ sub response_body {
     # get character sets
     if ( $object eq "Charsets" ){
             $log->info("extracting character sets");
-            my @charsets = $self->_extract_charsets($project);
+            my $charsets = $self->_extract_charsets($project);
             my $f = $self->charsetformat || "JSON";
             my $writer = Bio::BioVeL::Service::NeXMLExtractor::CharSetWriter->new(lc($f));
-            $result .= $writer->write_charsets(@charsets);
+            $result .= $writer->write_charsets($charsets);
     }
     $project->reset_xml_ids;
     return $result;    
@@ -194,8 +194,6 @@ sub _extract_charsets {
         my ( $self, $project ) = @_;
 	my $log = $self->logger;
         
-        my @charsets;
-
         # extracting sets from matrix object
         my ($matrix) = @{ $project->get_items(_MATRIX_) };
         my $characters = $matrix->get_characters;
@@ -220,11 +218,13 @@ sub _extract_charsets {
         
         # now, iterate over each caracter set and look if we can summarize some characters 
         #  (e.g. 1-100 instead of all characters inbetween, or 3-9\3 for characters in steps of 3).
+        my %final_sets;
         foreach my $setname (@setnames) {
                 my @ids = @{$set_chrs{$setname}};
                 my $last_diff;
                 my $start = $ids[0];
                 my $end;
+                my @sets;
                 for my $i (1..($#ids+1)){
                         my $diff;
                         if ($i <($#ids+1)){
@@ -235,15 +235,15 @@ sub _extract_charsets {
                                 my $coord_set = { 'start'=> $start,
                                                   'end'  => $end,
                                                   'phase'=> $start == $end ? 1 : $last_diff,
-                                                  'ref'  => $setname
                                 };
-                                push @charsets, $coord_set;
+                                push @sets, $coord_set;
                                 $start = $ids[$i];
                         }
                         $last_diff = $diff;
                 }
+                $final_sets{$setname} = \@sets;
         }
-        return @charsets;
+        return \%final_sets;
 }
 
 =back
