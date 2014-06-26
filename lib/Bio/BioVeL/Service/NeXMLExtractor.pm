@@ -220,24 +220,35 @@ sub _extract_charsets {
         #  (e.g. 1-100 instead of all characters inbetween, or 3-9\3 for characters in steps of 3).
         my %final_sets;
         foreach my $setname (@setnames) {
-                my @ids = @{$set_chrs{$setname}};
+                
+                my @char_positions = @{$set_chrs{$setname}};
+                
                 my $last_diff;
-                my $start = $ids[0];
-                my $end;
+                my $start = $char_positions[0];
                 my @sets;
-                for my $i (1..($#ids+1)){
+                for my $i (1 .. $#char_positions + 1) {
                         my $diff;
-                        if ($i <($#ids+1)){
-                                $diff = $ids[$i] - $ids[$i-1];
+                        if ($i < $#char_positions + 1) {
+                                $diff = $char_positions[$i] - $char_positions[ $i - 1 ];
                         }
-                        if (!$diff || ( $last_diff && ($last_diff != $diff)) ) {
-                                $end = $ids[$i-1];
-                                my $coord_set = { 'start'=> $start,
-                                                  'end'  => $end,
-                                                  'phase'=> $start == $end ? 1 : $last_diff,
+                        
+                        # Merge with the last number from the previous series if needed:
+                        if (!$last_diff # Just starting a new series.
+                            and $i > 2  # Far enough to have preceding char_positions.
+                            and $diff and $diff == $char_positions[ $i - 1 ] - $char_positions[ $i - 2 ]
+                            ) {
+                                $sets[-1]{end} = $char_positions[ $i - 3 ];
+                                $sets[-1]{offset} = 0 if $sets[-1]{start} == $sets[-1]{end};
+                                $start = $char_positions[ $i - 2 ];
+                        }
+                        
+                        if (! $diff or ( $last_diff && ($last_diff != $diff)) ) {
+                                push @sets, { start  => $start,
+                                              end    => $char_positions[ $i - 1 ],
+                                              offset => $last_diff,
                                 };
-                                push @sets, $coord_set;
-                                $start = $ids[$i];
+                                $start = $char_positions[$i];
+                                undef $diff;
                         }
                         $last_diff = $diff;
                 }
