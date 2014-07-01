@@ -29,6 +29,20 @@ $nexml = "$Bin/../Examples/merge.xml";
     '-charsetformat' => 'nexus'
 );
 
+#call in browser:
+#http://biovel.naturalis.nl/biovel?service=NeXMLExtractor&nexml=https://raw.githubusercontent.com/naturalis/biovel-nbc/master/Examples/merge.xml&charsetformat=nexus&object=Charsets
+
 $extractor = new_ok ('Bio::BioVeL::Service::NeXMLExtractor');
 ok( $res = $extractor->response_body );
+
+# extract taxa in various formats
+@ARGV = (
+    '-nexml'      => $nexml,
+    '-object'     => 'Taxa',
+    '-dataformat' => 'tsv'
+);
+
+$extractor = new_ok ('Bio::BioVeL::Service::NeXMLExtractor');
+ok( $res = $extractor->response_body );
+print $res;
 
