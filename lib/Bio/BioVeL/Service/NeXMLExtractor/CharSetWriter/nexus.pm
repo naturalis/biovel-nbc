@@ -2,8 +2,6 @@ package Bio::BioVeL::Service::NeXMLExtractor::CharSetWriter::nexus;
 use strict;
 use warnings;
 
-use List::MoreUtils qw(uniq);
-
 use Bio::BioVeL::Service::NeXMLExtractor::CharSetWriter;
 use base 'Bio::BioVeL::Service::NeXMLExtractor::CharSetWriter';
 
