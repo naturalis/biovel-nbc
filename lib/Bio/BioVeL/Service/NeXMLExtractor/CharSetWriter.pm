@@ -22,7 +22,7 @@ Each has reference has the following form:
 =cut
 
 sub write_charsets {
-	my ( $self, $handle ) = @_;
+	my ( $self, $charsets ) = @_;
 	die "Implement me!";
 }
 
