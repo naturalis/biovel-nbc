@@ -4,6 +4,7 @@ use warnings;
 
 use Bio::BioVeL::Service;
 use Bio::BioVeL::Service::NeXMLExtractor::CharSetWriter;
+use Bio::BioVeL::Service::NeXMLExtractor::TaxaWriter;
 
 use Bio::AlignIO;
 use Bio::Phylo::IO qw (parse unparse);
@@ -161,14 +162,12 @@ sub response_body {
     # get taxa
     if ( $object eq "Taxa" ){
 		my @taxa = @{ $project->get_items( _TAXA_ ) };
-		$log->info("extracting ".scalar(@taxa)." taxa blocks as NEXUS");
-		
-		# nexus format seems to be the only supported one right now
-		for my $t( @taxa ){
-			$result .= $t->to_nexus
-		}
+		$log->info("extracting ".scalar(@taxa)." taxa blocks");
+                my $f = $self->dataformat || "nexus";
+		my $writer = Bio::BioVeL::Service::NeXMLExtractor::TaxaWriter->new(lc($f));
+                $result .= $writer->write_taxa(@taxa);
     }
-
+    
     # get character sets
     if ( $object eq "Charsets" ){
             $log->info("extracting character sets");
