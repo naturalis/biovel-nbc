@@ -161,7 +161,8 @@ sub response_body {
     
     # get taxa
     if ( $object eq "Taxa" ){
-		my @taxa = @{ $project->get_items( _TAXA_ ) };
+            print "Extracting Taxa!\n";
+		my @taxa = @{ $project->get_taxa };
 		$log->info("extracting ".scalar(@taxa)." taxa blocks");
                 my $f = $self->dataformat || "nexus";
 		my $writer = Bio::BioVeL::Service::NeXMLExtractor::TaxaWriter->new(lc($f));
