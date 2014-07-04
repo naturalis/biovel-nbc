@@ -8,6 +8,7 @@ use Apache2::Request;
 use Apache2::RequestRec ();
 use Apache2::RequestIO ();
 use Apache2::Const -compile => qw(OK);
+use CGI::Carp qw(fatalsToBrowser set_message);
 use LWP::UserAgent;
 use Bio::Phylo::Util::Logger ':levels';
 
@@ -22,7 +23,20 @@ my $log = Bio::Phylo::Util::Logger->new(
 		'Bio::BioVeL::Service::NeXMLExtractor' 
 	]
 );
+
 our $AUTOLOAD;
+
+
+# this redirects fatal errors on the web server directly to the browser instead
+# of to the server error log using the function fatalsToBrowser;
+# note that fatalsToBrowser alone does not really work with mod_perl2, so 
+# we override the 'die' signal and then redirect the error message to fatalsToBrowser.
+$SIG{__DIE__} = sub {
+    my $message = $_[0];
+    # do not print email of web master...                                                                                                                                                            
+    set_message(" ");
+    fatalsToBrowser($message);
+};
 
 =head1 NAME
 
