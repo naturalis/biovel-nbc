@@ -26,6 +26,10 @@ my $log = Bio::Phylo::Util::Logger->new(
 
 our $AUTOLOAD;
 
+# list which services are synchronous or asynchronous so the
+# handler function knows which subclass to intanciate.
+my @sync_services = ("NeXMLMerger", "NeXMLExtractor");
+my @async_services = ("TNRS");
 
 # this redirects fatal errors on the web server directly to the browser instead
 # of to the server error log using the function fatalsToBrowser;
@@ -174,7 +178,18 @@ C<Apache2::Const::OK>, indicates to mod_perl that everything went well.
 
 sub handler {
 	my $request = Apache2::Request->new(shift);
-	my $subclass = __PACKAGE__ . '::' . $request->param('service');
+	my $baseclass;
+	my $service = $request->param('service');
+	if (grep $service, @sync_services) {
+       $baseclass = "Bio::BioVeL::Service";
+    } 
+   	elsif (grep $service, @async_services) {
+       $baseclass = "Bio::BioVeL::AsynchronousService";
+    }
+    else {
+       $log->fatal("Invalid service name $service");
+    }
+	my $subclass = $baseclass . '::' . $service;
 	eval "require $subclass";
 	my $self = $subclass->new( 'request' => $request );
 	$request->content_type( $self->content_type );
