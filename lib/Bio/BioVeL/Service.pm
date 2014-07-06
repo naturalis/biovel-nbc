@@ -180,10 +180,10 @@ sub handler {
 	my $request = Apache2::Request->new(shift);
 	my $baseclass;
 	my $service = $request->param('service');
-	if (grep $service, @sync_services) {
+	if ($service ~~ @sync_services) {
        $baseclass = "Bio::BioVeL::Service";
-    } 
-   	elsif (grep $service, @async_services) {
+   	} 
+   	elsif ($service ~~ @async_services) {
        $baseclass = "Bio::BioVeL::AsynchronousService";
     }
     else {
