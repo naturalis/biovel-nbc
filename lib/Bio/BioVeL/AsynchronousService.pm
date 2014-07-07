@@ -9,6 +9,7 @@ use Bio::BioVeL::Service;
 use Digest::MD5 'md5_hex';
 use Apache2::Const '-compile' => qw'OK REDIRECT';
 use Proc::ProcessTable;
+use File::Spec 'tmpdir';
 use base qw'Bio::BioVeL::Service Exporter'; # NOTE: multiple inheritance
 
 # status constants
@@ -320,9 +321,12 @@ result files), use outdir().
 
 sub workdir {
 	my $class = shift;
+	my $log = $class->logger;
 	my $name = ref($class) || $class;
 	$name =~ s|::|/|g;
-	my $dir = $ENV{'BIOVEL_HOME'} . '/' . $name;
+	my $tmpdir = File::Spec->tmpdir();
+	$log->info("using temporary directory $tmpdir for output");
+	my $dir = $tmpdir . '/' . $name;
 	make_path($dir) if not -d $dir;
 	return $dir;
 }

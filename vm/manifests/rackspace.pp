@@ -1,4 +1,4 @@
-# This manifests installs the biovel-mdc nexml-merger/extractor web service on the default
+# This manifests installs the biovel-nbc web services on the default
 # ubuntu instances hosted by rackspace.
 
 # update the $PATH environment variable for the Exec tasks.                                                                                                                                                 
