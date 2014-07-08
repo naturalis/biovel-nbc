@@ -42,7 +42,6 @@ ok( $res = $extractor->response_body );
 #call in browser:
 #http://biovel.naturalis.nl/biovel?service=NeXMLExtractor&nexml=https://raw.githubusercontent.com/naturalis/biovel-nbc/master/Examples/merge.xml&dataformat=tsv&object=Taxa
 $extractor = new_ok ('Bio::BioVeL::Service::NeXMLExtractor');
-$res = $extractor->response_body;
 ok( $res = $extractor->response_body );
 
 
