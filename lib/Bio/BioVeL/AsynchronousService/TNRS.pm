@@ -5,6 +5,7 @@ use Bio::BioVeL::AsynchronousService ':status';
 use Bio::Phylo::Util::Logger 'WARN';
 use base 'Bio::BioVeL::AsynchronousService';
 
+    
 =head1 NAME
 
 Bio::BioVeL::AsynchronousService::TNRS - wrapper for the SUPERSMART TNRS service
@@ -30,6 +31,7 @@ sub new {
 	shift->SUPER::new( 'parameters' => [ 'names' ], @_ );
 }
 
+
 =item launch
 
 Launches the TNRS script. This will require the SUPERSMART_HOME environment 
@@ -51,6 +53,7 @@ sub launch {
 	my $logfile = $self->outdir . '/TNRS.log';
 	
 	# SUPERSMART_HOME needs to be known and accessible to the httpd process
+	die ("need environment variable SUPERSMART_HOME") if not $ENV{'SUPERSMART_HOME'};
 	my $script = $ENV{'SUPERSMART_HOME'} . '/script/supersmart/mpi_write_taxa_table.pl';
 	$log->error("no such file: $script") if not -e $script;
 	
@@ -61,7 +64,7 @@ sub launch {
 	print $writefh $_ while <$readfh>; 
 	
 	# run the job
-	my $command = "mpirun -np 2 $script -i $infile 2>$logfile |";
+	my $command = "mpirun -x SUPERSMART_HOME=$ENV{SUPERSMART_HOME} -np 4 $script -i $infile 2>$logfile |";
 	$log->info("going to open command pipe from $command");
 	open my $pipe, $command or die $!;
 	my @result = <$pipe>;
@@ -101,10 +104,22 @@ file of names-to-taxon-ID mappings.
 
 sub response_body {
 	my $self = shift;
+	while( $self->update ne DONE ) {
+		sleep 5;
+	}
 	open my $fh, '<', $self->outdir . '/taxa.tsv';
 	my @result = do { local $/; <$fh> };
 	return join "\n", @result;
 }
+
+=item content_type
+
+Returns the MIME type.
+
+=cut
+
+sub content_type { 'text/plain' }
+
 
 =back
 
