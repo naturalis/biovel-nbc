@@ -25,5 +25,7 @@ SKIP: {
 	}
 
 	ok( -e $tnrs->response_location, 'output location exists' );
-
+	my $rb = $tnrs->response_body();
 }
+
+# http://biovel.naturalis.nl/biovel?service=TNRS&names=https://raw.githubusercontent.com/naturalis/biovel-nbc/master/Examples/tnrs_names.txt
