@@ -8,7 +8,10 @@ use Apache2::Request;
 use Apache2::RequestRec ();
 use Apache2::RequestIO ();
 use Apache2::Const -compile => qw(OK);
-use CGI::Carp qw(fatalsToBrowser set_message);
+use CGI::Carp qw(fatalsToBrowser warningsToBrowser set_message);
+
+warningsToBrowser(1);
+
 use LWP::UserAgent;
 use Bio::Phylo::Util::Logger ':levels';
 
@@ -37,9 +40,13 @@ my @async_services = ("TNRS");
 # we override the 'die' signal and then redirect the error message to fatalsToBrowser.
 $SIG{__DIE__} = sub {
     my $message = $_[0];
-    # do not print email of web master...                                                                                                                                                            
-    set_message(" ");
-    fatalsToBrowser($message);
+	my @ignored_exceptions = ();
+    if ( ! (ref($message) ~~ @ignored_exceptions) ) {
+    	# do not print email of web master...     
+    	set_message(" ");
+    	#print CGI::header();
+    	fatalsToBrowser($message);
+	}
 };
 
 =head1 NAME
@@ -139,7 +146,7 @@ with the specified data.
 
 sub get_handle {
 	my ( $self, $location ) = @_;
-	
+			
 	# location is a URL
 	if ( $location =~ m#^(?:http|ftp|https)://# ) {
 		my $ua = LWP::UserAgent->new;
@@ -149,6 +156,10 @@ sub get_handle {
 			open my $fh, '<', \$content;
 			return $fh;
 		}
+		else {
+			die("could not create handle for file from location $location");
+		}
+		
 	}
 	else {
 		open my $fh, '<', $location or die $!;
@@ -175,7 +186,7 @@ to produce a response body, which the handler prints out. The return value,
 C<Apache2::Const::OK>, indicates to mod_perl that everything went well.
 
 =cut
-
+	
 sub handler {
 	my $request = Apache2::Request->new(shift);
 	my $baseclass;
@@ -189,7 +200,7 @@ sub handler {
     else {
        $log->fatal("Invalid service name $service");
     }
-	my $subclass = $baseclass . '::' . $service;
+    my $subclass = $baseclass . '::' . $service;
 	eval "require $subclass";
 	my $self = $subclass->new( 'request' => $request );
 	$request->content_type( $self->content_type );
