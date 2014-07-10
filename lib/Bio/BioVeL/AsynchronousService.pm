@@ -9,7 +9,6 @@ use Bio::BioVeL::Service;
 use Digest::MD5 'md5_hex';
 use Apache2::Const '-compile' => qw'OK REDIRECT';
 use Proc::ProcessTable;
-use File::Spec 'tmpdir';
 use base qw'Bio::BioVeL::Service Exporter'; # NOTE: multiple inheritance
 
 # status constants
@@ -193,6 +192,8 @@ sub update {
 		PROC: for my $proc ( @{ $pt->table } ) {
 			if ( $proc->pid == $pid ) {
 				if ( abs( $timestamp - $proc->start ) < 2 ) {
+					$log->info("PID : ".$proc->pid);
+					
 					$log->info("still running: ".$proc->cmndline);
 					$status = RUNNING;
 					last PROC;
@@ -200,6 +201,7 @@ sub update {
 			}
 		}
 	}
+	$log->info("Setting status to $status");
 	$self->status($status);
 }
 
@@ -279,15 +281,22 @@ sub handler {
 		'request' => $request, 
 		'jobid'   => ( $request->param('jobid') || 0 ),
 	);
+	my $table = $request->param;
+    my @table_keys = keys %$table;
+    $self->logger(join ",", @table_keys);
+	
+	
 	if ( $self->status eq DONE ) {
+		$self->logger->info("asynchronous server staus: DONE. response location: ".$self->response_location);
 		if ( my $loc = $self->response_location ) {
-			my $docroot = $r->doc_root;
+			my $docroot = $r->document_root;
 			my $path    = $r->location;
 			my $server  = $r->get_server_name;
 			$loc =~ s/^\Q$docroot\E//;
-			my $url = 'http://' . $server . $path . $loc;
+			my $url = 'http://' . $server . $loc;
 			$r->headers_out->set('Location' => $url);
 			$r->status(Apache2::Const::REDIRECT);			
+			$self->logger->info("setting url for asynchronous server response to : ".$url);
 		}
 		else {
 			print $self->response_body;
@@ -310,9 +319,7 @@ TEMPLATE
 
 =item workdir
 
-This static method returns a directory inside $ENV{BIOVEL_HOME}, which consequently needs 
-to be defined, for example by specifying it with PerlSetEnv inside httpd.conf. See:
-L<http://modperlbook.org/html/4-2-10-PerlSetEnv-and-PerlPassEnv.html>. This dir is used 
+This static method returns a directory to which the web server has access. This dir is used 
 for serializing the job object, so its location can be generated/pulled out of the air by 
 static methods (as the object might not exist yet). For job-specific output (e.g. analysis
 result files), use outdir().
@@ -321,13 +328,12 @@ result files), use outdir().
 
 sub workdir {
 	my $class = shift;
-	my $log = $class->logger;
 	my $name = ref($class) || $class;
 	$name =~ s|::|/|g;
-	my $tmpdir = File::Spec->tmpdir();
-	$log->info("using temporary directory $tmpdir for output");
-	my $dir = $tmpdir . '/' . $name;
+	die ("writable document root needs to be specified in web server configuration file!") if not $ENV{'DOCUMENT_ROOT'}; 
+	my $dir = $ENV{'DOCUMENT_ROOT'} . '/' . $name;
 	make_path($dir) if not -d $dir;
+	$class->logger("WORKDIR : $dir");
 	return $dir;
 }
 
