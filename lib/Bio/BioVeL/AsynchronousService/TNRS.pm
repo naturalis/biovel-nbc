@@ -104,9 +104,6 @@ file of names-to-taxon-ID mappings.
 
 sub response_body {
 	my $self = shift;
-	while( $self->update ne DONE ) {
-		sleep 5;
-	}
 	open my $fh, '<', $self->outdir . '/taxa.tsv';
 	my @result = do { local $/; <$fh> };
 	return join "\n", @result;
