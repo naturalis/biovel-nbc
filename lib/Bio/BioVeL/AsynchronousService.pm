@@ -281,10 +281,6 @@ sub handler {
 		'request' => $request, 
 		'jobid'   => ( $request->param('jobid') || 0 ),
 	);
-	my $table = $request->param;
-    my @table_keys = keys %$table;
-    $self->logger(join ",", @table_keys);
-	
 	
 	if ( $self->status eq DONE ) {
 		$self->logger->info("asynchronous server staus: DONE. response location: ".$self->response_location);
