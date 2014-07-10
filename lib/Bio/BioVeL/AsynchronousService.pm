@@ -281,9 +281,10 @@ sub handler {
 		'request' => $request, 
 		'jobid'   => ( $request->param('jobid') || 0 ),
 	);
+	$self->logger->info("USER: ".$ENV{'USER'});
 	
 	if ( $self->status eq DONE ) {
-		$self->logger->info("asynchronous server staus: DONE. response location: ".$self->response_location);
+		$self->logger->info("asynchronous server status: DONE. response location: ".$self->response_location);
 		if ( my $loc = $self->response_location ) {
 			my $docroot = $r->document_root;
 			my $path    = $r->location;
