@@ -4,6 +4,7 @@ use warnings;
 use Bio::BioVeL::AsynchronousService ':status';
 use Bio::Phylo::Util::Logger 'WARN';
 use base 'Bio::BioVeL::AsynchronousService';
+use IPC::Run 'run';
 
     
 =head1 NAME
@@ -64,24 +65,29 @@ sub launch {
 	print $writefh $_ while <$readfh>; 
 	
 	# run the job
-	my $command = "mpirun -x SUPERSMART_HOME=$ENV{SUPERSMART_HOME} -np 4 $script -i $infile 2>$logfile |";
-	$log->info("going to open command pipe from $command");
-	open my $pipe, $command or die $!;
-	my @result = <$pipe>;
-	$log->info("read ".scalar(@result)." line(s) from command pipe");
-	
-	# there was an error form the OS
+	my $out;
+	my $err;
+	my @command = ("mpirun", "-x", "SUPERSMART_HOME=".$ENV{SUPERSMART_HOME}, "-np", "4", $script, "-i", $infile);
+	$log->info("going to run command " . join( ",", @command) );
+	run( \@command, ">", \$out, "2>", \$err, verbose=>1 );
+			
+	# there was an error from the OS
 	if ( $? ) {
 		$self->status( ERROR );
 		$self->lasterr( "unexpected problem, exit code: " . ( $? >> 8 ) );
 		$log->error( "unexpected problem, exit code: " . ( $? >> 8 ) ); 
 	}
 	else {
+		# write output file
 		open my $fh, '>', $outfile or die;
-		print $fh @result;
+		print $fh $out;
 		close $fh;
 		$self->status( DONE );
 		$log->info("results written to $outfile, status: ".DONE);
+		# write log file
+		open my $logfh, '>', $logfile or die;
+		print $logfh $err;
+		close $logfh;
 	}
 }
 
