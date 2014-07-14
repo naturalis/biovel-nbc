@@ -318,7 +318,7 @@ TEMPLATE
 This static method returns a directory to which the web server has access. This dir is used 
 for serializing the job object, so its location can be generated/pulled out of the air by 
 static methods (as the object might not exist yet). For job-specific output (e.g. analysis
-result files), use outdir().
+result files), use outdir(). 
 
 =cut
 
@@ -326,8 +326,10 @@ sub workdir {
 	my $class = shift;
 	my $name = ref($class) || $class;
 	$name =~ s|::|/|g;
-	die ("writable document root needs to be specified in web server configuration file!") if not $ENV{'DOCUMENT_ROOT'}; 
-	my $dir = $ENV{'DOCUMENT_ROOT'} . '/' . $name;
+	die ("writable document root needs to be specified in web server configuration file!") 
+		if not $ENV{'DOCUMENT_ROOT'} and not $ENV{'BIOVEL_HOME'}; 
+	my $root = $ENV{'DOCUMENT_ROOT'} ? $ENV{'DOCUMENT_ROOT'} : $ENV{'BIOVEL_HOME'};
+	my $dir = $root . '/' . $name;
 	make_path($dir) if not -d $dir;
 	$class->logger("WORKDIR : $dir");
 	return $dir;
