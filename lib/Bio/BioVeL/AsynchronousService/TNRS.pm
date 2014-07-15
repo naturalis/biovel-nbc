@@ -56,7 +56,7 @@ sub launch {
 	# SUPERSMART_HOME needs to be known and accessible to the httpd process
 	die ("need environment variable SUPERSMART_HOME") if not $ENV{'SUPERSMART_HOME'};
 	
-	# with mod_perl, environment variables are not passed to the child script; use Env::C to set globally
+	# with mod_perl, environment variables might not be passed to the child script (depending of OS and apache version); use Env::C to set globally
 	Env::C::setenv("SUPERSMART_HOME", $ENV{SUPERSMART_HOME});
 	
 	my $script = $ENV{'SUPERSMART_HOME'} . '/script/supersmart/parallel_write_taxa_table.pl';
