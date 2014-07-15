@@ -326,7 +326,7 @@ sub workdir {
 	my $class = shift;
 	my $name = ref($class) || $class;
 	$name =~ s|::|/|g;
-	die ("writable document root needs to be specified in web server configuration file!") 
+	die ("writable document root needs to be specified either in \$DOCUMENT_ROOT in apache's configuration file or alternatively in \$BIOVEL_HOME") 
 		if not $ENV{'DOCUMENT_ROOT'} and not $ENV{'BIOVEL_HOME'}; 
 	my $root = $ENV{'DOCUMENT_ROOT'} ? $ENV{'DOCUMENT_ROOT'} : $ENV{'BIOVEL_HOME'};
 	my $dir = $root . '/' . $name;
