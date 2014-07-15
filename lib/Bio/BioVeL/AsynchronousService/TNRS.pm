@@ -4,8 +4,8 @@ use warnings;
 use Bio::BioVeL::AsynchronousService ':status';
 use Bio::Phylo::Util::Logger 'WARN';
 use base 'Bio::BioVeL::AsynchronousService';
-use IPC::Run 'run';
-
+use Env::C;
+	
     
 =head1 NAME
 
@@ -55,7 +55,11 @@ sub launch {
 	
 	# SUPERSMART_HOME needs to be known and accessible to the httpd process
 	die ("need environment variable SUPERSMART_HOME") if not $ENV{'SUPERSMART_HOME'};
-	my $script = $ENV{'SUPERSMART_HOME'} . '/script/supersmart/mpi_write_taxa_table.pl';
+	
+	# with mod_perl, environment variables are not passed to the child script; use Env::C to set globally
+	Env::C::setenv("SUPERSMART_HOME", $ENV{SUPERSMART_HOME});
+	
+	my $script = $ENV{'SUPERSMART_HOME'} . '/script/supersmart/parallel_write_taxa_table.pl';
 	$log->error("no such file: $script") if not -e $script;
 	
 	# fetch the input file
@@ -65,12 +69,9 @@ sub launch {
 	print $writefh $_ while <$readfh>; 
 	
 	# run the job
-	my $out;
-	my $err;
-	my @command = ("mpirun", "-x", "SUPERSMART_HOME=".$ENV{SUPERSMART_HOME}, "-np", "4", $script, "-i", $infile);
-	$log->info("going to run command " . join( ",", @command) );
-	run( \@command, ">", \$out, "2>", \$err, verbose=>1 );
-			
+	my $command = "perl $script -i $infile 2>$logfile";
+	my $out = qx($command);
+	
 	# there was an error from the OS
 	if ( $? ) {
 		$self->status( ERROR );
@@ -84,10 +85,6 @@ sub launch {
 		close $fh;
 		$self->status( DONE );
 		$log->info("results written to $outfile, status: ".DONE);
-		# write log file
-		open my $logfh, '>', $logfile or die;
-		print $logfh $err;
-		close $logfh;
 	}
 }
 
