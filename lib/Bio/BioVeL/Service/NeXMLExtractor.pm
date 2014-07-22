@@ -138,6 +138,12 @@ sub response_body {
 		# use Bio::Phylo's unparse()
 		else {		
 			for my $matrix ( @matrices ){
+				my @rows = @{$matrix->get_entities};
+				
+				# set name of matrix row to the name of the taxon it links to
+				#  (prevents exporting a matrix with internal identifiers) 				
+				map {$_->set_name($_->get_taxon()->get_name)} @rows;
+				
 				$result .= unparse (
 					'-format' => ucfirst $format,
 					'-phylo'  => $matrix,
