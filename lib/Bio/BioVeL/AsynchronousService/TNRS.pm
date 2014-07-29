@@ -69,7 +69,7 @@ sub launch {
 	print $writefh $_ while <$readfh>; 
 	
 	# run the job
-	my $command = "perl $script -i $infile 2>$logfile";
+	my $command = "mpirun -np 2 perl $script -i $infile 2>$logfile";
 	my $out = qx($command);
 	
 	# there was an error from the OS
