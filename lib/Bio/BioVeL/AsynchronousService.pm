@@ -265,6 +265,18 @@ sub status {
 	return $self->{'status'};
 }
 
+=item check_input
+
+This abstract method should be implementd by the child service classes. 
+Puropse is to check the parameters and give an error message and exit
+if an essential parameter is not provided.
+
+=cut
+
+sub check_input {
+	warn ("check_input should be implemented by the invoked service class");
+}
+
 =item handler
 
 The mod_perl handler. Tries to rebuild the job object, checks its status, returns
@@ -281,6 +293,11 @@ sub handler {
 		'request' => $request, 
 		'jobid'   => ( $request->param('jobid') || 0 ),
 	);
+	
+	my %parms;
+	my @paramnames = $request->param();
+	@parms{ @paramnames } = map { $request->param($_) } @paramnames;
+	$self->check_input( \%parms );
 	
 	if ( $self->status eq DONE ) {
 		$self->logger->info("asynchronous server status: DONE. response location: ".$self->response_location);

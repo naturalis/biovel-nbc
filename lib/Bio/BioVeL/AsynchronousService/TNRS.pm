@@ -29,7 +29,7 @@ list.
 =cut
 
 sub new {
-	shift->SUPER::new( 'parameters' => [ 'names' ], @_ );
+	shift->SUPER::new( 'parameters' => [ 'names' ], @_ );	
 }
 
 
@@ -120,6 +120,18 @@ Returns the MIME type.
 
 sub content_type { 'text/plain' }
 
+=item check_input
+
+Checks wether parameter 'names' if provided, exits with an error if not.
+
+=cut
+
+sub check_input {
+	my ($self, $params) = @_;
+	my $names_param = ${$params}{'names'};
+	$self->logger->info("checking for parameter 'names' : $names_param");
+	die ("'names' parameter is required for TNRS service class") unless $names_param;
+}
 
 =back
 
