@@ -129,8 +129,9 @@ Checks wether parameter 'names' if provided, exits with an error if not.
 sub check_input {
 	my ($self, $params) = @_;
 	my $names_param = ${$params}{'names'};
+	my $jobid_param = ${$params}{'jobid'};
 	$self->logger->info("checking for parameter 'names' : $names_param");
-	die ("'names' parameter is required for TNRS service class") unless $names_param;
+	die ("either 'names' or 'jobid' parameter is required for TNRS service class") unless $names_param | $jobid_param;
 }
 
 =back
