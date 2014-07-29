@@ -28,4 +28,5 @@ SKIP: {
 	my $rb = $tnrs->response_body();
 }
 
-# http://biovel.naturalis.nl/biovel?service=TNRS&names=https://raw.githubusercontent.com/naturalis/biovel-nbc/master/Examples/tnrs_names.txt
+# call in browser:
+# http://biovel.naturalis.nl/biovel-supersmart?service=TNRS&names=https://raw.githubusercontent.com/naturalis/biovel-nbc/master/Examples/tnrs_names.txt
