@@ -2,11 +2,9 @@ package Bio::BioVeL::AsynchronousService::WriteAlignments;
 use strict;
 use warnings;
 use Bio::BioVeL::AsynchronousService ':status';
-use Bio::Phylo::Util::Logger 'WARN';
+use Bio::Phylo::Util::Logger 'INFO';
 use base 'Bio::BioVeL::AsynchronousService';
-use Env::C;
-	
-    
+
 =head1 NAME
 
 Bio::BioVeL::AsynchronousService::WriteAlignments - wrapper for the SUPERSMART script 
@@ -48,7 +46,7 @@ adding something like the following to httpd.conf:
 sub launch {
 	my $self = shift;
 	my $log = $self->logger;
-	$log->VERBOSE( '-level' => WARN, '-class' => __PACKAGE__ );
+	$log->VERBOSE( '-level' => INFO, '-class' => __PACKAGE__ );
 	
 	# contents in this results dir may be made visible to the user
 	my $outfile = $self->outdir . '/aligned.tsv';
@@ -57,9 +55,6 @@ sub launch {
 	
 	# SUPERSMART_HOME needs to be known and accessible to the httpd process
 	die ("need environment variable SUPERSMART_HOME") if not $ENV{'SUPERSMART_HOME'};
-	
-	# with mod_perl, environment variables might not be passed to the child script (depending of OS and apache version); use Env::C to set globally
-	Env::C::setenv("SUPERSMART_HOME", $ENV{SUPERSMART_HOME});
 	
 	my $script = $ENV{'SUPERSMART_HOME'} . '/script/supersmart/parallel_write_alignments.pl';
 	$log->error("no such file: $script") if not -e $script;
@@ -70,8 +65,11 @@ sub launch {
 	open my $writefh, '>', $infile;
 	print $writefh $_ while <$readfh>; 
 	
-	# run the job
-	my $command = "mpirun -np 2 perl $script -i $infile 2>$logfile";
+	my $workdir = $self->outdir;
+	
+	# run the job, make sure the PATH and SUPERSMART environment variables are passed to the script
+	my $command = "mpirun -x PATH=$ENV{PATH} -x SUPERSMART_HOME=$ENV{SUPERSMART_HOME} -np 2 perl $script -i $infile -w $workdir 2>$logfile";
+	$log->info("Running command $command");
 	my $out = qx($command);
 	
 	# there was an error from the OS
@@ -132,8 +130,8 @@ sub check_input {
 	my ($self, $params) = @_;
 	my $taxafile_param = ${$params}{'taxafile'};
 	my $jobid_param = ${$params}{'jobid'};
-	$self->logger->info("checking for parameter 'names' : $param");
-	die ("'taxafile' parameter is required for WriteAlignments service class") unless $taxafile_param | $jobid_param;
+	$self->logger->info("checking for essential service input parameters");
+	die ("either 'taxafile' or 'jobid' parameter is required for WriteAlignments service class") unless $taxafile_param or $jobid_param;
 }
 
 =back
