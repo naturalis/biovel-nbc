@@ -29,7 +29,10 @@ list.
 =cut
 
 sub new {
-	shift->SUPER::new( 'parameters' => [ 'names' ], @_ );	
+	shift->SUPER::new( 'parameters' => [ 
+										'names',      # location of file with taxon names 
+										'root_taxon'  # or root taxon as a string
+										], @_ );	
 }
 
 
@@ -62,14 +65,26 @@ sub launch {
 	my $script = $ENV{'SUPERSMART_HOME'} . '/script/supersmart/parallel_write_taxa_table.pl';
 	$log->error("no such file: $script") if not -e $script;
 	
-	# fetch the input file
-	$log->info("going to fetch input names from ".$self->names);
-	my $readfh  = $self->get_handle( $self->names );	
-	open my $writefh, '>', $infile;
-	print $writefh $_ while <$readfh>; 
+	my $command = "mpirun -np 2 perl $script ";
+	
+	# fetch the input file if given as argument and append to system command
+	if ( $self->names ) {
+		$log->info("going to fetch input names from ".$self->names);
+		my $readfh  = $self->get_handle( $self->names );	
+		open my $writefh, '>', $infile;
+		print $writefh $_ while <$readfh>; 
+		$command .= " -i $infile ";
+	}
+
+	# append root taxon, if given, to system command
+	if ( $self->root_taxon ) {
+		$command .= " -r " . $self->root_taxon;
+	}
+
+	# redirect STDERR to logfile
+	$command .= "  2>$logfile";
 	
 	# run the job
-	my $command = "mpirun -np 2 perl $script -i $infile 2>$logfile";
 	my $out = qx($command);
 	
 	# there was an error from the OS
@@ -122,7 +137,7 @@ sub content_type { 'text/plain' }
 
 =item check_input
 
-Checks wether parameter 'names' if provided, exits with an error if not.
+Checks if either parameter 'names', 'jobid' or 'root_taxon' is provided, exits with an error otherwise.
 
 =cut
 
@@ -130,8 +145,9 @@ sub check_input {
 	my ($self, $params) = @_;
 	my $names_param = ${$params}{'names'};
 	my $jobid_param = ${$params}{'jobid'};
-	$self->logger->info("checking for parameter 'names' : $names_param");
-	die ("either 'names' or 'jobid' parameter is required for TNRS service class") unless $names_param | $jobid_param;
+	my $root_taxon_param = ${$params}{'root_taxon'};
+	$self->logger->info("checking for essential service input parameters");
+	die ("either 'names' or 'jobid' parameter is required for TNRS service class") unless $names_param or $jobid_param or $root_taxon_param;
 }
 
 =back
