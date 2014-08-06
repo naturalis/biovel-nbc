@@ -10,6 +10,7 @@ use Apache2::RequestIO ();
 use Apache2::Const -compile => qw(OK);
 use CGI::Carp qw(fatalsToBrowser warningsToBrowser set_message);
 
+print CGI::header();
 warningsToBrowser(1);
 
 use LWP::UserAgent;
@@ -22,17 +23,18 @@ use Bio::Phylo::Util::Logger ':levels';
 my $log = Bio::Phylo::Util::Logger->new(
 	'-level' => INFO,
 	'-class' => [ 
+		'Bio::BioVeL::Service',
 		'Bio::BioVeL::Service::NeXMLMerger', 
-		'Bio::BioVeL::Service::NeXMLExtractor' 
+		'Bio::BioVeL::Service::NeXMLExtractor',
+		'Bio::BioVeL::AsynchronousService',
+		'Bio::BioVeL::AsynchronousService::TNRS',
+		'Bio::BioVeL::AsynchronousService::WriteAlignments',
+		'Bio::BioVeL::AsynchronousService::MakeBackboneSupermatrix',
+		
 	]
 );
 
 our $AUTOLOAD;
-
-# list which services are synchronous or asynchronous so the
-# handler function knows which subclass to intanciate.
-my @sync_services = ("NeXMLMerger", "NeXMLExtractor");
-my @async_services = ("TNRS");
 
 # this redirects fatal errors on the web server directly to the browser instead
 # of to the server error log using the function fatalsToBrowser;
@@ -146,13 +148,15 @@ with the specified data.
 
 sub get_handle {
 	my ( $self, $location ) = @_;
-			
+	$log->info("resolving location  $location ");
+
 	# location is a URL
 	if ( $location =~ m#^(?:http|ftp|https)://# ) {
 		my $ua = LWP::UserAgent->new;
 		my $response = $ua->get($location);
 		if ( $response->is_success ) {
 			my $content = $response->decoded_content;
+			$log->info($location);
 			open my $fh, '<', \$content;
 			return $fh;
 		}
@@ -189,18 +193,9 @@ C<Apache2::Const::OK>, indicates to mod_perl that everything went well.
 	
 sub handler {
 	my $request = Apache2::Request->new(shift);
-	my $baseclass;
-	my $service = $request->param('service');
-	if ($service ~~ @sync_services) {
-       $baseclass = "Bio::BioVeL::Service";
-   	} 
-   	elsif ($service ~~ @async_services) {
-       $baseclass = "Bio::BioVeL::AsynchronousService";
-    }
-    else {
-       $log->fatal("Invalid service name $service");
-    }
-    my $subclass = $baseclass . '::' . $service;
+	my @params = $request->param;	
+
+	my $subclass = __PACKAGE__ . '::' . $request->param('service');
 	eval "require $subclass";
 	my $self = $subclass->new( 'request' => $request );
 	$request->content_type( $self->content_type );
