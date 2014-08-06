@@ -12,6 +12,8 @@
 # need Sys::Info (might be in supersmart)
 # need XML::Twig
 # add handler for asynchronous service
+# should add ServerName biovel.naturalis.nl to httpd.conf
+# must add PerlSetEnv PATH ${PATH}:/usr/local/bin
 
 # This manifests installs the biovel-nbc web services on the default
 # ubuntu instances hosted by rackspace.
