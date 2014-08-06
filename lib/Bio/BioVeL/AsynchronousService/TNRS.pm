@@ -3,8 +3,9 @@ use strict;
 use warnings;
 use Bio::BioVeL::AsynchronousService ':status';
 use Bio::Phylo::Util::Logger 'WARN';
+use Bio::BioVeL::Launcher::TNRS;
 use base 'Bio::BioVeL::AsynchronousService';
-use Env::C;
+
 	
     
 =head1 NAME
@@ -52,20 +53,10 @@ sub launch {
 	$log->VERBOSE( '-level' => WARN, '-class' => __PACKAGE__ );
 	
 	# contents in this results dir may be made visible to the user
+	my $infile = $self->outdir . '/names.txt';
 	my $outfile = $self->outdir . '/taxa.tsv';
-	my $infile  = $self->outdir . '/names.txt';
 	my $logfile = $self->outdir . '/TNRS.log';
 	
-	# SUPERSMART_HOME needs to be known and accessible to the httpd process
-	die ("need environment variable SUPERSMART_HOME") if not $ENV{'SUPERSMART_HOME'};
-	
-	# with mod_perl, environment variables might not be passed to the child script (depending of OS and apache version); use Env::C to set globally
-	Env::C::setenv("SUPERSMART_HOME", $ENV{SUPERSMART_HOME});
-	
-	my $script = $ENV{'SUPERSMART_HOME'} . '/script/supersmart/parallel_write_taxa_table.pl';
-	$log->error("no such file: $script") if not -e $script;
-	
-	my $command = "mpirun -np 2 perl $script ";
 	
 	# fetch the input file if given as argument and append to system command
 	if ( $self->names ) {
@@ -73,34 +64,12 @@ sub launch {
 		my $readfh  = $self->get_handle( $self->names );	
 		open my $writefh, '>', $infile;
 		print $writefh $_ while <$readfh>; 
-		$command .= " -i $infile ";
 	}
 
-	# append root taxon, if given, to system command
-	if ( $self->root_taxon ) {
-		$command .= " -r " . $self->root_taxon;
-	}
-
-	# redirect STDERR to logfile
-	$command .= "  2>$logfile";
-	
-	# run the job
-	my $out = qx($command);
-	
-	# there was an error from the OS
-	if ( $? ) {
-		$self->status( ERROR );
-		$self->lasterr( "unexpected problem, exit code: " . ( $? >> 8 ) );
-		$log->error( "unexpected problem, exit code: " . ( $? >> 8 ) ); 
-	}
-	else {
-		# write output file
-		open my $fh, '>', $outfile or die;
-		print $fh $out;
-		close $fh;
-		$self->status( DONE );
-		$log->info("results written to $outfile, status: ".DONE);
-	}
+	my $launcher = Bio::BioVeL::Launcher::TNRS->new;
+	my $out = $launcher->launch( $infile, $self->outdir, $logfile );
+	my $status = $self->write_results( $out, $self->response_location );
+	$self->status( $status );
 }
 
 =item response_location
