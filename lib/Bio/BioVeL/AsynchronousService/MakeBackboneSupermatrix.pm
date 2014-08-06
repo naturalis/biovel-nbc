@@ -1,10 +1,13 @@
 package Bio::BioVeL::AsynchronousService::MakeBackboneSupermatrix;
 use strict;
 use warnings;
+use Bio::BioVeL::Launcher::WriteAlignments;
+use Bio::BioVeL::Launcher::MergeAlignments;
+use Bio::BioVeL::Launcher::PickExemplars;
 use Bio::BioVeL::AsynchronousService ':status';
 use Bio::Phylo::Util::Logger 'INFO';
 use base 'Bio::BioVeL::AsynchronousService';
-use Env::C;
+
 
 =head1 NAME
 
@@ -48,100 +51,36 @@ sub launch {
 	my $self = shift;
 	my $log = $self->logger;
 	$log->VERBOSE( '-level' => INFO, '-class' => __PACKAGE__ );
-	
-	# step 1 : get sequence data and perform alignments
-	
+		
 	# contents in this results dir may be made visible to the user
+	my $taxafile = $self->outdir . '/taxa.tsv';
 	my $alnfile = $self->outdir . '/aligned.txt';
-	my $taxafile  = $self->outdir . '/taxa.tsv';
+	my $mergedfile = $self->outdir . '/merged.txt';
 	my $logfile = $self->outdir . '/MakeBackboneSupermarix.log';
 	
-	# SUPERSMART_HOME needs to be known and accessible to the httpd process
-	die ("need environment variable SUPERSMART_HOME") if not $ENV{'SUPERSMART_HOME'};
-
-	# with mod_perl, environment variables might not be passed to the child script (depending of OS and apache version); use Env::C to set globally
-	Env::C::setenv("SUPERSMART_HOME", $ENV{SUPERSMART_HOME});
-	Env::C::setenv("PATH", $ENV{PATH});
-
-	
-	my $script = $ENV{'SUPERSMART_HOME'} . '/script/supersmart/parallel_write_alignments.pl';
-	$log->error("no such file: $script") if not -e $script;
-	
-	# fetch the species table file
+	# input taxa file is given as a URL, here we write the contents into $taxafile
 	$log->info("going to fetch input taxa from ".$self->taxafile);
 	my $readfh  = $self->get_handle( $self->taxafile );	
 	open my $writefh, '>', $taxafile;
 	print $writefh $_ while <$readfh>; 
-	my $workdir = $self->outdir;
 	
-	# run the alignment job, make sure the PATH and SUPERSMART environment variables are passed to the script
-	my $command = "mpirun -x PATH=$ENV{PATH} -x SUPERSMART_HOME=$ENV{SUPERSMART_HOME} -np 4 perl $script -i $taxafile -w $workdir -v 2>$logfile";
-	$log->info("Running command $command");
-	my $out = qx($command);
-	
-	# there was an error from the OS
-	if ( $? ) {
-		$self->status( ERROR );
-		$self->lasterr( "unexpected problem, exit code: " . ( $? >> 8 ) );
-		$log->error( "unexpected problem, exit code: " . ( $? >> 8 ) ); 
-	}
-	else {
-		# write output alignment file
-		open my $fh, '>', $alnfile or die;
-		print $fh $out;
-		close $fh;
-		#$self->status( DONE );
-		$log->info("results written to $alnfile");
-	}
+	# step 1 : get sequence data and perform alignments
+	my $launcher = 	Bio::BioVeL::Launcher::WriteAlignments->new;
+	my $out = $launcher->launch( $taxafile, $self->outdir, $logfile );
+	my $status = $self->write_results( $out, $alnfile );
+	$self->status( $status ) if $status eq ERROR;
 	
 	# step 2: merge alignments
-	my $merged_file = $self->outdir . '/merged.txt';
-	
-	# run the merging job, make sure the PATH and SUPERSMART environment variables are passed to the script
-	$script = $ENV{'SUPERSMART_HOME'} . '/script/supersmart/parallel_merge_alignments.pl';
+	$launcher = 	Bio::BioVeL::Launcher::MergeAlignments->new;
+	$out = $launcher->launch( $alnfile, $self->outdir, $logfile );
+	$status = $self->write_results( $out, $mergedfile );
+	$self->status( $status ) if $status eq ERROR;
 		
-	$command = "mpirun -x PATH=$ENV{PATH} -x SUPERSMART_HOME=$ENV{SUPERSMART_HOME} -np 2 perl $script -l $alnfile -w $workdir -v 2>>$logfile";
-	
-	$log->info("Running command $command");
-	$out = qx($command);
-	
-	# there was an error from the OS
-	if ( $? ) {
-		$self->status( ERROR );
-		$self->lasterr( "unexpected problem, exit code: " . ( $? >> 8 ) );
-		$log->error( "unexpected problem, exit code: " . ( $? >> 8 ) ); 
-	}
-	else {
-		# write output alignment file
-		open my $fh, '>', $merged_file or die;
-		print $fh $out;
-		close $fh;
-		$log->info("results written to $merged_file");
-	}
-	
 	# step 3: write backbone supermatrix
-	my $matrix_file = $self->outdir . '/supermatrix.phy';
-	
-	$script = $ENV{'SUPERSMART_HOME'} . '/script/supersmart/pick_exemplars.pl';
-	
-	$command = "perl $script -l $merged_file -t $taxafile 2>>$logfile";
-	$out = qx($command);
-
-	# there was an error from the OS
-	if ( $? ) {
-		$self->status( ERROR );
-		$self->lasterr( "unexpected problem, exit code: " . ( $? >> 8 ) );
-		$log->error( "unexpected problem, exit code: " . ( $? >> 8 ) ); 
-	}
-	else {
-		# write output alignment file
-		open my $fh, '>', $matrix_file or die;
-		print $fh $out;
-		close $fh;
-		$log->info("results written to $matrix_file status: ".DONE);
-		$self->status( DONE );		
-	}
-	
+	$launcher = 	Bio::BioVeL::Launcher::PickExemplars->new;
+	$out = $launcher->launch( $mergedfile, $taxafile, $logfile );
+	$status = $self->write_results( $out, $self->response_location );
+	$self->status( $status );
 }
 
 =item response_location
