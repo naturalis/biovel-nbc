@@ -64,7 +64,7 @@ sub new {
 			'treeformat',   # NEXUS|Newick|PhyloXML|NeXML
 			'dataformat',   # NEXUS|PHYLIP|FASTA|Stockholm 
 			'metaformat',   # tsv|JSON|csv
-                        'charsetformat' # NEXUS|JSON
+            'charsetformat' # NEXUS|JSON
                 ],
 		@_,
 	);	
@@ -103,7 +103,6 @@ sub response_body {
     my $log      = $self->logger;
     my $location = $self->nexml;
     my $object   = $self->object;
-    
     if ( not $location or not $object ) {
 		$log->info("no nexml file or no object to extract given; nothing to do");
 		return;
