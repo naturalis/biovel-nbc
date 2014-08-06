@@ -20,7 +20,7 @@ SKIP: {
 
 	while( $tnrs->update ne DONE ) {
 		ok( $tnrs->status eq RUNNING, 'still running' );
-		sleep 5;
+		sleep 10;
 		$tnrs = Bio::BioVeL::AsynchronousService::TNRS->new( 'jobid' => $jobid );
 	}
 
