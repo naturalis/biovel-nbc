@@ -79,7 +79,13 @@ sub new {
 	
 		# unfreeze from file
 		$log->info("instantiating existing $class job: $id");
-		$self = $class->from_file( $class->workdir . '/' . $id . '.yml' );
+		my $objfile = $class->workdir . '/' . $id . '.yml';
+		if ( -e  $objfile ){
+			$log->info("file $objfile exists");
+		} else {
+			$log->error("could not find $objfile");
+		}
+		$self = $class->from_file( $objfile );
 		
 		# check the service status
 		eval { $self->update };
@@ -142,6 +148,7 @@ Wraps the service C<launch> inside a C<fork> to keep track of the PID.
 sub launch_wrapper {
 	my $self = shift;
 	my $log  = $self->logger;
+	
 	my $pid  = fork();
 	if ( $pid == 0 ) {
 		
@@ -277,6 +284,33 @@ sub check_input {
 	warn ("check_input should be implemented by the invoked service class");
 }
 
+sub write_results {
+	my $self = shift;
+	my ( $out, $outfile ) = @_;
+	die "need output from child process" if not $out;
+	$outfile = $self->response_location if not $outfile;
+	my $log = $self->logger;
+	
+	# return value is the status: ERROR if errors from OS are detected, DONE otherwise
+	my $status;
+	
+	# there was an error from the OS
+	if ( $? ) {
+		$status =  ERROR;
+		$self->lasterr( "unexpected problem, exit code: " . ( $? >> 8 ) );
+		$log->error( "unexpected problem, exit code: " . ( $? >> 8 ) ); 
+	}
+	else {
+		# write output file
+		open my $fh, '>', $outfile or die;
+		print $fh $out;
+		close $fh;
+		$log->info("results written to " . $outfile);
+		$status  = DONE;
+	}
+	return $status;
+}
+
 =item handler
 
 The mod_perl handler. Tries to rebuild the job object, checks its status, returns
@@ -363,6 +397,20 @@ sub outdir {
 	my $dir  = $self->workdir . '/' . $self->jobid;
 	make_path($dir) if not -d $dir;
 	return $dir;
+}
+
+=item logfile
+
+Getter/setter for log file of the invoked child process of the asynchronous service
+
+=cut
+
+sub logfile {
+	my $self = shift;
+	if ( @_ ){
+		$self->{'logfile'} = shift;
+	}
+	return $self->{'logfile'};
 }
 
 =item DESTROY
