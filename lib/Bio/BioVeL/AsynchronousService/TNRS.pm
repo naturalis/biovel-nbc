@@ -67,7 +67,7 @@ sub launch {
 	}
 
 	my $launcher = Bio::BioVeL::Launcher::TNRS->new;
-	my $out = $launcher->launch( $infile, $self->outdir, $logfile );
+	my $out = $launcher->launch( $infile, $self->root_taxon, $logfile );
 	my $status = $self->write_results( $out, $self->response_location );
 	$self->status( $status );
 }
