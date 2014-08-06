@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use Bio::BioVeL::AsynchronousService ':status';
 use Bio::Phylo::Util::Logger 'INFO';
+use Bio::BioVeL::Launcher::WriteAlignments;
 use base 'Bio::BioVeL::AsynchronousService';
 
 =head1 NAME
@@ -45,47 +46,25 @@ adding something like the following to httpd.conf:
 
 sub launch {
 	my $self = shift;
+	
 	my $log = $self->logger;
 	$log->VERBOSE( '-level' => INFO, '-class' => __PACKAGE__ );
-	
+
 	# contents in this results dir may be made visible to the user
-	my $outfile = $self->outdir . '/aligned.tsv';
 	my $infile  = $self->outdir . '/taxa.tsv';
-	my $logfile = $self->outdir . '/WriteAlignemnts.log';
+	my $logfile = $self->logfile( $self->outdir . '/WriteAlignemnts.log' );
 	
-	# SUPERSMART_HOME needs to be known and accessible to the httpd process
-	die ("need environment variable SUPERSMART_HOME") if not $ENV{'SUPERSMART_HOME'};
-	
-	my $script = $ENV{'SUPERSMART_HOME'} . '/script/supersmart/parallel_write_alignments.pl';
-	$log->error("no such file: $script") if not -e $script;
-	
-	# fetch the input file
-	$log->info("going to fetch input taxa from ".$self->taxafile);
+	$log->info("going to fetch input taxa from ".$infile);
 	my $readfh  = $self->get_handle( $self->taxafile );	
 	open my $writefh, '>', $infile;
 	print $writefh $_ while <$readfh>; 
 	
-	my $workdir = $self->outdir;
+	my $launcher = 	Bio::BioVeL::Launcher::WriteAlignments->new;
+	my $out = $launcher->launch( $infile, $self->outdir, $logfile );
 	
-	# run the job, make sure the PATH and SUPERSMART environment variables are passed to the script
-	my $command = "mpirun -x PATH=$ENV{PATH} -x SUPERSMART_HOME=$ENV{SUPERSMART_HOME} -np 2 perl $script -i $infile -w $workdir 2>$logfile";
-	$log->info("Running command $command");
-	my $out = qx($command);
-	
-	# there was an error from the OS
-	if ( $? ) {
-		$self->status( ERROR );
-		$self->lasterr( "unexpected problem, exit code: " . ( $? >> 8 ) );
-		$log->error( "unexpected problem, exit code: " . ( $? >> 8 ) ); 
-	}
-	else {
-		# write output file
-		open my $fh, '>', $outfile or die;
-		print $fh $out;
-		close $fh;
-		$self->status( DONE );
-		$log->info("results written to $outfile, status: ".DONE);
-	}
+	# check if there are errors from the OS and write the output to the response location
+	my $status = $self->write_results( $out );
+	$self->status( $status );
 }
 
 =item response_location
