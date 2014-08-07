@@ -8,8 +8,9 @@ use base 'Bio::BioVeL::AsynchronousService';
 
 =head1 NAME
 
-Bio::BioVeL::AsynchronousService::WriteAlignments - wrapper for the SUPERSMART script 
-collecting sequence data for a given list of taxa and performing the alignment
+Bio::BioVeL::AsynchronousService::WriteAlignments - web service class which calls the 
+SUPERSMART script write_alignments, collecting sequence data for a given list of taxa 
+and performing the alignment
 
 =head1 DESCRIPTION
 
