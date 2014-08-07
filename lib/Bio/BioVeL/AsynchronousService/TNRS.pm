@@ -7,16 +7,21 @@ use Bio::BioVeL::Launcher::TNRS;
 use base 'Bio::BioVeL::AsynchronousService';
 
 	
-    
+	    
 =head1 NAME
 
-Bio::BioVeL::AsynchronousService::TNRS - wrapper for the SUPERSMART TNRS service
+Bio::BioVeL::AsynchronousService::TNRS - SUPERSMART TNRS service
 
 =head1 DESCRIPTION
 
-B<NOTE>: this service is untested, it is a work in progress. It is meant to show
-how the scripts of the L<http://www.supersmart-project.org> could be executed as
-asynchronous web services.
+Takes a list of taxon names as input and maps them to their respective 
+identifiers in their NCBI taxonomy for various taxonomic ranks. 
+Alternatively, a higher level root taxon name can be provided; the service 
+then returns all descendant taxa with rank Species. If a taxon name cannot 
+be resolved, the 'Taxonomic Name Resolution Service' 
+(L<http://tnrs.iplantcollaborative.org/TNRSapp.html>) is queried. The service 
+returns a table (tab separated values) with taxon names and NCBI taxon 
+identifiers for the ranks species, genus, family, order, class, phylum, kingdom.
 
 =head1 METHODS
 
@@ -106,7 +111,8 @@ sub content_type { 'text/plain' }
 
 =item check_input
 
-Checks if either parameter 'names', 'jobid' or 'root_taxon' is provided, exits with an error otherwise.
+Checks if either parameter L<names>, L<jobid> or L<root_taxon> is 
+provided, exits with an error otherwise.
 
 =cut
 
