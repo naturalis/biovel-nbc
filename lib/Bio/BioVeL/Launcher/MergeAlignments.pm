@@ -5,6 +5,29 @@ use base 'Bio::BioVeL::Launcher';
 use strict;
 use warnings;
 
+=head1 NAME
+
+Bio::BioVeL::Launcher::MergeAlignments - wrapper for the SUPERSMART script 
+collecting 
+=head1 DESCRIPTION
+
+This wrapper class calls the SUPERSMART script merge_alignments to merge given sequence alignments. This is done
+by assessing their orthology by all vs. all BLAST searches and profile aligning the orthologous clusters.
+The script can be called via the L<launch> method.
+
+=head1 METHODS
+
+=over
+
+=item launch
+
+The launch method collects the input file $infile with a list of alignemnts (as produced by 
+L<Bio::BioVeL::Launcher::WriteAlignments>), the working directory and a logfile.
+Using these parameters, a system call to the SUPERSMART script merge_alignments
+is executed and the STDOUT from the system call is returned as a string. 
+
+=cut
+
 sub launch {
 	my ( $self, $infile, $dir, $logfile ) = @_;
 	

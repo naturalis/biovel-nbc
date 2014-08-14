@@ -21,7 +21,7 @@ data for a given list of input taxa. The script can be called via the L<launch> 
 
 =item launch
 
-The launch method collects the taxafile $infile and the working directory.
+The launch method collects the taxafile $infile, a working directory and a logfile.
 Using these parameters, a system call to the SUPERSMART script write_alignments
 is executed and the STDOUT from the system call is returned as a string. 
 
