@@ -63,7 +63,7 @@ sub launch {
 	my $logfile = $self->outdir . '/TNRS.log';
 	
 	
-	# fetch the input file if given as argument and append to system command
+	# fetch the input file if given as argument
 	if ( $self->names ) {
 		$log->info("going to fetch input names from ".$self->names);
 		my $readfh  = $self->get_handle( $self->names );	
