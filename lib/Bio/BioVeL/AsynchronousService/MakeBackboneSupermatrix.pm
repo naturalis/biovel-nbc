@@ -11,8 +11,7 @@ use base 'Bio::BioVeL::AsynchronousService';
 
 =head1 NAME
 
-Bio::BioVeL::AsynchronousService::MakeBackboneSupermatrix - wrapper for the SUPERSMART script 
-collecting sequence data for a given list of taxa and performing the alignment
+Bio::BioVeL::AsynchronousService::MakeBackboneSupermatrix 
 
 =head1 DESCRIPTION
 
@@ -29,7 +28,7 @@ list.
 
 sub new {
 	shift->SUPER::new( 
-					'parameters' => [ 
+						'parameters' => [ 
 						'taxafile' 		# tsv (output from TNRS web service)  
 								
 						],
