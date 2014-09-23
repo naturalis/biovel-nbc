@@ -74,3 +74,12 @@ ok ( $res = $extractor->response_body );
 # check if result matrix is labeled a real taxon name (and not the eternal id) 
 ok ( $res=~m/Grifola/, "found taxon name in extracted matrix in nexus format");
 
+# test extracting matrix in phylip format with test data stored on different server
+$nexml = "http://biovel.naturalis.nl/exampledata/test.xml";
+@ARGV = (
+	'-nexml'		=> $nexml,
+	'-object'   	=> 'Matrices',
+	'-dataformat' 	=> 'phylip'
+);
+$extractor = new_ok ('Bio::BioVeL::Service::NeXMLExtractor');
+ok ( $res = $extractor->response_body );
