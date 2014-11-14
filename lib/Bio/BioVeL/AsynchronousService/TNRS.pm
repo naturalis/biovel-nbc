@@ -37,7 +37,8 @@ list.
 sub new {
 	shift->SUPER::new( 'parameters' => [ 
 										'names',      # location of file with taxon names 
-										'root_taxon'  # or root taxon as a string
+										'root_taxon', # or root taxon as a string
+										'jobid'       # jobid to fetch the result  
 										], @_ );	
 }
 
