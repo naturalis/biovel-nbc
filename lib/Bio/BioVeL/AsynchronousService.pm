@@ -9,6 +9,7 @@ use Bio::BioVeL::Service;
 use Digest::MD5 'md5_hex';
 use Apache2::Const '-compile' => qw'OK REDIRECT';
 use Proc::ProcessTable;
+use Bio::Phylo::Util::Exceptions 'throw';
 use base qw'Bio::BioVeL::Service Exporter'; # NOTE: multiple inheritance
 
 # status constants
@@ -86,6 +87,7 @@ sub new {
 			$log->error("could not find $objfile");
 		}
 		$self = $class->from_file( $objfile );
+		$log->info("object created from file, process id set to " . $self->pid);
 		
 		# check the service status
 		eval { $self->update };
@@ -108,6 +110,7 @@ sub new {
 		# launch the service
 		eval { $self->launch_wrapper };
 		if ( $@ ) {
+			$log->info("Launch wrapper errors : " . $@);
 			if ( $@ !~ /ModPerl::Util::exit/ ) {
 				my $msg = "$@";
 				$log->error("problem launching $self: $msg");
@@ -148,13 +151,16 @@ Wraps the service C<launch> inside a C<fork> to keep track of the PID.
 sub launch_wrapper {
 	my $self = shift;
 	my $log  = $self->logger;
-	
+	#$log->info("PID HERE : $$");
 	my $pid  = fork();
 	if ( $pid == 0 ) {
-		
+				
 		# we're in the child process. make its logger
 		# (which is a copy of the original process),
 		# write to a job-specific file
+		
+		#$self->serialize;
+				
 		my $logfile = $self->outdir . '/job.log';
 		open my $logfh, '>', $logfile or die $!;
 		$log->set_listeners(sub{$logfh->print(shift)});
@@ -165,7 +171,7 @@ sub launch_wrapper {
 			my @loc = caller(1);
 			$log->fatal("fatality caused at line $loc[2] in $loc[1]");
 			$log->fatal("process died with the following argument stack: ".Dumper(\@_));
-			CORE::die "\n";
+			throw 'API' => $@;
 		};
 		
 		# the idea is that this could take days or
@@ -178,39 +184,48 @@ sub launch_wrapper {
 		# we're in the parent
 		$log->info("launched service job with PID $pid");
 		$self->pid($pid);
+		$self->serialize;
 	}
 }
 
 =item update 
 
-Updates the status of the forked child process by probing the process table to
-see if a process with the same PID and timestamp is still active. If not, the
-process is presumably DONE.
+Updates the status of the forked child process, currently by checking the C<done_flag>
 
 =cut
 
 sub update { 
 	my $self   = shift;
 	my $log    = $self->logger;
-	my $status = DONE;
-	if ( my $pid = $self->pid ) {
-		my $timestamp = $self->timestamp;
-		my $pt = Proc::ProcessTable->new;
-		PROC: for my $proc ( @{ $pt->table } ) {
-			if ( $proc->pid == $pid ) {
-				if ( abs( $timestamp - $proc->start ) < 2 ) {
-					$log->info("PID : ".$proc->pid);
-					
-					$log->info("still running: ".$proc->cmndline);
-					$status = RUNNING;
-					last PROC;
-				}
-			}
-		}
+
+	#my $pid = $self->pid;
+	#use POSIX ":sys_wait_h";	
+	#my $res = waitpid($pid, WNOHANG);
+
+	my $status = RUNNING;
+	
+	if ( -e $self->done_flag ) {
+		$status = DONE;
 	}
+		
 	$log->info("Setting status to $status");
 	$self->status($status);
 }
+
+=item done_flag
+
+Gives the location of a file that is created by the child class when the calculation of
+the service in the spawned child process is done. This is a small workaround which avoids
+dealing with process id's which behave very differently if the service is called from
+within unit tests within perl or in the browser, respectively.
+
+=cut
+
+sub done_flag {
+	my $self = shift;
+	return ( $self->outdir . '/done' ); 
+}
+
 
 =item jobid
 
@@ -272,45 +287,6 @@ sub status {
 	return $self->{'status'};
 }
 
-=item check_input
-
-This abstract method should be implementd by the child service classes. 
-Puropse is to check the parameters and give an error message and exit
-if an essential parameter is not provided.
-
-=cut
-
-sub check_input {
-	warn ("check_input should be implemented by the invoked service class");
-}
-
-sub write_results {
-	my $self = shift;
-	my ( $out, $outfile ) = @_;
-	die "need output from child process" if not $out;
-	$outfile = $self->response_location if not $outfile;
-	my $log = $self->logger;
-	
-	# return value is the status: ERROR if errors from OS are detected, DONE otherwise
-	my $status;
-	
-	# there was an error from the OS
-	if ( $? ) {
-		$status =  ERROR;
-		$self->lasterr( "unexpected problem, exit code: " . ( $? >> 8 ) );
-		$log->error( "unexpected problem, exit code: " . ( $? >> 8 ) ); 
-	}
-	else {
-		# write output file
-		open my $fh, '>', $outfile or die;
-		print $fh $out;
-		close $fh;
-		$log->info("results written to " . $outfile);
-		$status  = DONE;
-	}
-	return $status;
-}
-
 =item handler
 
 The mod_perl handler. Tries to rebuild the job object, checks its status, returns
@@ -321,21 +297,18 @@ either a status report or the response body.
 sub handler {
 	my $r = shift;
 	my $request = Apache2::Request->new($r);
+
 	my $subclass = __PACKAGE__ . '::' . $request->param('service');
 	eval "require $subclass";
 	my $self = $subclass->new( 
 		'request' => $request, 
 		'jobid'   => ( $request->param('jobid') || 0 ),
 	);
-	
-	my %parms;
-	my @paramnames = $request->param();
-	@parms{ @paramnames } = map { $request->param($_) } @paramnames;
-	$self->check_input( \%parms );
+
 	
 	if ( $self->status eq DONE ) {
 		$self->logger->info("asynchronous server status: DONE. response location: ".$self->response_location);
-		if ( my $loc = $self->response_location ) {
+		if ( my $loc = $self->response_location and ( -e $self->response_location ) ) {
 			my $docroot = $r->document_root;
 			my $path    = $r->location;
 			my $server  = $r->get_server_name;
@@ -346,6 +319,7 @@ sub handler {
 			$self->logger->info("setting url for asynchronous server response to : ".$url);
 		}
 		else {
+			$self->logger->warn("child process has status DONE, but file in response location is not found!");
 			print $self->response_body;
 		}
 	}
@@ -411,22 +385,6 @@ sub logfile {
 		$self->{'logfile'} = shift;
 	}
 	return $self->{'logfile'};
-}
-
-=item DESTROY
-
-The object destructor automatically serializes the dying object inside workdir.
-
-=cut
-
-sub DESTROY {
-	my $self  = shift;
-	my $wdir  = $self->workdir;
-	my $jobid = $self->jobid;
-	my $file  = "${wdir}/${jobid}.yml";
-	my $log = $self->logger;
-	$log->info("writing $self as $jobid to file $file");
-	$self->to_file( $file );
 }
 
 =back

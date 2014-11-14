@@ -88,6 +88,7 @@ its response body.
 sub new {
 	my $class = shift;
 	my %args  = @_;
+	
 	my $self  = { '_params' => {} };
 	bless $self, $class;
 	my $params = delete $args{'parameters'};
@@ -102,18 +103,19 @@ sub new {
 			}
 			GetOptions(%getopt);			
 		}
-		elsif ( my $req = delete $args{'request'} ) {
-			for my $p ( @{ $params } ) {
-				$self->{'_params'}->{$p} = $req->param($p);
-			}		
-		}
-		else {
-			my $cgi = CGI->new;
-			for my $p ( @{ $params } ) {
-				$self->{'_params'}->{$p} = $cgi->param($p);
+	}
+	elsif ( my $req = delete $args{'request'} ) {
+				for my $p ( $req->param() ) {
+					$self->{'_params'}->{$p} = $req->param($p);
 			}
+	}		
+	else {
+		my $cgi = CGI->new;
+		for my $p ( @{ $params } ) {
+			$self->{'_params'}->{$p} = $cgi->param($p);
 		}
 	}
+	
 	for my $key ( keys %args ) {
 		$self->$key( $args{$key} );
 	}	
@@ -201,6 +203,26 @@ sub handler {
 	$request->content_type( $self->content_type );
 	$request->print( $self->response_body );
 	return Apache2::Const::OK;
+}
+
+=item serialize 
+
+Saves the object to a file in the working directory; filename is 
+the C<jobid> with an .yml ending.
+
+=cut
+
+sub serialize {
+	my $self = shift;
+	my $log = $self->logger;	
+	if ( ! $self->pid ) {
+		$self->pid($$);
+	}
+	my $wdir  = $self->workdir;
+	my $jobid = $self->jobid;
+	my $file  = "${wdir}/${jobid}.yml";
+	$log->info("writing $self with pid" . $self->pid. "as $jobid to file $file");
+	$self->to_file( $file );
 }
 
 =item response_header
