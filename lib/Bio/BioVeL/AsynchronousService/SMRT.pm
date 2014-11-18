@@ -52,7 +52,8 @@ sub launch {
 	my %file_options; 
 	foreach my $option ( @cmd_options ) {
 		# file options are specified by arg => file
-		if ( grep { ( UNIVERSAL::isa($_, "HASH") and ( $_->{arg} eq "file")) } @${option} ){
+		my $has_file_arg = eval {grep { ( UNIVERSAL::isa($_, "HASH") and ( $_->{arg} eq "file")) } @${option}};
+		if ( $has_file_arg ){
 			my $opt_name = @{$option}[0];
 			# keep short name (one letter) and long name
 			my ($long, $short) = ($opt_name=~/^(.+?)\|(.)/);
@@ -107,6 +108,19 @@ sub launch {
 	# this is to tell the parent process that we are done
 	my $df = $self->done_flag;
 	system("touch $df");
+}
+
+=item outdir
+
+This object method returns a directory location where the child class can write its output
+
+=cut
+
+sub outdir {
+	my $self = shift;
+	my $dir  = $self->workdir;
+	make_path($dir) if not -d $dir;
+	return $dir;
 }
 
 =item response_location
