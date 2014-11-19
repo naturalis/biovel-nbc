@@ -76,16 +76,13 @@ sub new {
 	my $log   = $class->logger;
 	my %args  = @_;
 	my $self;
-	if ( my $id = $args{'jobid'} ) {
+	
+	my $id = $args{'jobid'};
+	if ( $id and ( -e  $class->workdir . '/' . $id . '.yml' ) ) {
 	
 		# unfreeze from file
 		$log->info("instantiating existing $class job: $id");
 		my $objfile = $class->workdir . '/' . $id . '.yml';
-		if ( -e  $objfile ){
-			$log->info("file $objfile exists");
-		} else {
-			$log->error("could not find $objfile");
-		}
 		$self = $class->from_file( $objfile );
 		$log->info("object created from file, process id set to " . $self->pid);
 		
@@ -99,18 +96,21 @@ sub new {
 		}
 	}
 	else {
-		
 		# create new instance
-		$log->info("launching new $class job");
+		$log->info("no jobid from previous runs found, launching new $class job");
 		$self = $class->SUPER::new( 'timestamp' => time(), %args );
 		
-		# generate UID: {pointer address}.{epoch time}
-		$self->jobid( refaddr($self) . '.' . timestamp($self) );
+		# generate UID: {pointer address}.{epoch time}, if not given
+		if ( $id ){
+			$self->jobid( $id );
+		} else {
+			$self->jobid( refaddr($self) . '.' . timestamp($self) );
+		}
 		
 		# launch the service
 		eval { $self->launch_wrapper };
 		if ( $@ ) {
-			$log->info("Launch wrapper errors : " . $@);
+			$log->info($@);
 			if ( $@ !~ /ModPerl::Util::exit/ ) {
 				my $msg = "$@";
 				$log->error("problem launching $self: $msg");
@@ -167,12 +167,12 @@ sub launch_wrapper {
 		$log->info("launching the child process");
 		
 		# try to trap disasters
-		$SIG{'__DIE__'} = sub {
-			my @loc = caller(1);
-			$log->fatal("fatality caused at line $loc[2] in $loc[1]");
-			$log->fatal("process died with the following argument stack: ".Dumper(\@_));
-			throw 'API' => $@;
-		};
+		#$SIG{'__DIE__'} = sub {
+		#	my @loc = caller(1);
+		#	$log->fatal("fatality caused at line $loc[2] in $loc[1]");
+		#	$log->fatal("process died with the following argument stack: ".Dumper(\@_));
+		#	throw 'API' => $@;
+		#};
 		
 		# the idea is that this could take days or
 		# however long it needs

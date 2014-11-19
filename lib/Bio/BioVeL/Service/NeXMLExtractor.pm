@@ -147,6 +147,7 @@ sub response_body {
 					'-format' => ucfirst $format,
 					'-phylo'  => $matrix,
 				);
+				$result .= "#\n";
 			}
 		}
     }

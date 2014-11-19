@@ -104,7 +104,7 @@ sub new {
 			GetOptions(%getopt);			
 		}
 	}
-	elsif ( my $req = delete $args{'request'} ) {
+	if ( my $req = delete $args{'request'} ) {
 				for my $p ( $req->param() ) {
 					$self->{'_params'}->{$p} = $req->param($p);
 			}
@@ -221,7 +221,7 @@ sub serialize {
 	my $wdir  = $self->workdir;
 	my $jobid = $self->jobid;
 	my $file  = "${wdir}/${jobid}.yml";
-	$log->info("writing $self with pid" . $self->pid. "as $jobid to file $file");
+	$log->info("writing $self with pid" . $self->pid. " as $jobid to file $file");
 	$self->to_file( $file );
 }
 
