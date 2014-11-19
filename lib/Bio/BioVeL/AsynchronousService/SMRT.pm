@@ -40,7 +40,10 @@ sub launch {
 	# collect parameters passed to web service
 	my $params = $self->{'_params'};
 	my $command = delete $params->{'command'};	
+	
+	# delete params that are not meant for the subcommand
 	delete $params->{'service'};
+	delete $params->{'jobid'};
 		
 	# choose command class according to what was specified in parameter 'command'
 	my $commandclass = "Bio::SUPERSMART::App::smrt::Command::" . $command;	
@@ -108,19 +111,6 @@ sub launch {
 	# this is to tell the parent process that we are done
 	my $df = $self->done_flag;
 	system("touch $df");
-}
-
-=item outdir
-
-This object method returns a directory location where the child class can write its output
-
-=cut
-
-sub outdir {
-	my $self = shift;
-	my $dir  = $self->workdir;
-	make_path($dir) if not -d $dir;
-	return $dir;
 }
 
 =item response_location
