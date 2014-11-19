@@ -1,4 +1,37 @@
-<workflow xmlns="http://taverna.sf.net/2008/xml/t2flow" version="1" producedBy="taverna-biodiversity-2.5.0"><dataflow id="d98fa81a-05f8-4a09-ae6b-3ba863a8fd36" role="top"><name>Workflow13</name><inputPorts><port><name>dataformat</name><depth>0</depth><granularDepth>0</granularDepth><annotations /></port><port><name>objects</name><depth>0</depth><granularDepth>0</granularDepth><annotations /></port><port><name>nexml</name><depth>0</depth><granularDepth>0</granularDepth><annotations /></port></inputPorts><outputPorts><port><name>result</name><lastPredictedDepth>0</lastPredictedDepth><annotations /></port></outputPorts><processors><processor><name>GET__biovel_service_NeXMLExtractor_2</name><inputPorts><port><name>object</name><depth>0</depth></port><port><name>dataformat</name><depth>0</depth></port><port><name>nexml</name><depth>0</depth></port></inputPorts><outputPorts><port><name>responseBody</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>rest-activity</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.activities.rest.RESTActivity</class><inputMap><map from="nexml" to="nexml" /><map from="object" to="object" /><map from="dataformat" to="dataformat" /></inputMap><outputMap><map from="responseBody" to="responseBody" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean xmlns="">
+<workflow xmlns="http://taverna.sf.net/2008/xml/t2flow" version="1" producedBy="taverna-biodiversity-2.5.0"><dataflow id="6b55a661-3419-481a-b853-59aa2c71dd4b" role="top"><name>Workflow13</name><inputPorts><port><name>dataformat</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+        <text>Nexus</text>
+      </annotationBean>
+      <date>2014-11-19 12:29:30.889 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port><port><name>objects</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+        <text>Matrices</text>
+      </annotationBean>
+      <date>2014-11-19 12:30:07.750 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port><port><name>nexml</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+        <text>https://raw.githubusercontent.com/naturalis/biovel-nbc/master/Examples/treebase-record.xml</text>
+      </annotationBean>
+      <date>2014-11-19 12:29:55.748 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port></inputPorts><outputPorts><port><name>result</name><lastPredictedDepth>0</lastPredictedDepth><annotations /></port></outputPorts><processors><processor><name>GET__biovel_service_NeXMLExtractor_2</name><inputPorts><port><name>object</name><depth>0</depth></port><port><name>dataformat</name><depth>0</depth></port><port><name>nexml</name><depth>0</depth></port></inputPorts><outputPorts><port><name>responseBody</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>rest-activity</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.activities.rest.RESTActivity</class><inputMap><map from="nexml" to="nexml" /><map from="object" to="object" /><map from="dataformat" to="dataformat" /></inputMap><outputMap><map from="responseBody" to="responseBody" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean xmlns="">
   <httpMethod>GET</httpMethod>
   <urlSignature>http://biovel.naturalis.nl/biovel?service=NeXMLExtractor&amp;charsetformat={charsetformat}&amp;dataformat={dataformat}&amp;metaformat={metaformat}&amp;nexml={nexml}&amp;treeformat={treeformat}&amp;object={object}</urlSignature>
   <acceptsHeaderValue>text/plain</acceptsHeaderValue>
@@ -58,6 +91,17 @@
   <annotationAssertions>
     <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
       <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>6b55a661-3419-481a-b853-59aa2c71dd4b</identification>
+      </annotationBean>
+      <date>2014-11-19 12:31:03.764 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
         <identification>d98fa81a-05f8-4a09-ae6b-3ba863a8fd36</identification>
       </annotationBean>
       <date>2014-09-12 14:37:21.686 UTC</date>
@@ -83,6 +127,17 @@
         <identification>5bac65ba-3a12-4270-ac69-1bd53dcaa353</identification>
       </annotationBean>
       <date>2014-09-12 14:10:57.792 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>339007d8-de29-447e-b655-587b3f091a14</identification>
+      </annotationBean>
+      <date>2014-11-19 12:30:04.915 UTC</date>
       <creators />
       <curationEventList />
     </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
