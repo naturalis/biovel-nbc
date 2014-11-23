@@ -1,0 +1,1642 @@
+<workflow xmlns="http://taverna.sf.net/2008/xml/t2flow" version="1" producedBy="taverna-biodiversity-2.5.0"><dataflow id="1e189b63-05c7-4263-aa09-b2f94f23deb0" role="top"><name>Workflow10</name><inputPorts><port><name>taxa</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+        <text>https://raw.githubusercontent.com/naturalis/biovel-nbc/master/Examples/marine_species.txt</text>
+      </annotationBean>
+      <date>2014-11-19 12:52:54.446 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port><port><name>expand_rank</name><depth>0</depth><granularDepth>0</granularDepth><annotations /></port><port><name>jobid</name><depth>0</depth><granularDepth>0</granularDepth><annotations /></port><port><name>calibrations</name><depth>0</depth><granularDepth>0</granularDepth><annotations /></port></inputPorts><outputPorts><port><name>result_taxize</name><lastPredictedDepth>0</lastPredictedDepth><annotations /></port><port><name>result_align</name><lastPredictedDepth>0</lastPredictedDepth><annotations /></port><port><name>result_orthologize</name><lastPredictedDepth>0</lastPredictedDepth><annotations /></port><port><name>result_bbmerge</name><lastPredictedDepth>0</lastPredictedDepth><annotations /></port><port><name>status</name><lastPredictedDepth>1</lastPredictedDepth><annotations /></port><port><name>result_classify</name><lastPredictedDepth>0</lastPredictedDepth><annotations /></port><port><name>result_bbinfer</name><lastPredictedDepth>0</lastPredictedDepth><annotations /></port><port><name>result_bbreroot</name><lastPredictedDepth>0</lastPredictedDepth><annotations /></port><port><name>result_bbdecompose</name><lastPredictedDepth>0</lastPredictedDepth><annotations /></port><port><name>FINAL</name><lastPredictedDepth>0</lastPredictedDepth><annotations /></port><port><name>result_bbcalibrate</name><lastPredictedDepth>0</lastPredictedDepth><annotations /></port></outputPorts><processors><processor><name>Taxize</name><inputPorts><port><name>jobid</name><depth>0</depth></port><port><name>expand_rank</name><depth>0</depth></port><port><name>infile</name><depth>0</depth></port></inputPorts><outputPorts><port><name>redirection</name><depth>0</depth><granularDepth>0</granularDepth></port><port><name>responseBody</name><depth>0</depth><granularDepth>0</granularDepth></port><port><name>status</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>rest-activity</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.activities.rest.RESTActivity</class><inputMap><map from="infile" to="infile" /><map from="expand_rank" to="expand_rank" /><map from="jobid" to="jobid" /></inputMap><outputMap><map from="redirection" to="redirection" /><map from="status" to="status" /><map from="responseBody" to="responseBody" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean xmlns="">
+  <httpMethod>GET</httpMethod>
+  <urlSignature>http://localhost/biovel-supersmart?service=SMRT&amp;command=Taxize&amp;jobid={jobid}&amp;expand_rank={expand_rank}&amp;infile={infile}&amp;outfile={outfile}</urlSignature>
+  <acceptsHeaderValue>text/plain</acceptsHeaderValue>
+  <contentTypeForUpdates>application/xml</contentTypeForUpdates>
+  <outgoingDataFormat>String</outgoingDataFormat>
+  <sendHTTPExpectRequestHeader>false</sendHTTPExpectRequestHeader>
+  <showRedirectionOutputPort>true</showRedirectionOutputPort>
+  <showActualUrlPort>false</showActualUrlPort>
+  <showResponseHeadersPort>false</showResponseHeadersPort>
+  <escapeParameters>false</escapeParameters>
+  <otherHTTPHeaders />
+  <activityInputs>
+    <entry>
+      <string>infile</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>expand_rank</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>outfile</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>jobid</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+  </activityInputs>
+</net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Loop</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration xmlns="">
+  <conditionXML>&lt;activity xmlns="http://taverna.sf.net/2008/xml/t2flow"&gt;&lt;raven&gt;&lt;group&gt;net.sf.taverna.t2.activities&lt;/group&gt;&lt;artifact&gt;beanshell-activity&lt;/artifact&gt;&lt;version&gt;1.5&lt;/version&gt;&lt;/raven&gt;&lt;class&gt;net.sf.taverna.t2.activities.beanshell.BeanshellActivity&lt;/class&gt;&lt;inputMap /&gt;&lt;outputMap /&gt;&lt;configBean encoding="xstream"&gt;&lt;net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns=""&gt;&#xD;
+  &lt;inputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;status&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;translatedElementType&gt;java.lang.String&lt;/translatedElementType&gt;&#xD;
+      &lt;allowsLiteralValues&gt;true&lt;/allowsLiteralValues&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+  &lt;/inputs&gt;&#xD;
+  &lt;outputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;loop&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;granularDepth&gt;0&lt;/granularDepth&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+  &lt;/outputs&gt;&#xD;
+  &lt;classLoaderSharing&gt;workflow&lt;/classLoaderSharing&gt;&#xD;
+  &lt;localDependencies /&gt;&#xD;
+  &lt;artifactDependencies /&gt;&#xD;
+  &lt;script&gt;loop = "" + ! status.equals("200"); &#xD;
+if ("true".matches(loop)) {&#xD;
+   Thread.sleep(2000);&#xD;
+}&lt;/script&gt;&#xD;
+  &lt;dependencies /&gt;&#xD;
+&lt;/net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean&gt;&lt;/configBean&gt;&lt;annotations /&gt;&lt;/activity&gt;</conditionXML>
+  <runFirst>true</runFirst>
+  <properties>
+    <property name="compareValue" value="200" />
+    <property name="delay" value="2" />
+    <property name="comparePort" value="status" />
+    <property name="isFeedBack" value="false" />
+    <property name="comparison" value="EqualTo" />
+  </properties>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="jobid" depth="0" /><port name="expand_rank" depth="0" /><port name="infile" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>BBmerge</name><inputPorts><port><name>alnfile</name><depth>0</depth></port><port><name>jobid</name><depth>0</depth></port><port><name>taxafile</name><depth>0</depth></port></inputPorts><outputPorts><port><name>responseBody</name><depth>0</depth><granularDepth>0</granularDepth></port><port><name>status</name><depth>0</depth><granularDepth>0</granularDepth></port><port><name>redirection</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>rest-activity</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.activities.rest.RESTActivity</class><inputMap><map from="taxafile" to="taxafile" /><map from="alnfile" to="alnfile" /><map from="jobid" to="jobid" /></inputMap><outputMap><map from="redirection" to="redirection" /><map from="status" to="status" /><map from="responseBody" to="responseBody" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean xmlns="">
+  <httpMethod>GET</httpMethod>
+  <urlSignature>http://localhost/biovel-supersmart?service=SMRT&amp;command=BBmerge&amp;jobid={jobid}&amp;alnfile={alnfile}&amp;taxafile={taxafile}&amp;outfile={outfile}</urlSignature>
+  <acceptsHeaderValue>text/plain</acceptsHeaderValue>
+  <contentTypeForUpdates>application/xml</contentTypeForUpdates>
+  <outgoingDataFormat>String</outgoingDataFormat>
+  <sendHTTPExpectRequestHeader>false</sendHTTPExpectRequestHeader>
+  <showRedirectionOutputPort>true</showRedirectionOutputPort>
+  <showActualUrlPort>false</showActualUrlPort>
+  <showResponseHeadersPort>false</showResponseHeadersPort>
+  <escapeParameters>false</escapeParameters>
+  <otherHTTPHeaders />
+  <activityInputs>
+    <entry>
+      <string>taxafile</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>alnfile</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>outfile</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>jobid</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+  </activityInputs>
+</net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Loop</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration xmlns="">
+  <conditionXML>&lt;activity xmlns="http://taverna.sf.net/2008/xml/t2flow"&gt;&lt;raven&gt;&lt;group&gt;net.sf.taverna.t2.activities&lt;/group&gt;&lt;artifact&gt;beanshell-activity&lt;/artifact&gt;&lt;version&gt;1.5&lt;/version&gt;&lt;/raven&gt;&lt;class&gt;net.sf.taverna.t2.activities.beanshell.BeanshellActivity&lt;/class&gt;&lt;inputMap /&gt;&lt;outputMap /&gt;&lt;configBean encoding="xstream"&gt;&lt;net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns=""&gt;&#xD;
+  &lt;inputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;status&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;translatedElementType&gt;java.lang.String&lt;/translatedElementType&gt;&#xD;
+      &lt;allowsLiteralValues&gt;true&lt;/allowsLiteralValues&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+  &lt;/inputs&gt;&#xD;
+  &lt;outputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;loop&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;granularDepth&gt;0&lt;/granularDepth&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+  &lt;/outputs&gt;&#xD;
+  &lt;classLoaderSharing&gt;workflow&lt;/classLoaderSharing&gt;&#xD;
+  &lt;localDependencies /&gt;&#xD;
+  &lt;artifactDependencies /&gt;&#xD;
+  &lt;script&gt;loop = "" + ! status.equals("200"); &#xD;
+if ("true".matches(loop)) {&#xD;
+   Thread.sleep(10000);&#xD;
+}&lt;/script&gt;&#xD;
+  &lt;dependencies /&gt;&#xD;
+&lt;/net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean&gt;&lt;/configBean&gt;&lt;annotations /&gt;&lt;/activity&gt;</conditionXML>
+  <runFirst>true</runFirst>
+  <properties>
+    <property name="compareValue" value="200" />
+    <property name="delay" value="10" />
+    <property name="comparePort" value="status" />
+    <property name="isFeedBack" value="false" />
+    <property name="comparison" value="EqualTo" />
+  </properties>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="alnfile" depth="0" /><port name="jobid" depth="0" /><port name="taxafile" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>Classify</name><inputPorts><port><name>infile</name><depth>0</depth></port><port><name>jobid</name><depth>0</depth></port></inputPorts><outputPorts><port><name>responseBody</name><depth>0</depth><granularDepth>0</granularDepth></port><port><name>status</name><depth>0</depth><granularDepth>0</granularDepth></port><port><name>redirection</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>rest-activity</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.activities.rest.RESTActivity</class><inputMap><map from="infile" to="infile" /><map from="jobid" to="jobid" /></inputMap><outputMap><map from="redirection" to="redirection" /><map from="status" to="status" /><map from="responseBody" to="responseBody" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean xmlns="">
+  <httpMethod>GET</httpMethod>
+  <urlSignature>http://localhost/biovel-supersmart?service=SMRT&amp;command=Classify&amp;jobid={jobid}&amp;infile={infile}&amp;outfile={outfile}</urlSignature>
+  <acceptsHeaderValue>text/plain</acceptsHeaderValue>
+  <contentTypeForUpdates>application/xml</contentTypeForUpdates>
+  <outgoingDataFormat>String</outgoingDataFormat>
+  <sendHTTPExpectRequestHeader>false</sendHTTPExpectRequestHeader>
+  <showRedirectionOutputPort>true</showRedirectionOutputPort>
+  <showActualUrlPort>false</showActualUrlPort>
+  <showResponseHeadersPort>false</showResponseHeadersPort>
+  <escapeParameters>false</escapeParameters>
+  <otherHTTPHeaders />
+  <activityInputs>
+    <entry>
+      <string>infile</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>outfile</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>jobid</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+  </activityInputs>
+</net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Loop</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration xmlns="">
+  <conditionXML>&lt;activity xmlns="http://taverna.sf.net/2008/xml/t2flow"&gt;&lt;raven&gt;&lt;group&gt;net.sf.taverna.t2.activities&lt;/group&gt;&lt;artifact&gt;beanshell-activity&lt;/artifact&gt;&lt;version&gt;1.5&lt;/version&gt;&lt;/raven&gt;&lt;class&gt;net.sf.taverna.t2.activities.beanshell.BeanshellActivity&lt;/class&gt;&lt;inputMap /&gt;&lt;outputMap /&gt;&lt;configBean encoding="xstream"&gt;&lt;net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns=""&gt;&#xD;
+  &lt;inputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;status&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;translatedElementType&gt;java.lang.String&lt;/translatedElementType&gt;&#xD;
+      &lt;allowsLiteralValues&gt;true&lt;/allowsLiteralValues&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+  &lt;/inputs&gt;&#xD;
+  &lt;outputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;loop&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;granularDepth&gt;0&lt;/granularDepth&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+  &lt;/outputs&gt;&#xD;
+  &lt;classLoaderSharing&gt;workflow&lt;/classLoaderSharing&gt;&#xD;
+  &lt;localDependencies /&gt;&#xD;
+  &lt;artifactDependencies /&gt;&#xD;
+  &lt;script&gt;loop = "" + ! status.equals("200"); &#xD;
+if ("true".matches(loop)) {&#xD;
+   Thread.sleep(1000);&#xD;
+}&lt;/script&gt;&#xD;
+  &lt;dependencies /&gt;&#xD;
+&lt;/net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean&gt;&lt;/configBean&gt;&lt;annotations /&gt;&lt;/activity&gt;</conditionXML>
+  <runFirst>true</runFirst>
+  <properties>
+    <property name="compareValue" value="200" />
+    <property name="delay" value="1" />
+    <property name="comparePort" value="status" />
+    <property name="isFeedBack" value="false" />
+    <property name="comparison" value="EqualTo" />
+  </properties>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="infile" depth="0" /><port name="jobid" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>BBinfer</name><inputPorts><port><name>jobid</name><depth>0</depth></port><port><name>starttree</name><depth>0</depth></port><port><name>supermatrix</name><depth>0</depth></port></inputPorts><outputPorts><port><name>responseBody</name><depth>0</depth><granularDepth>0</granularDepth></port><port><name>status</name><depth>0</depth><granularDepth>0</granularDepth></port><port><name>redirection</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>rest-activity</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.activities.rest.RESTActivity</class><inputMap><map from="supermatrix" to="supermatrix" /><map from="starttree" to="starttree" /><map from="jobid" to="jobid" /></inputMap><outputMap><map from="redirection" to="redirection" /><map from="status" to="status" /><map from="responseBody" to="responseBody" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean xmlns="">
+  <httpMethod>GET</httpMethod>
+  <urlSignature>http://localhost/biovel-supersmart?service=SMRT&amp;command=BBinfer&amp;jobid={jobid}&amp;supermatrix={supermatrix}&amp;starttree={starttree}&amp;outfile={outfile}</urlSignature>
+  <acceptsHeaderValue>text/plain</acceptsHeaderValue>
+  <contentTypeForUpdates>application/xml</contentTypeForUpdates>
+  <outgoingDataFormat>String</outgoingDataFormat>
+  <sendHTTPExpectRequestHeader>false</sendHTTPExpectRequestHeader>
+  <showRedirectionOutputPort>true</showRedirectionOutputPort>
+  <showActualUrlPort>false</showActualUrlPort>
+  <showResponseHeadersPort>false</showResponseHeadersPort>
+  <escapeParameters>false</escapeParameters>
+  <otherHTTPHeaders />
+  <activityInputs>
+    <entry>
+      <string>supermatrix</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>outfile</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>starttree</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>jobid</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+  </activityInputs>
+</net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Loop</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration xmlns="">
+  <conditionXML>&lt;activity xmlns="http://taverna.sf.net/2008/xml/t2flow"&gt;&lt;raven&gt;&lt;group&gt;net.sf.taverna.t2.activities&lt;/group&gt;&lt;artifact&gt;beanshell-activity&lt;/artifact&gt;&lt;version&gt;1.5&lt;/version&gt;&lt;/raven&gt;&lt;class&gt;net.sf.taverna.t2.activities.beanshell.BeanshellActivity&lt;/class&gt;&lt;inputMap /&gt;&lt;outputMap /&gt;&lt;configBean encoding="xstream"&gt;&lt;net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns=""&gt;&#xD;
+  &lt;inputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;status&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;translatedElementType&gt;java.lang.String&lt;/translatedElementType&gt;&#xD;
+      &lt;allowsLiteralValues&gt;true&lt;/allowsLiteralValues&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+  &lt;/inputs&gt;&#xD;
+  &lt;outputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;loop&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;granularDepth&gt;0&lt;/granularDepth&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+  &lt;/outputs&gt;&#xD;
+  &lt;classLoaderSharing&gt;workflow&lt;/classLoaderSharing&gt;&#xD;
+  &lt;localDependencies /&gt;&#xD;
+  &lt;artifactDependencies /&gt;&#xD;
+  &lt;script&gt;loop = "" + ! status.equals("200"); &#xD;
+if ("true".matches(loop)) {&#xD;
+   Thread.sleep(10000);&#xD;
+}&lt;/script&gt;&#xD;
+  &lt;dependencies /&gt;&#xD;
+&lt;/net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean&gt;&lt;/configBean&gt;&lt;annotations /&gt;&lt;/activity&gt;</conditionXML>
+  <runFirst>true</runFirst>
+  <properties>
+    <property name="compareValue" value="200" />
+    <property name="delay" value="10" />
+    <property name="comparePort" value="status" />
+    <property name="isFeedBack" value="false" />
+    <property name="comparison" value="EqualTo" />
+  </properties>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="jobid" depth="0" /><port name="starttree" depth="0" /><port name="supermatrix" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>Orthologize</name><inputPorts><port><name>jobid</name><depth>0</depth></port><port><name>infile</name><depth>0</depth></port></inputPorts><outputPorts><port><name>responseBody</name><depth>0</depth><granularDepth>0</granularDepth></port><port><name>redirection</name><depth>0</depth><granularDepth>0</granularDepth></port><port><name>status</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>rest-activity</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.activities.rest.RESTActivity</class><inputMap><map from="infile" to="infile" /><map from="jobid" to="jobid" /></inputMap><outputMap><map from="redirection" to="redirection" /><map from="status" to="status" /><map from="responseBody" to="responseBody" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean xmlns="">
+  <httpMethod>GET</httpMethod>
+  <urlSignature>http://localhost/biovel-supersmart?service=SMRT&amp;command=Orthologize&amp;jobid={jobid}&amp;infile={infile}&amp;outfile={outfile}</urlSignature>
+  <acceptsHeaderValue>text/plain</acceptsHeaderValue>
+  <contentTypeForUpdates>application/xml</contentTypeForUpdates>
+  <outgoingDataFormat>String</outgoingDataFormat>
+  <sendHTTPExpectRequestHeader>false</sendHTTPExpectRequestHeader>
+  <showRedirectionOutputPort>true</showRedirectionOutputPort>
+  <showActualUrlPort>false</showActualUrlPort>
+  <showResponseHeadersPort>false</showResponseHeadersPort>
+  <escapeParameters>false</escapeParameters>
+  <otherHTTPHeaders />
+  <activityInputs>
+    <entry>
+      <string>infile</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>outfile</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>jobid</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+  </activityInputs>
+</net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Loop</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration xmlns="">
+  <conditionXML>&lt;activity xmlns="http://taverna.sf.net/2008/xml/t2flow"&gt;&lt;raven&gt;&lt;group&gt;net.sf.taverna.t2.activities&lt;/group&gt;&lt;artifact&gt;beanshell-activity&lt;/artifact&gt;&lt;version&gt;1.5&lt;/version&gt;&lt;/raven&gt;&lt;class&gt;net.sf.taverna.t2.activities.beanshell.BeanshellActivity&lt;/class&gt;&lt;inputMap /&gt;&lt;outputMap /&gt;&lt;configBean encoding="xstream"&gt;&lt;net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns=""&gt;&#xD;
+  &lt;inputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;status&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;translatedElementType&gt;java.lang.String&lt;/translatedElementType&gt;&#xD;
+      &lt;allowsLiteralValues&gt;true&lt;/allowsLiteralValues&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+  &lt;/inputs&gt;&#xD;
+  &lt;outputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;loop&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;granularDepth&gt;0&lt;/granularDepth&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+  &lt;/outputs&gt;&#xD;
+  &lt;classLoaderSharing&gt;workflow&lt;/classLoaderSharing&gt;&#xD;
+  &lt;localDependencies /&gt;&#xD;
+  &lt;artifactDependencies /&gt;&#xD;
+  &lt;script&gt;loop = "" + ! status.equals("200"); &#xD;
+if ("true".matches(loop)) {&#xD;
+   Thread.sleep(10000);&#xD;
+}&lt;/script&gt;&#xD;
+  &lt;dependencies /&gt;&#xD;
+&lt;/net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean&gt;&lt;/configBean&gt;&lt;annotations /&gt;&lt;/activity&gt;</conditionXML>
+  <runFirst>true</runFirst>
+  <properties>
+    <property name="compareValue" value="200" />
+    <property name="delay" value="10" />
+    <property name="comparePort" value="status" />
+    <property name="isFeedBack" value="false" />
+    <property name="comparison" value="EqualTo" />
+  </properties>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="jobid" depth="0" /><port name="infile" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>Align</name><inputPorts><port><name>jobid</name><depth>0</depth></port><port><name>infile</name><depth>0</depth></port></inputPorts><outputPorts><port><name>redirection</name><depth>0</depth><granularDepth>0</granularDepth></port><port><name>responseBody</name><depth>0</depth><granularDepth>0</granularDepth></port><port><name>status</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>rest-activity</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.activities.rest.RESTActivity</class><inputMap><map from="infile" to="infile" /><map from="jobid" to="jobid" /></inputMap><outputMap><map from="redirection" to="redirection" /><map from="status" to="status" /><map from="responseBody" to="responseBody" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean xmlns="">
+  <httpMethod>GET</httpMethod>
+  <urlSignature>http://localhost/biovel-supersmart?service=SMRT&amp;command=Align&amp;jobid={jobid}&amp;infile={infile}&amp;outfile={outfile}</urlSignature>
+  <acceptsHeaderValue>text/plain</acceptsHeaderValue>
+  <contentTypeForUpdates>application/xml</contentTypeForUpdates>
+  <outgoingDataFormat>String</outgoingDataFormat>
+  <sendHTTPExpectRequestHeader>false</sendHTTPExpectRequestHeader>
+  <showRedirectionOutputPort>true</showRedirectionOutputPort>
+  <showActualUrlPort>false</showActualUrlPort>
+  <showResponseHeadersPort>false</showResponseHeadersPort>
+  <escapeParameters>false</escapeParameters>
+  <otherHTTPHeaders />
+  <activityInputs>
+    <entry>
+      <string>infile</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>outfile</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>jobid</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+  </activityInputs>
+</net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Loop</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration xmlns="">
+  <conditionXML>&lt;activity xmlns="http://taverna.sf.net/2008/xml/t2flow"&gt;&lt;raven&gt;&lt;group&gt;net.sf.taverna.t2.activities&lt;/group&gt;&lt;artifact&gt;beanshell-activity&lt;/artifact&gt;&lt;version&gt;1.5&lt;/version&gt;&lt;/raven&gt;&lt;class&gt;net.sf.taverna.t2.activities.beanshell.BeanshellActivity&lt;/class&gt;&lt;inputMap /&gt;&lt;outputMap /&gt;&lt;configBean encoding="xstream"&gt;&lt;net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns=""&gt;&#xD;
+  &lt;inputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;status&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;translatedElementType&gt;java.lang.String&lt;/translatedElementType&gt;&#xD;
+      &lt;allowsLiteralValues&gt;true&lt;/allowsLiteralValues&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+  &lt;/inputs&gt;&#xD;
+  &lt;outputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;loop&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;granularDepth&gt;0&lt;/granularDepth&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+  &lt;/outputs&gt;&#xD;
+  &lt;classLoaderSharing&gt;workflow&lt;/classLoaderSharing&gt;&#xD;
+  &lt;localDependencies /&gt;&#xD;
+  &lt;artifactDependencies /&gt;&#xD;
+  &lt;script&gt;loop = "" + ! status.equals("200"); &#xD;
+if ("true".matches(loop)) {&#xD;
+   Thread.sleep(10000);&#xD;
+}&lt;/script&gt;&#xD;
+  &lt;dependencies /&gt;&#xD;
+&lt;/net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean&gt;&lt;/configBean&gt;&lt;annotations /&gt;&lt;/activity&gt;</conditionXML>
+  <runFirst>true</runFirst>
+  <properties>
+    <property name="compareValue" value="200" />
+    <property name="delay" value="10" />
+    <property name="comparePort" value="status" />
+    <property name="isFeedBack" value="false" />
+    <property name="comparison" value="EqualTo" />
+  </properties>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="jobid" depth="0" /><port name="infile" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>BBreroot</name><inputPorts><port><name>backbone</name><depth>0</depth></port><port><name>taxafile</name><depth>0</depth></port><port><name>jobid</name><depth>0</depth></port></inputPorts><outputPorts><port><name>status</name><depth>0</depth><granularDepth>0</granularDepth></port><port><name>responseBody</name><depth>0</depth><granularDepth>0</granularDepth></port><port><name>redirection</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>rest-activity</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.activities.rest.RESTActivity</class><inputMap><map from="taxafile" to="taxafile" /><map from="jobid" to="jobid" /><map from="backbone" to="backbone" /></inputMap><outputMap><map from="redirection" to="redirection" /><map from="status" to="status" /><map from="responseBody" to="responseBody" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean xmlns="">
+  <httpMethod>GET</httpMethod>
+  <urlSignature>http://localhost/biovel-supersmart?service=SMRT&amp;command=BBreroot&amp;taxafile={taxafile}&amp;backbone={backbone}&amp;outfile={outfile}&amp;jobid={jobid}</urlSignature>
+  <acceptsHeaderValue>text/plain</acceptsHeaderValue>
+  <contentTypeForUpdates>application/xml</contentTypeForUpdates>
+  <outgoingDataFormat>String</outgoingDataFormat>
+  <sendHTTPExpectRequestHeader>false</sendHTTPExpectRequestHeader>
+  <showRedirectionOutputPort>true</showRedirectionOutputPort>
+  <showActualUrlPort>false</showActualUrlPort>
+  <showResponseHeadersPort>false</showResponseHeadersPort>
+  <escapeParameters>false</escapeParameters>
+  <otherHTTPHeaders />
+  <activityInputs>
+    <entry>
+      <string>taxafile</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>outfile</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>jobid</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>backbone</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+  </activityInputs>
+</net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Loop</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration xmlns="">
+  <conditionXML>&lt;activity xmlns="http://taverna.sf.net/2008/xml/t2flow"&gt;&lt;raven&gt;&lt;group&gt;net.sf.taverna.t2.activities&lt;/group&gt;&lt;artifact&gt;beanshell-activity&lt;/artifact&gt;&lt;version&gt;1.5&lt;/version&gt;&lt;/raven&gt;&lt;class&gt;net.sf.taverna.t2.activities.beanshell.BeanshellActivity&lt;/class&gt;&lt;inputMap /&gt;&lt;outputMap /&gt;&lt;configBean encoding="xstream"&gt;&lt;net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns=""&gt;&#xD;
+  &lt;inputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;status&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;translatedElementType&gt;java.lang.String&lt;/translatedElementType&gt;&#xD;
+      &lt;allowsLiteralValues&gt;true&lt;/allowsLiteralValues&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+  &lt;/inputs&gt;&#xD;
+  &lt;outputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;loop&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;granularDepth&gt;0&lt;/granularDepth&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+  &lt;/outputs&gt;&#xD;
+  &lt;classLoaderSharing&gt;workflow&lt;/classLoaderSharing&gt;&#xD;
+  &lt;localDependencies /&gt;&#xD;
+  &lt;artifactDependencies /&gt;&#xD;
+  &lt;script&gt;loop = "" + ! status.equals("200"); &#xD;
+if ("true".matches(loop)) {&#xD;
+   Thread.sleep(5000);&#xD;
+}&lt;/script&gt;&#xD;
+  &lt;dependencies /&gt;&#xD;
+&lt;/net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean&gt;&lt;/configBean&gt;&lt;annotations /&gt;&lt;/activity&gt;</conditionXML>
+  <runFirst>true</runFirst>
+  <properties>
+    <property name="compareValue" value="200" />
+    <property name="delay" value="5" />
+    <property name="comparePort" value="status" />
+    <property name="isFeedBack" value="false" />
+    <property name="comparison" value="EqualTo" />
+  </properties>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="backbone" depth="0" /><port name="taxafile" depth="0" /><port name="jobid" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>BBdecompose</name><inputPorts><port><name>alnfile</name><depth>0</depth></port><port><name>classtree</name><depth>0</depth></port><port><name>jobid</name><depth>0</depth></port><port><name>taxafile</name><depth>0</depth></port><port><name>backbone</name><depth>0</depth></port></inputPorts><outputPorts><port><name>status</name><depth>0</depth><granularDepth>0</granularDepth></port><port><name>responseBody</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>rest-activity</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.activities.rest.RESTActivity</class><inputMap><map from="taxafile" to="taxafile" /><map from="alnfile" to="alnfile" /><map from="classtree" to="classtree" /><map from="jobid" to="jobid" /><map from="backbone" to="backbone" /></inputMap><outputMap><map from="status" to="status" /><map from="responseBody" to="responseBody" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean xmlns="">
+  <httpMethod>GET</httpMethod>
+  <urlSignature>http://localhost/biovel-supersmart?service=SMRT&amp;command=BBdecompose&amp;alnfile={alnfile}&amp;backbone={backbone}&amp;classtree={classtree}&amp;outfile={outfile}&amp;taxafile={taxafile}&amp;jobid={jobid}</urlSignature>
+  <acceptsHeaderValue>text/plain</acceptsHeaderValue>
+  <contentTypeForUpdates>application/xml</contentTypeForUpdates>
+  <outgoingDataFormat>String</outgoingDataFormat>
+  <sendHTTPExpectRequestHeader>false</sendHTTPExpectRequestHeader>
+  <showRedirectionOutputPort>true</showRedirectionOutputPort>
+  <showActualUrlPort>false</showActualUrlPort>
+  <showResponseHeadersPort>false</showResponseHeadersPort>
+  <escapeParameters>false</escapeParameters>
+  <otherHTTPHeaders />
+  <activityInputs>
+    <entry>
+      <string>taxafile</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>alnfile</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>outfile</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>classtree</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>jobid</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>backbone</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+  </activityInputs>
+</net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Loop</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration xmlns="">
+  <conditionXML>&lt;activity xmlns="http://taverna.sf.net/2008/xml/t2flow"&gt;&lt;raven&gt;&lt;group&gt;net.sf.taverna.t2.activities&lt;/group&gt;&lt;artifact&gt;beanshell-activity&lt;/artifact&gt;&lt;version&gt;1.5&lt;/version&gt;&lt;/raven&gt;&lt;class&gt;net.sf.taverna.t2.activities.beanshell.BeanshellActivity&lt;/class&gt;&lt;inputMap /&gt;&lt;outputMap /&gt;&lt;configBean encoding="xstream"&gt;&lt;net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns=""&gt;&#xD;
+  &lt;inputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;status&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;translatedElementType&gt;java.lang.String&lt;/translatedElementType&gt;&#xD;
+      &lt;allowsLiteralValues&gt;true&lt;/allowsLiteralValues&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+  &lt;/inputs&gt;&#xD;
+  &lt;outputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;loop&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;granularDepth&gt;0&lt;/granularDepth&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+  &lt;/outputs&gt;&#xD;
+  &lt;classLoaderSharing&gt;workflow&lt;/classLoaderSharing&gt;&#xD;
+  &lt;localDependencies /&gt;&#xD;
+  &lt;artifactDependencies /&gt;&#xD;
+  &lt;script&gt;loop = "" + ! status.equals("200"); &#xD;
+if ("true".matches(loop)) {&#xD;
+   Thread.sleep(5000);&#xD;
+}&lt;/script&gt;&#xD;
+  &lt;dependencies /&gt;&#xD;
+&lt;/net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean&gt;&lt;/configBean&gt;&lt;annotations /&gt;&lt;/activity&gt;</conditionXML>
+  <runFirst>true</runFirst>
+  <properties>
+    <property name="compareValue" value="200" />
+    <property name="comparePort" value="status" />
+    <property name="delay" value="5" />
+    <property name="comparison" value="EqualTo" />
+    <property name="isFeedBack" value="false" />
+  </properties>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="alnfile" depth="0" /><port name="classtree" depth="0" /><port name="jobid" depth="0" /><port name="taxafile" depth="0" /><port name="backbone" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>Clademerge</name><inputPorts><port><name>jobid</name><depth>0</depth></port></inputPorts><outputPorts><port><name>status</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>rest-activity</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.activities.rest.RESTActivity</class><inputMap><map from="jobid" to="jobid" /></inputMap><outputMap><map from="status" to="status" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean xmlns="">
+  <httpMethod>GET</httpMethod>
+  <urlSignature>http://localhost/biovel-supersmart?service=SMRT&amp;command=Clademerge&amp;jobid={jobid}</urlSignature>
+  <acceptsHeaderValue>text/plain</acceptsHeaderValue>
+  <contentTypeForUpdates>application/xml</contentTypeForUpdates>
+  <outgoingDataFormat>String</outgoingDataFormat>
+  <sendHTTPExpectRequestHeader>false</sendHTTPExpectRequestHeader>
+  <showRedirectionOutputPort>true</showRedirectionOutputPort>
+  <showActualUrlPort>false</showActualUrlPort>
+  <showResponseHeadersPort>false</showResponseHeadersPort>
+  <escapeParameters>false</escapeParameters>
+  <otherHTTPHeaders />
+  <activityInputs>
+    <entry>
+      <string>jobid</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+  </activityInputs>
+</net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Loop</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration xmlns="">
+  <conditionXML>&lt;activity xmlns="http://taverna.sf.net/2008/xml/t2flow"&gt;&lt;raven&gt;&lt;group&gt;net.sf.taverna.t2.activities&lt;/group&gt;&lt;artifact&gt;beanshell-activity&lt;/artifact&gt;&lt;version&gt;1.5&lt;/version&gt;&lt;/raven&gt;&lt;class&gt;net.sf.taverna.t2.activities.beanshell.BeanshellActivity&lt;/class&gt;&lt;inputMap /&gt;&lt;outputMap /&gt;&lt;configBean encoding="xstream"&gt;&lt;net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns=""&gt;&#xD;
+  &lt;inputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;status&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;translatedElementType&gt;java.lang.String&lt;/translatedElementType&gt;&#xD;
+      &lt;allowsLiteralValues&gt;true&lt;/allowsLiteralValues&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+  &lt;/inputs&gt;&#xD;
+  &lt;outputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;loop&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;granularDepth&gt;0&lt;/granularDepth&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+  &lt;/outputs&gt;&#xD;
+  &lt;classLoaderSharing&gt;workflow&lt;/classLoaderSharing&gt;&#xD;
+  &lt;localDependencies /&gt;&#xD;
+  &lt;artifactDependencies /&gt;&#xD;
+  &lt;script&gt;loop = "" + ! status.equals("200"); &#xD;
+if ("true".matches(loop)) {&#xD;
+   Thread.sleep(30000);&#xD;
+}&lt;/script&gt;&#xD;
+  &lt;dependencies /&gt;&#xD;
+&lt;/net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean&gt;&lt;/configBean&gt;&lt;annotations /&gt;&lt;/activity&gt;</conditionXML>
+  <runFirst>true</runFirst>
+  <properties>
+    <property name="compareValue" value="200" />
+    <property name="comparePort" value="status" />
+    <property name="delay" value="30" />
+    <property name="comparison" value="EqualTo" />
+    <property name="isFeedBack" value="false" />
+  </properties>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="jobid" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>Cladeinfer</name><inputPorts><port><name>jobid</name><depth>0</depth></port></inputPorts><outputPorts><port><name>status</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>rest-activity</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.activities.rest.RESTActivity</class><inputMap><map from="jobid" to="jobid" /></inputMap><outputMap><map from="status" to="status" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean xmlns="">
+  <httpMethod>GET</httpMethod>
+  <urlSignature>http://localhost/biovel-supersmart?service=SMRT&amp;command=Cladeinfer&amp;jobid={jobid}</urlSignature>
+  <acceptsHeaderValue>text/plain</acceptsHeaderValue>
+  <contentTypeForUpdates>application/xml</contentTypeForUpdates>
+  <outgoingDataFormat>String</outgoingDataFormat>
+  <sendHTTPExpectRequestHeader>false</sendHTTPExpectRequestHeader>
+  <showRedirectionOutputPort>false</showRedirectionOutputPort>
+  <showActualUrlPort>false</showActualUrlPort>
+  <showResponseHeadersPort>false</showResponseHeadersPort>
+  <escapeParameters>false</escapeParameters>
+  <otherHTTPHeaders />
+  <activityInputs>
+    <entry>
+      <string>jobid</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+  </activityInputs>
+</net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Loop</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration xmlns="">
+  <conditionXML>&lt;activity xmlns="http://taverna.sf.net/2008/xml/t2flow"&gt;&lt;raven&gt;&lt;group&gt;net.sf.taverna.t2.activities&lt;/group&gt;&lt;artifact&gt;beanshell-activity&lt;/artifact&gt;&lt;version&gt;1.5&lt;/version&gt;&lt;/raven&gt;&lt;class&gt;net.sf.taverna.t2.activities.beanshell.BeanshellActivity&lt;/class&gt;&lt;inputMap /&gt;&lt;outputMap /&gt;&lt;configBean encoding="xstream"&gt;&lt;net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns=""&gt;&#xD;
+  &lt;inputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;status&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;translatedElementType&gt;java.lang.String&lt;/translatedElementType&gt;&#xD;
+      &lt;allowsLiteralValues&gt;true&lt;/allowsLiteralValues&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+  &lt;/inputs&gt;&#xD;
+  &lt;outputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;loop&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;granularDepth&gt;0&lt;/granularDepth&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+  &lt;/outputs&gt;&#xD;
+  &lt;classLoaderSharing&gt;workflow&lt;/classLoaderSharing&gt;&#xD;
+  &lt;localDependencies /&gt;&#xD;
+  &lt;artifactDependencies /&gt;&#xD;
+  &lt;script&gt;loop = "" + ! status.equals("200"); &#xD;
+if ("true".matches(loop)) {&#xD;
+   Thread.sleep(20000);&#xD;
+}&lt;/script&gt;&#xD;
+  &lt;dependencies /&gt;&#xD;
+&lt;/net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean&gt;&lt;/configBean&gt;&lt;annotations /&gt;&lt;/activity&gt;</conditionXML>
+  <runFirst>true</runFirst>
+  <properties>
+    <property name="compareValue" value="200" />
+    <property name="comparePort" value="status" />
+    <property name="delay" value="20" />
+    <property name="comparison" value="EqualTo" />
+    <property name="isFeedBack" value="false" />
+  </properties>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="jobid" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>Cladegraft</name><inputPorts><port><name>jobid</name><depth>0</depth></port><port><name>backbone</name><depth>0</depth></port></inputPorts><outputPorts><port><name>status</name><depth>0</depth><granularDepth>0</granularDepth></port><port><name>responseBody</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>rest-activity</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.activities.rest.RESTActivity</class><inputMap><map from="jobid" to="jobid" /><map from="backbone" to="backbone" /></inputMap><outputMap><map from="status" to="status" /><map from="responseBody" to="responseBody" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean xmlns="">
+  <httpMethod>GET</httpMethod>
+  <urlSignature>http://localhost/biovel-supersmart?service=SMRT&amp;command=Cladegraft&amp;jobid={jobid}&amp;backbone={backbone}</urlSignature>
+  <acceptsHeaderValue>text/plain</acceptsHeaderValue>
+  <contentTypeForUpdates>application/xml</contentTypeForUpdates>
+  <outgoingDataFormat>String</outgoingDataFormat>
+  <sendHTTPExpectRequestHeader>false</sendHTTPExpectRequestHeader>
+  <showRedirectionOutputPort>true</showRedirectionOutputPort>
+  <showActualUrlPort>false</showActualUrlPort>
+  <showResponseHeadersPort>false</showResponseHeadersPort>
+  <escapeParameters>false</escapeParameters>
+  <otherHTTPHeaders />
+  <activityInputs>
+    <entry>
+      <string>jobid</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>backbone</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+  </activityInputs>
+</net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Loop</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration xmlns="">
+  <conditionXML>&lt;activity xmlns="http://taverna.sf.net/2008/xml/t2flow"&gt;&lt;raven&gt;&lt;group&gt;net.sf.taverna.t2.activities&lt;/group&gt;&lt;artifact&gt;beanshell-activity&lt;/artifact&gt;&lt;version&gt;1.5&lt;/version&gt;&lt;/raven&gt;&lt;class&gt;net.sf.taverna.t2.activities.beanshell.BeanshellActivity&lt;/class&gt;&lt;inputMap /&gt;&lt;outputMap /&gt;&lt;configBean encoding="xstream"&gt;&lt;net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns=""&gt;&#xD;
+  &lt;inputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;status&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;translatedElementType&gt;java.lang.String&lt;/translatedElementType&gt;&#xD;
+      &lt;allowsLiteralValues&gt;true&lt;/allowsLiteralValues&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+  &lt;/inputs&gt;&#xD;
+  &lt;outputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;loop&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;granularDepth&gt;0&lt;/granularDepth&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+  &lt;/outputs&gt;&#xD;
+  &lt;classLoaderSharing&gt;workflow&lt;/classLoaderSharing&gt;&#xD;
+  &lt;localDependencies /&gt;&#xD;
+  &lt;artifactDependencies /&gt;&#xD;
+  &lt;script&gt;loop = "" + ! status.equals("200"); &#xD;
+if ("true".matches(loop)) {&#xD;
+   Thread.sleep(10000);&#xD;
+}&lt;/script&gt;&#xD;
+  &lt;dependencies /&gt;&#xD;
+&lt;/net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean&gt;&lt;/configBean&gt;&lt;annotations /&gt;&lt;/activity&gt;</conditionXML>
+  <runFirst>true</runFirst>
+  <properties>
+    <property name="compareValue" value="200" />
+    <property name="delay" value="10" />
+    <property name="comparePort" value="status" />
+    <property name="isFeedBack" value="false" />
+    <property name="comparison" value="EqualTo" />
+  </properties>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="jobid" depth="0" /><port name="backbone" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>BBcalibrate</name><inputPorts><port><name>fossiltable</name><depth>0</depth></port><port><name>jobid</name><depth>0</depth></port><port><name>supermatrix</name><depth>0</depth></port><port><name>tree</name><depth>0</depth></port></inputPorts><outputPorts><port><name>redirection</name><depth>0</depth><granularDepth>0</granularDepth></port><port><name>status</name><depth>0</depth><granularDepth>0</granularDepth></port><port><name>responseBody</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>rest-activity</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.activities.rest.RESTActivity</class><inputMap><map from="tree" to="tree" /><map from="supermatrix" to="supermatrix" /><map from="fossiltable" to="fossiltable" /><map from="jobid" to="jobid" /></inputMap><outputMap><map from="redirection" to="redirection" /><map from="status" to="status" /><map from="responseBody" to="responseBody" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean xmlns="">
+  <httpMethod>GET</httpMethod>
+  <urlSignature>http://localhost/biovel-supersmart?service=SMRT&amp;command=BBcalibrate&amp;tree={tree}&amp;fossiltable={fossiltable}&amp;supermatrix={supermatrix}&amp;jobid={jobid}</urlSignature>
+  <acceptsHeaderValue>text/plain</acceptsHeaderValue>
+  <contentTypeForUpdates>application/xml</contentTypeForUpdates>
+  <outgoingDataFormat>String</outgoingDataFormat>
+  <sendHTTPExpectRequestHeader>false</sendHTTPExpectRequestHeader>
+  <showRedirectionOutputPort>true</showRedirectionOutputPort>
+  <showActualUrlPort>false</showActualUrlPort>
+  <showResponseHeadersPort>false</showResponseHeadersPort>
+  <escapeParameters>false</escapeParameters>
+  <otherHTTPHeaders />
+  <activityInputs>
+    <entry>
+      <string>supermatrix</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>tree</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>fossiltable</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+    <entry>
+      <string>jobid</string>
+      <java-class>java.lang.String</java-class>
+    </entry>
+  </activityInputs>
+</net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Loop</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration xmlns="">
+  <conditionXML>&lt;activity xmlns="http://taverna.sf.net/2008/xml/t2flow"&gt;&lt;raven&gt;&lt;group&gt;net.sf.taverna.t2.activities&lt;/group&gt;&lt;artifact&gt;beanshell-activity&lt;/artifact&gt;&lt;version&gt;1.5&lt;/version&gt;&lt;/raven&gt;&lt;class&gt;net.sf.taverna.t2.activities.beanshell.BeanshellActivity&lt;/class&gt;&lt;inputMap /&gt;&lt;outputMap /&gt;&lt;configBean encoding="xstream"&gt;&lt;net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns=""&gt;&#xD;
+  &lt;inputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;status&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;translatedElementType&gt;java.lang.String&lt;/translatedElementType&gt;&#xD;
+      &lt;allowsLiteralValues&gt;true&lt;/allowsLiteralValues&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean&gt;&#xD;
+  &lt;/inputs&gt;&#xD;
+  &lt;outputs&gt;&#xD;
+    &lt;net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+      &lt;name&gt;loop&lt;/name&gt;&#xD;
+      &lt;depth&gt;0&lt;/depth&gt;&#xD;
+      &lt;granularDepth&gt;0&lt;/granularDepth&gt;&#xD;
+    &lt;/net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean&gt;&#xD;
+  &lt;/outputs&gt;&#xD;
+  &lt;classLoaderSharing&gt;workflow&lt;/classLoaderSharing&gt;&#xD;
+  &lt;localDependencies /&gt;&#xD;
+  &lt;artifactDependencies /&gt;&#xD;
+  &lt;script&gt;loop = "" + ! status.equals("200"); &#xD;
+if ("true".matches(loop)) {&#xD;
+   Thread.sleep(10000);&#xD;
+}&lt;/script&gt;&#xD;
+  &lt;dependencies /&gt;&#xD;
+&lt;/net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean&gt;&lt;/configBean&gt;&lt;annotations /&gt;&lt;/activity&gt;</conditionXML>
+  <runFirst>true</runFirst>
+  <properties>
+    <property name="compareValue" value="200" />
+    <property name="delay" value="10" />
+    <property name="comparePort" value="status" />
+    <property name="isFeedBack" value="false" />
+    <property name="comparison" value="EqualTo" />
+  </properties>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.LoopConfiguration></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.5</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="fossiltable" depth="0" /><port name="jobid" depth="0" /><port name="supermatrix" depth="0" /><port name="tree" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor></processors><conditions><condition control="BBinfer" target="BBreroot" /><condition control="Clademerge" target="Cladeinfer" /><condition control="BBreroot" target="BBcalibrate" /><condition control="Orthologize" target="BBinfer" /><condition control="Orthologize" target="BBmerge" /><condition control="Align" target="Orthologize" /><condition control="Taxize" target="Align" /><condition control="BBreroot" target="BBdecompose" /><condition control="Cladeinfer" target="Cladegraft" /><condition control="BBdecompose" target="Clademerge" /><condition control="BBcalibrate" target="BBdecompose" /></conditions><datalinks><datalink><sink type="processor"><processor>Taxize</processor><port>jobid</port></sink><source type="dataflow"><port>jobid</port></source></datalink><datalink><sink type="processor"><processor>Taxize</processor><port>expand_rank</port></sink><source type="dataflow"><port>expand_rank</port></source></datalink><datalink><sink type="processor"><processor>Taxize</processor><port>infile</port></sink><source type="dataflow"><port>taxa</port></source></datalink><datalink><sink type="processor"><processor>BBmerge</processor><port>alnfile</port></sink><source type="processor"><processor>Orthologize</processor><port>redirection</port></source></datalink><datalink><sink type="processor"><processor>BBmerge</processor><port>jobid</port></sink><source type="dataflow"><port>jobid</port></source></datalink><datalink><sink type="processor"><processor>BBmerge</processor><port>taxafile</port></sink><source type="processor"><processor>Taxize</processor><port>redirection</port></source></datalink><datalink><sink type="processor"><processor>Classify</processor><port>infile</port></sink><source type="processor"><processor>Taxize</processor><port>redirection</port></source></datalink><datalink><sink type="processor"><processor>Classify</processor><port>jobid</port></sink><source type="dataflow"><port>jobid</port></source></datalink><datalink><sink type="processor"><processor>BBinfer</processor><port>jobid</port></sink><source type="dataflow"><port>jobid</port></source></datalink><datalink><sink type="processor"><processor>BBinfer</processor><port>starttree</port></sink><source type="processor"><processor>Classify</processor><port>redirection</port></source></datalink><datalink><sink type="processor"><processor>BBinfer</processor><port>supermatrix</port></sink><source type="processor"><processor>BBmerge</processor><port>redirection</port></source></datalink><datalink><sink type="processor"><processor>Orthologize</processor><port>jobid</port></sink><source type="dataflow"><port>jobid</port></source></datalink><datalink><sink type="processor"><processor>Orthologize</processor><port>infile</port></sink><source type="processor"><processor>Align</processor><port>redirection</port></source></datalink><datalink><sink type="processor"><processor>Align</processor><port>jobid</port></sink><source type="dataflow"><port>jobid</port></source></datalink><datalink><sink type="processor"><processor>Align</processor><port>infile</port></sink><source type="processor"><processor>Taxize</processor><port>redirection</port></source></datalink><datalink><sink type="processor"><processor>BBreroot</processor><port>backbone</port></sink><source type="processor"><processor>BBinfer</processor><port>redirection</port></source></datalink><datalink><sink type="processor"><processor>BBreroot</processor><port>taxafile</port></sink><source type="processor"><processor>Taxize</processor><port>redirection</port></source></datalink><datalink><sink type="processor"><processor>BBreroot</processor><port>jobid</port></sink><source type="dataflow"><port>jobid</port></source></datalink><datalink><sink type="processor"><processor>BBdecompose</processor><port>alnfile</port></sink><source type="processor"><processor>Align</processor><port>redirection</port></source></datalink><datalink><sink type="processor"><processor>BBdecompose</processor><port>classtree</port></sink><source type="processor"><processor>Classify</processor><port>redirection</port></source></datalink><datalink><sink type="processor"><processor>BBdecompose</processor><port>jobid</port></sink><source type="dataflow"><port>jobid</port></source></datalink><datalink><sink type="processor"><processor>BBdecompose</processor><port>taxafile</port></sink><source type="processor"><processor>Taxize</processor><port>redirection</port></source></datalink><datalink><sink type="processor"><processor>BBdecompose</processor><port>backbone</port></sink><source type="processor"><processor>BBcalibrate</processor><port>redirection</port></source></datalink><datalink><sink type="processor"><processor>Clademerge</processor><port>jobid</port></sink><source type="dataflow"><port>jobid</port></source></datalink><datalink><sink type="processor"><processor>Cladeinfer</processor><port>jobid</port></sink><source type="dataflow"><port>jobid</port></source></datalink><datalink><sink type="processor"><processor>Cladegraft</processor><port>jobid</port></sink><source type="dataflow"><port>jobid</port></source></datalink><datalink><sink type="processor"><processor>Cladegraft</processor><port>backbone</port></sink><source type="processor"><processor>BBcalibrate</processor><port>redirection</port></source></datalink><datalink><sink type="processor"><processor>BBcalibrate</processor><port>fossiltable</port></sink><source type="dataflow"><port>calibrations</port></source></datalink><datalink><sink type="processor"><processor>BBcalibrate</processor><port>jobid</port></sink><source type="dataflow"><port>jobid</port></source></datalink><datalink><sink type="processor"><processor>BBcalibrate</processor><port>supermatrix</port></sink><source type="processor"><processor>BBmerge</processor><port>redirection</port></source></datalink><datalink><sink type="processor"><processor>BBcalibrate</processor><port>tree</port></sink><source type="processor"><processor>BBreroot</processor><port>redirection</port></source></datalink><datalink><sink type="merge"><port>status</port></sink><source type="processor"><processor>Taxize</processor><port>status</port></source></datalink><datalink><sink type="merge"><port>status</port></sink><source type="processor"><processor>BBmerge</processor><port>status</port></source></datalink><datalink><sink type="merge"><port>status</port></sink><source type="processor"><processor>Classify</processor><port>status</port></source></datalink><datalink><sink type="merge"><port>status</port></sink><source type="processor"><processor>Orthologize</processor><port>status</port></source></datalink><datalink><sink type="merge"><port>status</port></sink><source type="processor"><processor>Align</processor><port>status</port></source></datalink><datalink><sink type="merge"><port>status</port></sink><source type="processor"><processor>BBinfer</processor><port>status</port></source></datalink><datalink><sink type="merge"><port>status</port></sink><source type="processor"><processor>BBreroot</processor><port>status</port></source></datalink><datalink><sink type="merge"><port>status</port></sink><source type="processor"><processor>BBdecompose</processor><port>status</port></source></datalink><datalink><sink type="merge"><port>status</port></sink><source type="processor"><processor>Clademerge</processor><port>status</port></source></datalink><datalink><sink type="merge"><port>status</port></sink><source type="processor"><processor>Cladeinfer</processor><port>status</port></source></datalink><datalink><sink type="merge"><port>status</port></sink><source type="processor"><processor>Cladegraft</processor><port>status</port></source></datalink><datalink><sink type="merge"><port>status</port></sink><source type="processor"><processor>BBcalibrate</processor><port>status</port></source></datalink><datalink><sink type="dataflow"><port>result_taxize</port></sink><source type="processor"><processor>Taxize</processor><port>responseBody</port></source></datalink><datalink><sink type="dataflow"><port>result_align</port></sink><source type="processor"><processor>Align</processor><port>responseBody</port></source></datalink><datalink><sink type="dataflow"><port>result_orthologize</port></sink><source type="processor"><processor>Orthologize</processor><port>responseBody</port></source></datalink><datalink><sink type="dataflow"><port>result_bbmerge</port></sink><source type="processor"><processor>BBmerge</processor><port>responseBody</port></source></datalink><datalink><sink type="dataflow"><port>result_classify</port></sink><source type="processor"><processor>Classify</processor><port>responseBody</port></source></datalink><datalink><sink type="dataflow"><port>result_bbinfer</port></sink><source type="processor"><processor>BBinfer</processor><port>responseBody</port></source></datalink><datalink><sink type="dataflow"><port>result_bbreroot</port></sink><source type="processor"><processor>BBreroot</processor><port>responseBody</port></source></datalink><datalink><sink type="dataflow"><port>result_bbdecompose</port></sink><source type="processor"><processor>BBdecompose</processor><port>responseBody</port></source></datalink><datalink><sink type="dataflow"><port>FINAL</port></sink><source type="processor"><processor>Cladegraft</processor><port>responseBody</port></source></datalink><datalink><sink type="dataflow"><port>result_bbcalibrate</port></sink><source type="processor"><processor>BBcalibrate</processor><port>responseBody</port></source></datalink></datalinks><annotations><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>dc8cf236-61cf-45ac-ad71-d6c215d46b0b</identification>
+      </annotationBean>
+      <date>2014-11-23 10:16:22.759 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.Author">
+        <text>Hannes Hettling</text>
+      </annotationBean>
+      <date>2014-11-23 15:17:35.417 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>a0212ed4-fece-4699-b5bc-97dba18345dc</identification>
+      </annotationBean>
+      <date>2014-11-19 16:19:37.237 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>5d99e5e7-2702-48fc-a8a1-7731ccfec9b8</identification>
+      </annotationBean>
+      <date>2014-11-19 12:54:52.229 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>cb8b4bab-0e47-4693-957a-2b7ed29f3b9e</identification>
+      </annotationBean>
+      <date>2014-11-20 00:24:46.885 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>7cdee71a-a5c6-475b-a57b-3cd11c0f3373</identification>
+      </annotationBean>
+      <date>2014-11-19 20:35:41.435 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>11509602-c782-43bf-a761-559978ce3082</identification>
+      </annotationBean>
+      <date>2014-11-23 10:02:04.738 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>19ed39e4-e9f4-47f1-8bd4-df6e30dfdc9a</identification>
+      </annotationBean>
+      <date>2014-11-20 15:16:41.361 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>0d1876b1-381c-44ef-b51e-e89870225829</identification>
+      </annotationBean>
+      <date>2014-11-23 21:52:10.869 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>54df281e-e474-4d53-8349-9445943baaf5</identification>
+      </annotationBean>
+      <date>2014-11-19 16:23:06.467 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>e72a35c0-6263-4a44-a194-b088e75fb8d8</identification>
+      </annotationBean>
+      <date>2014-11-23 21:10:47.666 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>686f2b7d-5486-48d6-b72c-f5e42c9cc4cd</identification>
+      </annotationBean>
+      <date>2014-11-23 21:05:52.773 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>32cc29ae-7c39-495e-9119-030c5029cee0</identification>
+      </annotationBean>
+      <date>2014-11-22 18:11:08.50 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>43fd765d-5a15-4d35-afef-7c90823cd74a</identification>
+      </annotationBean>
+      <date>2014-11-20 00:22:03.303 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>7371bab7-66de-4d6f-a057-772295ecc230</identification>
+      </annotationBean>
+      <date>2014-11-19 12:48:25.959 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>2ceb7900-0bbe-41ef-8611-db5a5acaa995</identification>
+      </annotationBean>
+      <date>2014-11-20 11:37:59.511 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>3d914270-e2bc-4989-9adb-47b0717443f4</identification>
+      </annotationBean>
+      <date>2014-11-20 00:37:11.919 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>32691eb4-6986-4722-82ce-a310539f68bc</identification>
+      </annotationBean>
+      <date>2014-11-21 20:11:15.933 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>e6963a5f-7641-4bee-ac2f-699544f655f4</identification>
+      </annotationBean>
+      <date>2014-11-22 00:28:43.820 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>cf1f6c7a-2bab-47df-955c-77cd0fa01730</identification>
+      </annotationBean>
+      <date>2014-11-23 15:14:20.71 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>471ada80-f5e3-46e6-842f-ff2c5823e0c5</identification>
+      </annotationBean>
+      <date>2014-11-19 23:59:19.785 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>7c776302-e11d-4799-9655-baac645485f6</identification>
+      </annotationBean>
+      <date>2014-11-21 20:13:54.776 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>61b6d159-caf7-49de-bdd4-de7040096a86</identification>
+      </annotationBean>
+      <date>2014-11-23 10:16:46.453 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>9b6b0592-2277-427d-a517-86b1ce2c93cc</identification>
+      </annotationBean>
+      <date>2014-11-21 18:55:23.812 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>2de58a5d-3233-4b40-8a8d-c67801c2de1c</identification>
+      </annotationBean>
+      <date>2014-11-20 00:19:31.101 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>15eae0cb-42c4-4a88-b6b5-8016e2b55d83</identification>
+      </annotationBean>
+      <date>2014-11-20 12:33:48.655 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>8286c154-f065-428d-8c83-edacb2e21786</identification>
+      </annotationBean>
+      <date>2014-11-23 15:16:06.727 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>1e189b63-05c7-4263-aa09-b2f94f23deb0</identification>
+      </annotationBean>
+      <date>2014-11-23 22:19:29.106 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>a7c0b819-56ba-4efa-849d-f33d9989a9c1</identification>
+      </annotationBean>
+      <date>2014-11-23 10:03:37.805 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>c0149fe2-10c3-4a91-9bb2-a9771e44e20c</identification>
+      </annotationBean>
+      <date>2014-11-23 21:12:47.1 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>e8e6ab0f-1b5a-44a4-b2f7-a759ebefcbcf</identification>
+      </annotationBean>
+      <date>2014-11-23 21:12:53.665 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>5ae2b0b1-cf83-4ac8-ad3e-8ea74dd86d6f</identification>
+      </annotationBean>
+      <date>2014-11-20 01:46:15.901 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>92efd284-d871-4f2f-8d30-1a5cfb8636ce</identification>
+      </annotationBean>
+      <date>2014-11-23 09:59:16.977 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>0a67a3cb-c8f7-4896-b6d1-c38b8dcf93b8</identification>
+      </annotationBean>
+      <date>2014-11-19 12:52:55.43 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>d93d40bd-9a6e-4515-95ee-8a8989008b23</identification>
+      </annotationBean>
+      <date>2014-11-22 17:13:06.336 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>b234c475-a0d4-4db4-b5bb-8cc46ae90bf3</identification>
+      </annotationBean>
+      <date>2014-11-19 20:52:55.605 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>958c3975-081e-45b5-b21d-d7059f9991a4</identification>
+      </annotationBean>
+      <date>2014-11-20 13:40:52.835 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>1cfe0c9f-9cf2-4087-b5c3-0370ce81db0c</identification>
+      </annotationBean>
+      <date>2014-11-23 18:19:32.197 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>e144f41d-f155-49c3-9e56-4ebba14f4129</identification>
+      </annotationBean>
+      <date>2014-11-23 18:07:09.601 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>d2a16893-f981-4642-98b0-51d7f6d1955a</identification>
+      </annotationBean>
+      <date>2014-11-20 12:35:22.720 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>10d0daa5-8988-458b-97a9-92d2af7ff790</identification>
+      </annotationBean>
+      <date>2014-11-20 00:26:43.446 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>3ecd08c3-34e7-4f79-a279-23fc76e7e582</identification>
+      </annotationBean>
+      <date>2014-11-20 01:48:21.517 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>b8b00bcf-3e0d-4775-a936-30b751ffbb2d</identification>
+      </annotationBean>
+      <date>2014-11-22 17:34:28.344 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>9f85f600-8d54-4216-96a0-94f687e85cc8</identification>
+      </annotationBean>
+      <date>2014-11-20 14:14:49.704 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>311bb17e-1557-4c30-8fe1-b2be0d6ba75b</identification>
+      </annotationBean>
+      <date>2014-11-19 19:55:54.80 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>a520b51b-ddf3-4cce-b972-5ff64814975a</identification>
+      </annotationBean>
+      <date>2014-11-20 13:26:35.573 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>86828997-6d3b-4be0-be5d-b9ae46023e63</identification>
+      </annotationBean>
+      <date>2014-11-22 00:15:48.945 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>ba4c461a-4564-4681-9636-d16962caee6e</identification>
+      </annotationBean>
+      <date>2014-11-23 15:19:38.874 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>2d7ed122-9592-4af0-b475-6d52e1eb23a3</identification>
+      </annotationBean>
+      <date>2014-11-20 15:02:44.665 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>970b4af9-d7cf-4099-a186-f3a07afae197</identification>
+      </annotationBean>
+      <date>2014-11-23 10:20:26.669 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>b57bd5b4-49ff-43a8-9404-20a13e5a355b</identification>
+      </annotationBean>
+      <date>2014-11-19 20:01:20.447 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>784ffec3-a157-4958-a04f-7979f580cadc</identification>
+      </annotationBean>
+      <date>2014-11-20 00:28:57.767 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>473b4b65-1bea-43c6-84da-6a2c7827ff56</identification>
+      </annotationBean>
+      <date>2014-11-23 10:00:25.369 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>86ec567a-c8a2-4c83-bc78-534fa9c625b9</identification>
+      </annotationBean>
+      <date>2014-11-23 21:12:01.828 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>3ae09b6f-d362-429c-9f50-0fe91a2c26da</identification>
+      </annotationBean>
+      <date>2014-11-19 15:07:42.170 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>e9b1fe50-63d4-4872-b094-3e639431b78a</identification>
+      </annotationBean>
+      <date>2014-11-20 15:23:12.525 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>f6dad881-1aa0-4d51-a1e8-5ff914c45dae</identification>
+      </annotationBean>
+      <date>2014-11-19 16:16:42.243 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>9d5ca088-766e-4d43-8b08-47d5896fffe7</identification>
+      </annotationBean>
+      <date>2014-11-23 21:44:03.808 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>c8598efe-7975-4f4a-b7fb-06c9b59d664c</identification>
+      </annotationBean>
+      <date>2014-11-21 20:06:49.86 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>8b2bdd85-18bf-41db-af82-04ddca1ec38a</identification>
+      </annotationBean>
+      <date>2014-11-21 20:03:03.790 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>14b8892c-1cf3-4fa0-bc84-c86470b529cb</identification>
+      </annotationBean>
+      <date>2014-11-21 20:27:40.843 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>7bed2e10-ccef-4457-9470-ce35ec91110d</identification>
+      </annotationBean>
+      <date>2014-11-21 20:26:25.731 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>7d211609-c673-42e7-967a-dd42b1fe7e68</identification>
+      </annotationBean>
+      <date>2014-11-20 00:06:42.108 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>4faad072-1d9c-40dc-96c4-3c969ecec1a2</identification>
+      </annotationBean>
+      <date>2014-11-19 16:25:13.631 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>eff09c77-d245-4b9f-b5bf-b2f75e1da544</identification>
+      </annotationBean>
+      <date>2014-11-20 02:00:36.355 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>c0149fe2-10c3-4a91-9bb2-a9771e44e20c</identification>
+      </annotationBean>
+      <date>2014-11-23 21:11:28.732 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>6a1741e4-f257-4c91-b24e-db0212217670</identification>
+      </annotationBean>
+      <date>2014-11-22 17:34:43.828 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>310db5f8-5747-42fc-addd-a0c65cd752a5</identification>
+      </annotationBean>
+      <date>2014-11-23 21:43:13.857 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>4befc7bc-15d2-4395-9817-87d4aace11dd</identification>
+      </annotationBean>
+      <date>2014-11-23 21:09:12.708 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>654a5eee-1052-4c49-85c4-0c74bcf6c097</identification>
+      </annotationBean>
+      <date>2014-11-19 16:29:14.899 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>59414dba-98d5-416e-ad59-8f8c7fb0a408</identification>
+      </annotationBean>
+      <date>2014-11-20 10:54:52.863 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>b392c88b-6f6d-4126-b0e4-4c6c6304c701</identification>
+      </annotationBean>
+      <date>2014-11-19 12:43:14.188 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>8f0eb3fa-f6a9-4598-956d-e151a5d59b7c</identification>
+      </annotationBean>
+      <date>2014-11-19 12:38:13.109 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>af069cad-84ef-4546-9a20-bb1b1f3e848d</identification>
+      </annotationBean>
+      <date>2014-11-22 17:19:11.361 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2></annotations></dataflow></workflow>
