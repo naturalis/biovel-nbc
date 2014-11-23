@@ -1,0 +1,3 @@
+NFos	FossilName	CrownvsStem	CalibratedTaxon	MinAge	MaxAge	BestPracticeScore	NUsrcrFos	DcrFos
+1	cal1	stem	Abra	50	60
+2	cal2	stem	Asterias	30	40
