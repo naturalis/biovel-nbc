@@ -4,14 +4,15 @@ use warnings;
 use Getopt::Long;
 use CGI;
 use YAML qw(Dump Load DumpFile LoadFile);
+use File::Path qw(make_path);
 use Apache2::Request;
 use Apache2::RequestRec ();
 use Apache2::RequestIO ();
 use Apache2::Const -compile => qw(OK);
-use CGI::Carp qw(fatalsToBrowser warningsToBrowser set_message);
+#use CGI::Carp qw(fatalsToBrowser warningsToBrowser set_message);
 
 print CGI::header();
-warningsToBrowser(1);
+#warningsToBrowser(1);
 
 use LWP::UserAgent;
 use Bio::Phylo::Util::Logger ':levels';
@@ -26,11 +27,9 @@ my $log = Bio::Phylo::Util::Logger->new(
 		'Bio::BioVeL::Service',
 		'Bio::BioVeL::Service::NeXMLMerger', 
 		'Bio::BioVeL::Service::NeXMLExtractor',
+		'Bio::BioVeL::Service::Supersmart',		
 		'Bio::BioVeL::AsynchronousService',
-		'Bio::BioVeL::AsynchronousService::TNRS',
-		'Bio::BioVeL::AsynchronousService::WriteAlignments',
-		'Bio::BioVeL::AsynchronousService::MakeBackboneSupermatrix',
-		
+		'Bio::BioVeL::AsynchronousService::TNRS',		
 	]
 );
 
@@ -40,6 +39,8 @@ our $AUTOLOAD;
 # of to the server error log using the function fatalsToBrowser;
 # note that fatalsToBrowser alone does not really work with mod_perl2, so 
 # we override the 'die' signal and then redirect the error message to fatalsToBrowser.
+
+=cut
 $SIG{__DIE__} = sub {
     my $message = $_[0];
 	my @ignored_exceptions = ();
@@ -50,6 +51,7 @@ $SIG{__DIE__} = sub {
     	fatalsToBrowser($message);
 	}
 };
+=cut
 
 =head1 NAME
 
@@ -132,13 +134,37 @@ sub AUTOLOAD {
 	my $method = $AUTOLOAD;
 	$method =~ s/.+://;
 	if ( $method !~ /^[A-Z]+$/ ) {
-	
+			
 		# an argument was provided, update the parameter
 		if ( @_ ) {
 			$self->{'_params'}->{$method} = shift;
 		}
 		return $self->{'_params'}->{$method};
 	}	
+}
+
+=item workdir
+
+This static method returns a directory to which the web server has access. This dir is used 
+for serializing the job object, so its location can be generated/pulled out of the air by 
+static methods (as the object might not exist yet). For job-specific output (e.g. analysis
+result files), use outdir(). 
+
+=cut
+
+sub workdir {
+	my $class = shift;
+	my $name = ref($class) || $class;
+	$name =~ s|::|/|g;
+	die ("writable document root needs to be specified either in \$DOCUMENT_ROOT in apache's configuration file or alternatively in \$BIOVEL_HOME") 
+		if not $ENV{'DOCUMENT_ROOT'} and not $ENV{'BIOVEL_HOME'}; 
+	my $root = $ENV{'DOCUMENT_ROOT'} ? $ENV{'DOCUMENT_ROOT'} : $ENV{'BIOVEL_HOME'};
+	my $dir = $root . '/' . $name;
+
+	make_path($dir) if not -d $dir;
+
+	# $class->logger("WORKDIR : $dir");
+	return $dir;
 }
 
 =item get_handle
@@ -203,26 +229,6 @@ sub handler {
 	$request->content_type( $self->content_type );
 	$request->print( $self->response_body );
 	return Apache2::Const::OK;
-}
-
-=item serialize 
-
-Saves the object to a file in the working directory; filename is 
-the C<jobid> with an .yml ending.
-
-=cut
-
-sub serialize {
-	my $self = shift;
-	my $log = $self->logger;	
-	if ( ! $self->pid ) {
-		$self->pid($$);
-	}
-	my $wdir  = $self->workdir;
-	my $jobid = $self->jobid;
-	my $file  = "${wdir}/${jobid}.yml";
-	$log->info("writing $self with pid" . $self->pid. " as $jobid to file $file");
-	$self->to_file( $file );
 }
 
 =item response_header
